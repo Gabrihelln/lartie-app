@@ -1,0 +1,263 @@
+rules_version = '2';
+
+// Regras de acesso do Lartiê (modelo da Seção 3 da especificação; caminhos em packages/modelo/src/caminhos.ts).
+//
+// - Cada casal só lê e altera os próprios dados. O casal do usuário vem do claim `casal_id`
+//   do Firebase Auth, gravado pelo servidor; assim as regras não gastam leituras da cota diária.
+// - Toda gravação do app registra quem e quando (criado_por/criado_em/atualizado_por/atualizado_em),
+//   com o horário do servidor (serverTimestamp), inclusive para alterações feitas offline.
+// - O que exige o servidor (criar casal, gerar plano, publicar lista, reservas de convidados,
+//   convites, notificações, RSVP) é gravado pela API da VPS com o Admin SDK, que não passa por estas regras.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function autenticado() {
+      return request.auth != null;
+    }
+
+    function doCasal(casalId) {
+      return autenticado() && request.auth.token.casal_id == casalId;
+    }
+
+    function dados() {
+      return request.resource.data;
+    }
+
+    function mudou() {
+      return dados().diff(resource.data).affectedKeys();
+    }
+
+    function auditoriaNaCriacao() {
+      return dados().criado_por == request.auth.uid
+        && dados().criado_em == request.time
+        && dados().atualizado_por == request.auth.uid
+        && dados().atualizado_em == request.time;
+    }
+
+    function auditoriaNaAtualizacao() {
+      return dados().atualizado_por == request.auth.uid
+        && dados().atualizado_em == request.time
+        && !mudou().hasAny(['criado_por', 'criado_em']);
+    }
+
+    function textoPreenchido(v) {
+      return v is string && v.trim().size() > 0;
+    }
+
+    function inteiroMinimo(v, minimo) {
+      return v is int && v >= minimo;
+    }
+
+    function dinheiroOuNulo(v) {
+      return v == null || (v is int && v >= 0);
+    }
+
+    // Validação por entidade -------------------------------------------------------
+
+    function itemValido(d) {
+      return textoPreenchido(d.nome)
+        && d.comodo_id is string
+        && d.fase in ['primeira_noite', 'primeiro_mes', 'com_calma']
+        && d.estado in ['falta', 'ja_tenho', 'na_lista']
+        && inteiroMinimo(d.quantidade, 1)
+        && (d.origem == null || d.origem in ['comprado', 'ganhado', 'ja_era_nosso'])
+        && dinheiroOuNulo(d.preco_estimado);
+    }
+
+    function comodoValido(d) {
+      return textoPreenchido(d.nome) && d.ordem is int && d.paredes_livres is list;
+    }
+
+    function tarefaValida(d) {
+      return textoPreenchido(d.titulo)
+        && d.fase in ['decisoes_iniciais', 'fornecedores_principais', 'detalhes', 'documentos_reta_final', 'semana_casamento']
+        && d.responsavel in ['noivo_1', 'noivo_2', 'os_dois']
+        && d.status in ['a_fazer', 'em_andamento', 'concluida']
+        && d.lembrete_ativo is bool
+        && d.oculta is bool;
+    }
+
+    function fornecedorValido(d) {
+      return textoPreenchido(d.nome)
+        && d.categoria is string
+        && d.status in ['pesquisando', 'orcamento_pedido', 'negociando', 'fechado', 'descartado']
+        && dinheiroOuNulo(d.valor);
+    }
+
+    function parcelaValida(d) {
+      return d.fornecedor_id is string
+        && inteiroMinimo(d.numero, 0)
+        && d.valor is int && d.valor >= 0
+        && d.vencimento is string
+        && d.paga is bool;
+    }
+
+    function categoriaValida(d) {
+      return textoPreenchido(d.nome) && d.escopo in ['casamento', 'casa'] && dinheiroOuNulo(d.planejado);
+    }
+
+    function gastoValido(d) {
+      return d.categoria_id is string
+        && d.valor is int && d.valor >= 0
+        && d.origem in ['manual', 'nota_fiscal', 'item', 'fornecedor'];
+    }
+
+    function listaValida(d) {
+      return d.ocasiao in ['cha_panela', 'cha_cozinha', 'cha_bar', 'casamento']
+        && textoPreenchido(d.slug_lista)
+        && d.status in ['rascunho', 'publicada', 'despublicada']
+        && d.modo_surpresa is bool;
+    }
+
+    function listaItemValido(d) {
+      return d.lista_id is string && d.item_id is string && inteiroMinimo(d.quantidade_na_lista, 1);
+    }
+
+    function agradecimentoValido(d) {
+      return textoPreenchido(d.nome) && d.agradecido is bool && (d.reserva_id != null || d.item_id != null);
+    }
+
+    function grupoValido(d) {
+      return textoPreenchido(d.nome)
+        && d.lado in ['noivo_1', 'noivo_2', 'os_dois']
+        && d.tipo in ['familia', 'amigos', 'trabalho'];
+    }
+
+    function convidadoValido(d) {
+      return textoPreenchido(d.nome)
+        && d.grupo_id is string
+        && d.faixa in ['adulto', 'crianca']
+        && d.presenca in ['sem_resposta', 'vai', 'nao_vai']
+        && d.restricao_alimentar in ['nenhuma', 'vegetariano', 'vegano', 'sem_gluten', 'sem_lactose', 'outra'];
+    }
+
+    function imovelValido(d) {
+      return d.tipo in ['apartamento', 'casa']
+        && inteiroMinimo(d.quartos, 1)
+        && inteiroMinimo(d.banheiros, 1)
+        && d.posse in ['alugado', 'proprio']
+        && d.mobiliado in ['sim', 'em_parte', 'nao']
+        && d.tem_pets is bool
+        && inteiroMinimo(d.moradores, 1);
+    }
+
+    function entidadeValida(sub, docId, d) {
+      return (sub == 'itens' && itemValido(d))
+        || (sub == 'comodos' && comodoValido(d))
+        || (sub == 'tarefas' && tarefaValida(d))
+        || (sub == 'fornecedores' && fornecedorValido(d))
+        || (sub == 'parcelas' && parcelaValida(d))
+        || (sub == 'categorias_orcamento' && categoriaValida(d))
+        || (sub == 'gastos' && gastoValido(d))
+        || (sub == 'listas_presentes' && listaValida(d))
+        || (sub == 'lista_itens' && listaItemValido(d))
+        || (sub == 'agradecimentos' && agradecimentoValido(d))
+        || (sub == 'grupos' && grupoValido(d))
+        || (sub == 'convidados' && convidadoValido(d))
+        || (sub == 'imovel' && docId == 'principal' && imovelValido(d));
+    }
+
+    // Subcoleções que o app grava diretamente (funcionam offline).
+    function gravavelPeloApp(sub) {
+      return sub in [
+        'imovel', 'comodos', 'itens', 'tarefas', 'fornecedores', 'parcelas', 'categorias_orcamento',
+        'gastos', 'listas_presentes', 'lista_itens', 'agradecimentos', 'grupos', 'convidados'
+      ];
+    }
+
+    // Publicar uma lista (T39) exige o servidor, que valida o link. O app pode criar, editar e
+    // despublicar, mas não pode passar uma lista para "publicada".
+    function naoPublicaPeloApp(sub) {
+      return sub != 'listas_presentes'
+        || dados().status != 'publicada'
+        || (resource != null && resource.data.status == 'publicada');
+    }
+
+    // Documentos -------------------------------------------------------------------
+
+    match /usuarios/{uid} {
+      allow read: if autenticado() && request.auth.uid == uid;
+      // Criado pelo servidor no cadastro (Etapa 1). O usuário só altera os próprios dados pessoais.
+      allow update: if autenticado() && request.auth.uid == uid
+        && mudou().hasOnly(['nome', 'preferencias_notificacao', 'tokens_push', 'atualizado_em'])
+        && dados().atualizado_em == request.time;
+      allow create, delete: if false;
+    }
+
+    match /casais/{casalId} {
+      allow read: if doCasal(casalId);
+      // Campos que só o servidor grava: slug (link público), modulos_gerados (plano gerado) e auditoria de criação.
+      allow update: if doCasal(casalId)
+        && !mudou().hasAny(['slug', 'modulos_gerados', 'criado_por', 'criado_em'])
+        && dados().modo_app in ['casamento', 'casa', 'os_dois', 'indefinido']
+        && textoPreenchido(dados().nome_1)
+        && dados().atualizado_por == request.auth.uid
+        && dados().atualizado_em == request.time
+        && (!mudou().hasAny(['modo_app'])
+          || (dados().modo_alterado_por == request.auth.uid && dados().modo_alterado_em == request.time));
+      allow create, delete: if false;
+
+      match /{sub}/{docId} {
+        // As regras se somam: notificações e mensagens da assistente têm leitura própria, abaixo.
+        allow read: if doCasal(casalId) && !(sub in ['notificacoes', 'mensagens_assistente']);
+
+        allow create: if doCasal(casalId)
+          && gravavelPeloApp(sub)
+          && auditoriaNaCriacao()
+          && naoPublicaPeloApp(sub)
+          && entidadeValida(sub, docId, dados());
+
+        allow update: if doCasal(casalId)
+          && gravavelPeloApp(sub)
+          && auditoriaNaAtualizacao()
+          && naoPublicaPeloApp(sub)
+          && entidadeValida(sub, docId, dados());
+
+        // Exclusão definitiva no MVP (13.8), sempre com confirmação no app. O imóvel não é excluído.
+        allow delete: if doCasal(casalId) && gravavelPeloApp(sub) && sub != 'imovel';
+      }
+
+      // Reservas são criadas e canceladas pelo servidor (13.5). O casal só marca como recebida.
+      match /reservas/{reservaId} {
+        allow read: if doCasal(casalId);
+        allow update: if doCasal(casalId)
+          && mudou().hasOnly(['status', 'atualizado_em'])
+          && resource.data.status == 'ativa'
+          && dados().status == 'recebida'
+          && dados().atualizado_em == request.time;
+        allow create, delete: if false;
+      }
+
+      // Notificações são criadas pelo servidor. O usuário só marca como lida as que são para ele.
+      match /notificacoes/{notificacaoId} {
+        allow read: if doCasal(casalId)
+          && (resource.data.usuario_id == null || resource.data.usuario_id == request.auth.uid);
+        allow update: if doCasal(casalId)
+          && (resource.data.usuario_id == null || resource.data.usuario_id == request.auth.uid)
+          && mudou().hasOnly(['lida'])
+          && dados().lida == true;
+        allow create, delete: if false;
+      }
+
+      // Assistente: fora do escopo atual (P14).
+      match /mensagens_assistente/{mensagemId} {
+        allow read, write: if false;
+      }
+    }
+
+    // Só o servidor: convites do parceiro, slugs únicos e tokens dos links públicos.
+    match /convites_parceiro/{id} {
+      allow read, write: if false;
+    }
+    match /slugs/{slug} {
+      allow read, write: if false;
+    }
+    match /tokens_rsvp/{token} {
+      allow read, write: if false;
+    }
+    match /tokens_reserva/{token} {
+      allow read, write: if false;
+    }
+  }
+}

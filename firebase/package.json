@@ -1,0 +1,16 @@
+{
+  "name": "@lartie/firebase",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Regras do Firestore e testes no emulador",
+  "type": "module",
+  "scripts": {
+    "test:emulador": "cd .. && firebase emulators:exec --only firestore --project demo-lartie \"npm run test:regras -w @lartie/firebase\"",
+    "test:regras": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "5.0.2",
+    "firebase": "12.19.0"
+  }
+}
