@@ -1,0 +1,19 @@
+{
+  "name": "lartie",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Lartiê: casamento e casa nova",
+  "workspaces": [
+    "packages/*",
+    "firebase"
+  ],
+  "engines": {
+    "node": ">=20.19"
+  },
+  "scripts": {
+    "tokens": "npm run gerar -w @lartie/tokens",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "test:regras-firestore": "npm run test:emulador -w @lartie/firebase"
+  }
+}
