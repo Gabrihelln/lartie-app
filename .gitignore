@@ -48,3 +48,6 @@ mobile/android/app/src/*/google-services.json
 
 # Metro
 mobile/.metro-health-check*
+
+# Cópia do ambiente ativo (gerada por mobile/scripts/ambiente.sh)
+mobile/ios/Lartie/GoogleService-Info.plist

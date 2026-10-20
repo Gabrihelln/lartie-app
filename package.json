@@ -14,7 +14,9 @@
     "tokens": "npm run gerar -w @lartie/tokens",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",
-    "test:regras-firestore": "npm run test:emulador -w @lartie/firebase"
+    "test:regras-firestore": "npm run test:emulador -w @lartie/firebase",
+    "emuladores": "npm run emuladores -w @lartie/firebase",
+    "semear": "npm run semear -w @lartie/firebase"
   },
   "devDependencies": {
     "@types/node": "24.19.2",
