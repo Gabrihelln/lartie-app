@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><link rel="stylesheet" href="../../tokens.css"><title>Cartão de progresso</title>
+<style>
+body{margin:0;background:var(--background);font-family:var(--font-ios);color:var(--on-surface)}
+.wrap{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;padding:20px;max-width:640px}
+.card{background:var(--surface);border-radius:var(--radius-lg);box-shadow:var(--shadow-card);padding:16px;display:flex;flex-direction:column;gap:8px}
+.lab{font:400 15px/20px var(--font-ios);color:var(--on-surface-variant)}
+.pct{font:700 28px/34px var(--font-ios)}
+.track{height:8px;border-radius:var(--radius-full)}
+.fill{height:100%;border-radius:var(--radius-full)}
+.tot{font:400 13px/18px var(--font-ios);color:var(--on-surface-variant)}
+.badge{align-self:flex-start;font:600 12px/16px var(--font-ios);padding:4px 8px;border-radius:var(--radius-sm);background:var(--success-container);color:var(--success)}
+</style></head>
+<body>
+<div class="wrap">
+<div class="card"><span class="lab">Casamento</span><span class="pct">23%</span><div class="track" style="background:var(--primary-container)"><div class="fill" style="width:23%;background:var(--primary)"></div></div><span class="tot">15 de 64 tarefas</span></div>
+<div class="card"><span class="lab">Casa nova</span><span class="pct">31%</span><div class="track" style="background:var(--home-container)"><div class="fill" style="width:31%;background:var(--home)"></div></div><span class="tot">56 de 182 itens</span></div>
+<div class="card"><span class="lab">Quarto</span><span class="pct">100%</span><div class="track" style="background:var(--home-container)"><div class="fill" style="width:100%;background:var(--home)"></div></div><span class="badge">Completo</span></div>
+</div>
+</body></html>

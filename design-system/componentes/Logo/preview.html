@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><link rel="stylesheet" href="../../tokens.css"><title>Logo</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,500,0..100&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:var(--background)}
+.wrap{display:flex;flex-wrap:wrap;gap:16px;padding:20px}
+.panel{width:280px;height:270px;border-radius:var(--radius-lg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;box-sizing:border-box;padding:16px}
+.tile{width:120px;height:120px;border-radius:28px;background:radial-gradient(circle at 28% 18%,rgba(255,255,255,.38),rgba(255,255,255,0) 55%),linear-gradient(155deg,var(--brand-rose-light) 0%,var(--brand-rose) 52%,var(--brand-rose-deep) 100%);box-shadow:0 10px 20px rgba(110,53,46,.28),inset 0 -5px 10px rgba(110,53,46,.22),inset 0 1px 0 rgba(255,255,255,.45);display:flex;align-items:center;justify-content:center}
+.word{font-family:var(--font-logo);font-weight:500;font-variation-settings:'SOFT' 100,'opsz' 72;letter-spacing:-.5px;line-height:1}
+.tag{font:500 12px/16px var(--font-ios);letter-spacing:1px}
+.row{display:flex;align-items:center;gap:12px}
+.cap{font:600 12px/16px var(--font-ios);color:var(--on-surface-variant)}
+.dk{display:none}
+[data-theme="dark"] .dk{display:inline}
+[data-theme="dark"] .lt{display:none}
+</style></head>
+<body>
+<div class="wrap">
+<div class="panel" style="background:var(--primary-container)">
+<div class="tile"><img src="../../logos/svg/simbolo-creme.svg" alt="Ícone do app Lartiê" style="height:93px"></div>
+<span class="cap">Ícone do app</span>
+</div>
+<div class="panel" style="background:var(--surface)">
+<div class="row"><div class="tile" style="width:60px;height:60px;border-radius:14px;box-shadow:none"><img src="../../logos/svg/simbolo-creme.svg" alt="" style="height:46px"></div>
+<div><div class="word" style="font-size:36px;color:var(--on-primary-container)">Lartiê</div><div class="tag" style="color:var(--on-surface-variant);margin-top:6px">casamento e casa nova</div></div></div>
+<div class="row" style="margin-top:14px"><img class="lt" src="../../logos/svg/simbolo-rose.svg" alt="" style="height:52px"><img class="dk" src="../../logos/svg/simbolo-creme.svg" alt="" style="height:52px"><span class="word" style="font-size:36px;color:var(--on-surface)">Lartiê</span></div>
+</div>
+<div class="panel" style="background:linear-gradient(165deg,var(--brand-blush) 0%,var(--brand-rose-strong) 42%,var(--brand-wine) 78%,var(--brand-wine-deep) 100%)">
+<div class="row"><img src="../../logos/svg/simbolo-creme.svg" alt="" style="height:60px"><span class="word" style="font-size:42px;color:var(--brand-cream)">Lartiê</span></div>
+<span class="tag" style="color:var(--brand-cream)">casamento e casa nova</span>
+</div>
+<div class="panel" style="background:var(--surface)">
+<div class="row" style="gap:20px;align-items:flex-end"><img class="lt" src="../../logos/svg/simbolo-simplificado.svg" alt="" style="height:48px"><img class="lt" src="../../logos/svg/simbolo-simplificado.svg" alt="" style="height:24px"><img class="lt" src="../../logos/svg/simbolo-simplificado.svg" alt="" style="height:16px"><img class="dk" src="../../logos/svg/simbolo-creme.svg" alt="" style="height:48px"></div>
+<span class="cap">Simplificado: abaixo de 24 px</span>
+</div>
+</div>
+</body></html>

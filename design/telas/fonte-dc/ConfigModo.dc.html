@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Modo do app</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&amp;display=swap" rel="stylesheet">
+<style>body{margin:0}a{color:#9A5A50}a:hover{color:#7E463E}</style>
+</helmet>
+<div style="position:relative;width:390px;height:844px;box-sizing:border-box;background:#FBF6F3;font-family:-apple-system,BlinkMacSystemFont,Roboto,system-ui,sans-serif;color:#2D1F1C;display:flex;flex-direction:column;overflow:hidden"><div style="flex:1;overflow-y:auto;padding:12px 20px 24px;display:flex;flex-direction:column"><a href="Perfil.dc.html" aria-label="Voltar para o perfil" style="width:44px;height:44px;margin-left:-12px;display:flex;align-items:center;justify-content:center;color:#2D1F1C"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></a><h1 style="margin:6px 0 6px;font-weight:700;font-size:28px">Modo do app</h1><p style="margin:0 0 18px;font-size:15px;line-height:22px;color:#6B5550">Escolham o que aparece na tela inicial e no menu. Vale para os dois.</p><sc-if value="{{toast}}" hint-placeholder-val="{{ false }}"><div role="status" style="display:flex;gap:10px;align-items:center;margin-bottom:14px;padding:12px 14px;border-radius:14px;background:#DDEFE5;color:#2F6B4F;font-size:14px;font-weight:600"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span>Modo atualizado. O menu já mudou para vocês dois.</span></div></sc-if><div role="radiogroup" aria-label="Modo do app" style="display:flex;flex-direction:column;gap:10px"><sc-for list="{{opts}}" as="o" hint-placeholder-count="4"><button role="radio" onClick="{{o.pick}}" aria-checked="{{o.on}}" style="{{o.css}}"><span style="{{o.iconCss}}"><sc-if value="{{o.isRing}}" hint-placeholder-val="{{ true }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="13.5" r="5.5"/><circle cx="15" cy="13.5" r="5.5"/><path d="M10.5 4.5h3L12 6.8z" stroke-linejoin="round"/></svg></sc-if><sc-if value="{{o.isHome}}" hint-placeholder-val="{{ false }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-6.5 8 6.5"/><path d="M6 9.5V20h12V9.5"/><path d="M10 20v-5h4v5"/></svg></sc-if><sc-if value="{{o.isBoth}}" hint-placeholder-val="{{ false }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7.5l5-4 5 4"/><circle cx="9.5" cy="15" r="4.6"/><circle cx="14.5" cy="15" r="4.6"/></svg></sc-if><sc-if value="{{o.isLater}}" hint-placeholder-val="{{ false }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg></sc-if></span><span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px"><span style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font-size:16px;font-weight:700">{{o.title}}</span><sc-if value="{{o.badge}}" hint-placeholder-val="{{ false }}"><span style="font-size:11px;font-weight:700;color:#5A2A23;background:#F4DED7;padding:3px 8px;border-radius:8px">{{o.badge}}</span></sc-if></span><span style="font-size:13px;line-height:18px;color:#6B5550;font-weight:400">{{o.desc}}</span></span><span style="{{o.radio}}"><sc-if value="{{o.checked}}" hint-placeholder-val="{{ false }}"><span style="width:10px;height:10px;border-radius:5px;background:#FFFFFF"></span></sc-if></span></button></sc-for></div><div style="margin-top:16px;padding:14px;border-radius:16px;background:#FFFFFF;border:1px solid #E6D8D3;display:flex;flex-direction:column;gap:10px"><div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:18px;color:#6B5550"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4F7564" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9v-5z"/><path d="M9 12l2 2 4-4"/></svg><span><b style="color:#2D1F1C">Nada é apagado.</b> O que vocês esconderem fica guardado e volta igual quando reativarem.</span></div><div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:18px;color:#6B5550"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9A5A50" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c1-4 3.5-5.5 6.5-5.5s5.5 1.5 6.5 5.5"/><circle cx="17" cy="9" r="2.7"/></svg><span>Pedro recebe um aviso quando o modo mudar.</span></div></div></div><div style="padding:12px 20px 30px;background:#FBF6F3;border-top:1px solid #E6D8D3"><button onClick="{{save}}" aria-disabled="{{disabled}}" style="{{saveCss}}">Salvar modo</button></div><sc-if value="{{sheet}}" hint-placeholder-val="{{ false }}"><div style="position:absolute;inset:0;background:rgba(45,31,28,.45);display:flex;flex-direction:column;justify-content:flex-end"><div role="dialog" aria-modal="true" aria-label="Confirmar mudança de modo" style="background:#FFFFFF;border-radius:24px 24px 0 0;padding:10px 24px 32px;display:flex;flex-direction:column"><span style="align-self:center;width:36px;height:5px;border-radius:3px;background:#E6D8D3;margin-bottom:18px"></span><h2 style="margin:0 0 8px;font-size:22px;line-height:28px">Mudar para “{{newTitle}}”?</h2><p style="margin:0 0 6px;font-size:15px;line-height:22px;color:#6B5550">O menu vai mostrar: <b style="color:#2D1F1C">{{newMenu}}</b>.</p><p style="margin:0 0 20px;font-size:15px;line-height:22px;color:#6B5550">{{newNote}}</p><button onClick="{{confirm}}" style="height:52px;border:0;border-radius:26px;background:#9A5A50;color:#FFFFFF;font:700 16px -apple-system,BlinkMacSystemFont,Roboto,system-ui,sans-serif;cursor:pointer">Mudar modo</button><button onClick="{{cancel}}" style="margin-top:8px;min-height:48px;border:0;background:none;color:#9A5A50;font:700 15px -apple-system,BlinkMacSystemFont,Roboto,system-ui,sans-serif;cursor:pointer">Cancelar</button></div></div></sc-if></div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+constructor(p){ super(p); this.state = { sel: 'dois', cur: 'dois', sheet: false, toast: false }; }
+renderVals() {
+const OPTS = [
+{ id: 'casamento', title: 'Só o casamento', desc: 'Checklist, orçamento, fornecedores, convidados e lista de presentes.', fg: '#9A5A50', bg: '#F4DED7', icon: 'Ring' },
+{ id: 'casa', title: 'Só a casa nova', desc: 'Enxoval por cômodo, medidas, cadastro por foto e lista de presentes.', fg: '#4F7564', bg: '#DCE9E2', icon: 'Home' },
+{ id: 'dois', title: 'Casamento e casa nova', desc: 'Tudo junto, com o progresso dos dois na tela inicial.', fg: '#5A2A23', bg: '#F4DED7', icon: 'Both', badge: 'Mais completo' }
+];
+const optVals = (sel, pick, compact) => OPTS.map((o) => {
+const on = o.id === sel;
+return { title: o.title, desc: o.desc, badge: o.badge || false, checked: on, on: String(on),
+isRing: o.icon === 'Ring', isHome: o.icon === 'Home', isBoth: o.icon === 'Both', isLater: o.icon === 'Later',
+css: 'display:flex;align-items:center;gap:14px;width:100%;text-align:left;cursor:pointer;color:#2D1F1C;font-family:-apple-system,BlinkMacSystemFont,Roboto,system-ui,sans-serif;border-radius:18px;padding:' + (compact ? '12px 14px' : '14px 16px') + ';background:#FFFFFF;' + (on ? 'border:2px solid #9A5A50;box-shadow:0 6px 16px rgba(90,42,35,.12)' : 'border:2px solid #E6D8D3'),
+iconCss: 'flex:none;width:46px;height:46px;border-radius:23px;display:flex;align-items:center;justify-content:center;background:' + o.bg + ';color:' + o.fg,
+radio: 'flex:none;width:24px;height:24px;border-radius:12px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;' + (on ? 'background:#9A5A50;border:2px solid #9A5A50' : 'background:#FFFFFF;border:2px solid #8F7A75'),
+pick: () => pick(o.id) };
+});
+const s = this.state;
+const META = {
+casamento: { menu: 'Início, Casamento, Convidados, Presentes e Perfil', note: 'Os cômodos e itens da casa ficam guardados.' },
+casa: { menu: 'Início, Casa, Presentes e Perfil', note: 'O checklist, o orçamento e os convidados ficam guardados.' },
+dois: { menu: 'Início, Casamento, Casa, Presentes e Perfil', note: 'Tudo que estava guardado volta a aparecer.' }
+};
+const changed = s.sel !== s.cur;
+const t = OPTS.find((o) => o.id === s.sel).title;
+return {
+opts: optVals(s.sel, (id) => this.setState({ sel: id, toast: false }), true),
+disabled: String(!changed),
+saveCss: 'width:100%;height:52px;border:0;border-radius:26px;font:700 16px -apple-system,BlinkMacSystemFont,Roboto,system-ui,sans-serif;cursor:pointer;' + (changed ? 'background:#9A5A50;color:#FFFFFF' : 'background:#E6D8D3;color:#8F7A75'),
+save: () => { if (changed) this.setState({ sheet: true }); },
+sheet: s.sheet, toast: s.toast,
+newTitle: t, newMenu: META[s.sel].menu, newNote: META[s.sel].note,
+confirm: () => this.setState({ cur: s.sel, sheet: false, toast: true }),
+cancel: () => this.setState({ sheet: false })
+};
+}
+}
+</script>
+</body>
+</html>

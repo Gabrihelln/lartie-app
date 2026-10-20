@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><link rel="stylesheet" href="../../tokens.css"><title>Lartiê</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,500,0..100&amp;display=swap" rel="stylesheet">
+<style>
+html,body{margin:0}
+.cover{position:relative;width:960px;height:288px;background:var(--background);overflow:hidden}
+svg{position:absolute;left:0;top:0}
+.rose{fill:var(--brand-rose-deep)}
+.wine{fill:var(--brand-wine)}
+.tint{fill:var(--primary-container)}
+.sage{fill:var(--home)}
+.ring{fill:none;stroke:var(--brand-cream);stroke-width:8}
+.ring2{fill:none;stroke:var(--brand-cream);stroke-width:6}
+.rxl{rx:var(--radius-xl)}
+.text{position:absolute;left:40px;bottom:36px;max-width:440px}
+.name{font-family:var(--font-logo);font-weight:500;font-variation-settings:'SOFT' 100,'opsz' 144;font-size:120px;line-height:.92;letter-spacing:-2px;color:var(--on-surface)}
+.tag{margin-top:12px;font:400 14px/20px var(--font-ios);color:var(--on-surface-variant)}
+</style></head>
+<body>
+<div class="cover">
+<svg width="960" height="288" viewBox="0 0 960 288" aria-hidden="true">
+<!-- blocks: brand-rose-deep 160×336 slab, brand-wine 168×200, primary-container 264×128, home 96×96 disc; all rx radius-xl (24) or half side -->
+<!-- arrangement: one tall rose slab bleeding top and bottom, wine block below a tint band that bleeds off the top-right, sage disc bleeding the right edge -->
+<!-- pattern: interlocked rings (the aliança of the symbol): "a literal motif", the brand is a ring with a house -->
+<!-- steps: gaps space-4 (16), ring radii 34/22, stroke 8/6 like the symbol's thick band -->
+<rect class="rose rxl" x="520" y="-24" width="160" height="336"/>
+<rect class="tint rxl" x="696" y="-24" width="288" height="128"/>
+<rect class="wine rxl" x="696" y="120" width="168" height="200"/>
+<rect class="sage" x="880" y="120" width="96" height="96" rx="48"/>
+<circle class="ring" cx="582" cy="150" r="34"/>
+<circle class="ring" cx="618" cy="150" r="34"/>
+<circle class="ring2" cx="768" cy="208" r="22"/>
+<circle class="ring2" cx="792" cy="208" r="22"/>
+</svg>
+<div style="position:absolute;left:40px;top:36px;width:72px;height:72px;border-radius:16px;background:radial-gradient(circle at 28% 18%,rgba(255,255,255,.38),rgba(255,255,255,0) 55%),linear-gradient(155deg,var(--brand-rose-light) 0%,var(--brand-rose) 52%,var(--brand-rose-deep) 100%);box-shadow:0 10px 20px rgba(110,53,46,.25),inset 0 1px 0 rgba(255,255,255,.45);display:flex;align-items:center;justify-content:center"><img src="../../logos/svg/simbolo-creme.svg" alt="" style="height:56px"></div>
+<div class="text"><div class="name">Lartiê</div><div class="tag">Casamento e casa nova, organizados num só app.</div></div>
+</div>
+</body></html>

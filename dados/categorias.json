@@ -1,0 +1,208 @@
+{
+  "versao": 1,
+  "orcamento_casamento": [
+    {
+      "id": "local_buffet",
+      "nome": "Local e buffet",
+      "percentual_sugerido": 45
+    },
+    {
+      "id": "foto_video",
+      "nome": "Fotografia e vídeo",
+      "percentual_sugerido": 12
+    },
+    {
+      "id": "decoracao_flores",
+      "nome": "Decoração e flores",
+      "percentual_sugerido": 10
+    },
+    {
+      "id": "musica",
+      "nome": "Música",
+      "percentual_sugerido": 7
+    },
+    {
+      "id": "roupas_beleza",
+      "nome": "Roupas e beleza",
+      "percentual_sugerido": 10
+    },
+    {
+      "id": "convites_papelaria",
+      "nome": "Convites e papelaria",
+      "percentual_sugerido": 3
+    },
+    {
+      "id": "lua_de_mel",
+      "nome": "Lua de mel",
+      "percentual_sugerido": 10
+    },
+    {
+      "id": "imprevistos",
+      "nome": "Imprevistos",
+      "percentual_sugerido": 3
+    }
+  ],
+  "orcamento_casa": [
+    {
+      "id": "moveis",
+      "nome": "Móveis"
+    },
+    {
+      "id": "eletrodomesticos",
+      "nome": "Eletrodomésticos"
+    },
+    {
+      "id": "enxoval",
+      "nome": "Enxoval"
+    },
+    {
+      "id": "decoracao",
+      "nome": "Decoração"
+    }
+  ],
+  "fornecedores": [
+    {
+      "id": "local",
+      "nome": "Local",
+      "categoria_orcamento": "local_buffet"
+    },
+    {
+      "id": "buffet",
+      "nome": "Buffet",
+      "categoria_orcamento": "local_buffet"
+    },
+    {
+      "id": "bolo_doces",
+      "nome": "Bolo e doces",
+      "categoria_orcamento": "local_buffet"
+    },
+    {
+      "id": "bebidas",
+      "nome": "Bebidas e bar",
+      "categoria_orcamento": "local_buffet"
+    },
+    {
+      "id": "fotografia",
+      "nome": "Fotografia",
+      "categoria_orcamento": "foto_video"
+    },
+    {
+      "id": "filmagem",
+      "nome": "Filmagem",
+      "categoria_orcamento": "foto_video"
+    },
+    {
+      "id": "decoracao",
+      "nome": "Decoração",
+      "categoria_orcamento": "decoracao_flores"
+    },
+    {
+      "id": "flores",
+      "nome": "Flores",
+      "categoria_orcamento": "decoracao_flores"
+    },
+    {
+      "id": "musica",
+      "nome": "Banda ou DJ",
+      "categoria_orcamento": "musica"
+    },
+    {
+      "id": "celebrante",
+      "nome": "Celebrante",
+      "categoria_orcamento": "musica"
+    },
+    {
+      "id": "vestido",
+      "nome": "Vestido",
+      "categoria_orcamento": "roupas_beleza"
+    },
+    {
+      "id": "traje",
+      "nome": "Traje do noivo",
+      "categoria_orcamento": "roupas_beleza"
+    },
+    {
+      "id": "beleza",
+      "nome": "Maquiagem e cabelo",
+      "categoria_orcamento": "roupas_beleza"
+    },
+    {
+      "id": "aliancas",
+      "nome": "Alianças",
+      "categoria_orcamento": "roupas_beleza"
+    },
+    {
+      "id": "convites",
+      "nome": "Convites e papelaria",
+      "categoria_orcamento": "convites_papelaria"
+    },
+    {
+      "id": "assessoria",
+      "nome": "Assessoria e cerimonial",
+      "categoria_orcamento": "imprevistos"
+    },
+    {
+      "id": "transporte",
+      "nome": "Transporte",
+      "categoria_orcamento": "imprevistos"
+    },
+    {
+      "id": "viagem",
+      "nome": "Viagem e lua de mel",
+      "categoria_orcamento": "lua_de_mel"
+    },
+    {
+      "id": "outro",
+      "nome": "Outro",
+      "categoria_orcamento": "imprevistos"
+    }
+  ],
+  "estilos_casamento": [
+    {
+      "id": "so_civil",
+      "nome": "Só civil"
+    },
+    {
+      "id": "civil_religioso",
+      "nome": "Civil + religioso"
+    },
+    {
+      "id": "mini_wedding",
+      "nome": "Mini wedding"
+    },
+    {
+      "id": "festa_grande",
+      "nome": "Festa grande"
+    },
+    {
+      "id": "destination",
+      "nome": "Destination"
+    }
+  ],
+  "ocasioes_lista": [
+    {
+      "id": "cha_panela",
+      "nome": "Chá de panela"
+    },
+    {
+      "id": "cha_cozinha",
+      "nome": "Chá de cozinha"
+    },
+    {
+      "id": "cha_bar",
+      "nome": "Chá bar"
+    },
+    {
+      "id": "casamento",
+      "nome": "Casamento"
+    }
+  ],
+  "restricoes_alimentares": [
+    "nenhuma",
+    "vegetariano",
+    "vegano",
+    "sem_gluten",
+    "sem_lactose",
+    "outra"
+  ]
+}

@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><link rel="stylesheet" href="../../tokens.css"><title>Degradês</title>
+<style>
+body{margin:0;background:var(--background);color:var(--on-surface)}
+.wrap{display:flex;flex-wrap:wrap;gap:16px;padding:20px}
+.it{display:flex;flex-direction:column;gap:8px;width:200px}
+.sw{position:relative;overflow:hidden;width:200px;height:220px;border-radius:var(--radius-lg);border:1px solid var(--outline-variant)}
+.n{font:600 13px/18px var(--font-ios)}
+.d{font:400 12px/16px var(--font-ios);color:var(--on-surface-variant)}
+</style></head>
+<body>
+<div class="wrap">
+<div class="it"><div class="sw" style="background:radial-gradient(circle at 28% 18%,rgba(255,255,255,.38),rgba(255,255,255,0) 55%),linear-gradient(155deg,var(--brand-rose-light) 0%,var(--brand-rose) 52%,var(--brand-rose-deep) 100%);border-radius:45px;width:200px;height:200px"></div><span class="n">gradient-icon</span><span class="d">155° · rose-light → rose → rose-deep + brilho</span></div>
+<div class="it"><div class="sw" style="background:linear-gradient(165deg,var(--brand-blush) 0%,var(--brand-rose-strong) 42%,var(--brand-wine) 78%,var(--brand-wine-deep) 100%)"></div><span class="n">gradient-splash</span><span class="d">165° · blush → rose-strong → wine → wine-deep</span></div>
+<div class="it"><div class="sw" style="background:linear-gradient(170deg,var(--brand-petal) 0%,var(--primary-container) 55%,var(--background) 100%)"><svg width="200" height="200" viewBox="0 0 420 420" fill="none" aria-hidden="true" style="position:absolute;right:-70px;top:-60px"><circle cx="170" cy="210" r="140" stroke="#FFFFFF" stroke-opacity=".35" stroke-width="18"/><circle cx="250" cy="210" r="140" stroke="#FFFFFF" stroke-opacity=".25" stroke-width="18"/></svg></div><span class="n">gradient-onboarding</span><span class="d">170° · petal → primary-container → background</span></div>
+</div>
+</body></html>

@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Boas-vindas</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..600,0..100&amp;display=swap" rel="stylesheet">
+<style>body{margin:0}a{color:#9A5A50}a:hover{color:#7E463E}</style>
+</helmet>
+<div style="width:390px;height:844px;box-sizing:border-box;background:#FBF6F3;font-family:-apple-system,BlinkMacSystemFont,Roboto,system-ui,sans-serif;color:#2D1F1C;display:flex;flex-direction:column;position:relative;overflow:hidden">
+<div style="position:relative;height:470px;background:linear-gradient(170deg,#E9C1B7 0%,#F4DED7 55%,#FBF6F3 100%);overflow:hidden">
+<svg width="420" height="420" viewBox="0 0 420 420" fill="none" aria-hidden="true" style="position:absolute;right:-150px;top:-120px"><circle cx="170" cy="210" r="140" stroke="#FFFFFF" stroke-opacity=".35" stroke-width="18"/><circle cx="250" cy="210" r="140" stroke="#FFFFFF" stroke-opacity=".25" stroke-width="18"/></svg>
+<div style="position:absolute;top:56px;left:24px;display:flex;align-items:center;gap:8px">
+<svg width="26" height="40" viewBox="24 6 52 84" fill="none" stroke="#9A5A50" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M36 31.5 L50 19 L64 31.5"/><path d="M40.5 28.5 V37.5 M59.5 28.5 V37.5"/><circle cx="50" cy="61" r="23.5"/><circle cx="50" cy="61" r="18.5" stroke-opacity=".55"/><path d="M50 33.62 C46.6 31.5 45.33 28.95 47.11 27.68 C48.3 27.0 50 27.68 50 28.95 C50 27.68 51.7 27.0 52.89 27.68 C54.67 28.95 53.4 31.5 50 33.62 Z" fill="#9A5A50" stroke="none"/></svg>
+<span style="font-family:Fraunces,Georgia,serif;font-weight:500;font-size:26px;color:#5A2A23;font-variation-settings:'SOFT' 100,'opsz' 72">Lartiê</span>
+</div>
+<sc-for list="{{cards}}" as="c" hint-placeholder-count="3">
+<div style="{{c.box}}">
+<div style="display:flex;align-items:center;gap:10px">
+<span style="{{c.dot}}"></span>
+<span style="flex:1;font-size:13px;font-weight:600;color:#6B5550">{{c.label}}</span>
+<span style="font-size:13px;font-weight:700;color:#2D1F1C">{{c.value}}</span>
+</div>
+<div style="font-size:16px;font-weight:600;line-height:21px;color:#2D1F1C">{{c.title}}</div>
+<sc-if value="{{c.hasBar}}" hint-placeholder-val="{{ true }}"><div style="{{c.track}}"><div style="{{c.fill}}"></div></div></sc-if>
+</div>
+</sc-for>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;padding:8px 24px 36px">
+<div style="display:flex;gap:4px;margin-left:-14px">
+<sc-for list="{{slides}}" as="s" hint-placeholder-count="3"><button onClick="{{s.go}}" aria-label="Ir para a página {{s.n}}" style="width:44px;height:44px;border:0;background:none;padding:0;display:flex;align-items:center;justify-content:center;cursor:pointer"><span style="{{s.dot}}"></span></button></sc-for>
+</div>
+<h1 style="margin:6px 0 10px;font-size:28px;line-height:34px;font-weight:700;letter-spacing:-.3px">{{title}}</h1>
+<p style="margin:0;font-size:16px;line-height:23px;color:#6B5550">{{text}}</p>
+<div style="flex:1"></div>
+<div style="display:flex;flex-direction:column;gap:10px">
+<a href="CriarConta.dc.html" style="height:52px;border-radius:26px;background:#9A5A50;color:#FFFFFF;font-weight:600;font-size:17px;display:flex;align-items:center;justify-content:center;text-decoration:none">Criar conta</a>
+<a href="Entrar.dc.html" style="height:52px;border-radius:26px;border:1.5px solid #8F7A75;color:#2D1F1C;font-weight:600;font-size:17px;display:flex;align-items:center;justify-content:center;text-decoration:none">Já tenho conta</a>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+constructor(p){ super(p); this.state = { i: 0 }; }
+renderVals() {
+const i = this.state.i;
+const data = [
+{ t: 'Casamento e casa nova no mesmo lugar', x: 'Um checklist com prazos para o grande dia e o enxoval da casa separado por cômodo.',
+  cards: [
+  { label: 'Casamento', value: '23%', title: 'Fechar fotógrafo', color: '#9A5A50', track: '#F4DED7', pct: 23, bar: true },
+  { label: 'Casa nova', value: '31%', title: 'Cozinha: 18 de 52 itens', color: '#4F7564', track: '#DCE9E2', pct: 31, bar: true },
+  { label: 'Faltam', value: '186 dias', title: '18 de abril de 2027', color: '#9A5A50', bar: false } ] },
+{ t: 'Quantidades certas, sem exageros', x: 'A lista se ajusta ao tamanho do imóvel, ao número de moradores e ao clima da sua cidade.',
+  cards: [
+  { label: 'Banheiro', value: '4 un.', title: 'Toalhas de banho', color: '#4F7564', bar: false },
+  { label: 'Cozinha', value: '6 un.', title: 'Pratos rasos', color: '#4F7564', bar: false },
+  { label: 'Curitiba · inverno', value: '1 un.', title: 'Edredom de casal', color: '#3E5A8A', bar: false } ] },
+{ t: 'A família sabe o que dar', x: 'Compartilhe a lista de presentes por link. Quem abre vê só o que ainda falta e reserva.',
+  cards: [
+  { label: 'Chá de panela', value: '9 de 24', title: 'Tia Bia reservou o jogo de panelas', color: '#3E5A8A', track: '#E2E7F3', pct: 38, bar: true },
+  { label: 'Reserva', value: 'Nova', title: 'Air fryer · Carla e Diego', color: '#3E5A8A', bar: false },
+  { label: 'Agradecimentos', value: '5', title: 'Presentes para agradecer', color: '#9A5A50', bar: false } ] }
+];
+const pos = ['top:118px;left:24px;transform:rotate(-3deg)', 'top:226px;right:20px;transform:rotate(2.5deg)', 'top:336px;left:44px;transform:rotate(-1.5deg)'];
+const d = data[i];
+return {
+title: d.t, text: d.x,
+cards: d.cards.map((c, n) => ({ label: c.label, value: c.value, title: c.title, hasBar: c.bar,
+  box: 'position:absolute;width:232px;box-sizing:border-box;padding:14px 16px;border-radius:18px;background:#FFFFFF;box-shadow:0 12px 28px rgba(90,42,35,.14);display:flex;flex-direction:column;gap:8px;' + pos[n],
+  dot: 'width:10px;height:10px;border-radius:5px;background:' + c.color,
+  track: 'height:6px;border-radius:3px;background:' + (c.track || '#F1E6E2'),
+  fill: 'height:100%;border-radius:3px;width:' + (c.pct || 0) + '%;background:' + c.color })),
+slides: data.map((x, n) => ({ n: n + 1, go: () => this.setState({ i: n }),
+  dot: 'display:block;height:8px;border-radius:4px;width:' + (n === i ? '24px' : '8px') + ';background:' + (n === i ? '#9A5A50' : '#D9C7C1') }))
+};
+}
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><link rel="stylesheet" href="../../tokens.css"><title>Chip</title>
+<style>
+body{margin:0;background:var(--background);font-family:var(--font-ios)}
+.row{display:flex;flex-wrap:wrap;gap:8px;padding:20px}
+.c{min-height:40px;padding:0 14px;border-radius:var(--radius-full);font:600 15px/20px var(--font-ios);background:var(--surface);color:var(--on-surface);border:1.5px solid var(--outline-variant);cursor:pointer}
+.on{background:var(--primary);color:var(--on-primary);border-color:var(--primary)}
+</style></head>
+<body>
+<div class="row">
+<button class="c on" aria-pressed="true">Todas</button>
+<button class="c" aria-pressed="false">A fazer</button>
+<button class="c" aria-pressed="false">Atrasadas</button>
+<button class="c" aria-pressed="false">Concluídas</button>
+<button class="c" aria-pressed="false">Mini wedding</button>
+</div>
+</body></html>

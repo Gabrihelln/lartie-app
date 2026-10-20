@@ -1,0 +1,50 @@
+# Sistema
+.DS_Store
+
+# Node
+node_modules/
+*.log
+.npm/
+coverage/
+*.tsbuildinfo
+
+# Segredos e configuração por ambiente
+.env
+.env.*
+!.env.example
+*-firebase-admin*.json
+service-account*.json
+
+# Firebase
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+firebase/emulator-data/
+
+# React Native / iOS
+mobile/ios/Pods/
+mobile/ios/build/
+mobile/ios/**/xcuserdata/
+mobile/ios/*.xcworkspace/xcuserdata/
+mobile/vendor/
+mobile/.bundle/
+
+# React Native / Android
+mobile/android/.gradle/
+mobile/android/build/
+mobile/android/app/build/
+mobile/android/local.properties
+mobile/android/app/release/
+*.keystore
+!debug.keystore
+*.jks
+
+# Configuração real do Firebase no app (cada ambiente fornece a sua)
+mobile/ios/Lartie/Firebase/*/GoogleService-Info.plist
+!mobile/ios/Lartie/Firebase/demo/GoogleService-Info.plist
+mobile/android/app/src/*/google-services.json
+!mobile/android/app/src/demo/google-services.json
+
+# Metro
+mobile/.metro-health-check*

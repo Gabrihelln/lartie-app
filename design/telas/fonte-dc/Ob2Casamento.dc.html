@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Onboarding: casamento</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&amp;display=swap" rel="stylesheet">
+<style>body{margin:0}a{color:#9A5A50}a:hover{color:#7E463E}</style>
+</helmet>
+<div style="position:relative;isolation:isolate;overflow:hidden;width:390px;height:844px;box-sizing:border-box;background:#FBF6F3;font-family:-apple-system,BlinkMacSystemFont,Roboto,system-ui,sans-serif;color:#2D1F1C;display:flex;flex-direction:column;padding:16px 24px 32px">
+<div aria-hidden="true" style="position:absolute;left:0;right:0;top:0;height:470px;background:linear-gradient(170deg,#EDC9BF 0%,#F4DED7 55%,#FBF6F3 100%);z-index:-1"></div><svg width="420" height="420" viewBox="0 0 420 420" fill="none" aria-hidden="true" style="position:absolute;right:-150px;top:-120px;z-index:-1"><circle cx="170" cy="210" r="140" stroke="#FFFFFF" stroke-opacity=".35" stroke-width="18"/><circle cx="250" cy="210" r="140" stroke="#FFFFFF" stroke-opacity=".25" stroke-width="18"/></svg>
+<div style="display:flex;align-items:center;gap:12px">
+<a href="ObUso.dc.html" aria-label="Voltar" style="width:44px;height:44px;margin-left:-12px;display:flex;align-items:center;justify-content:center;color:#2D1F1C"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></a>
+<div style="flex:1;display:grid;grid-template-columns:repeat(5, minmax(0, 1fr));gap:6px"><div style="height:6px;border-radius:3px;background:#9A5A50"></div><div style="height:6px;border-radius:3px;background:#9A5A50"></div><div style="height:6px;border-radius:3px;background:#9A5A50"></div><div style="height:6px;border-radius:3px;background:#EAD3CC"></div><div style="height:6px;border-radius:3px;background:#EAD3CC"></div></div>
+<span style="font-size:13px;font-weight:600;color:#6B5550">3 de 5</span>
+</div>
+<h1 style="margin:20px 0 6px;font-family:-apple-system,BlinkMacSystemFont,Roboto,system-ui,sans-serif;font-weight:700;font-size:28px;line-height:34px">Sobre o casamento</h1>
+<p style="margin:0 0 18px;font-size:15px;line-height:22px;color:#6B5550">Usamos isso para calcular os prazos do checklist.</p>
+<div style="display:flex;flex-direction:column;gap:14px">
+<div style="display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:12px">
+<label style="display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:600">Data<input type="text" value="18/04/2027" style="height:50px;border-radius:14px;border:1.5px solid #CDB9B3;background:#FFFFFF;padding:0 14px;font:400 16px -apple-system,BlinkMacSystemFont,Roboto,system-ui,sans-serif;min-width:0"></label>
+<label style="display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:600">Cidade<input type="text" value="Curitiba, PR" style="height:50px;border-radius:14px;border:1.5px solid #CDB9B3;background:#FFFFFF;padding:0 14px;font:400 16px -apple-system,BlinkMacSystemFont,Roboto,system-ui,sans-serif;min-width:0"></label>
+</div>
+<label style="display:flex;align-items:center;gap:10px;font-size:14px;color:#6B5550;margin-top:-4px"><input type="checkbox" style="width:20px;height:20px;margin:0;accent-color:#9A5A50">Ainda não definimos a data</label>
+<div style="display:flex;flex-direction:column;gap:8px">
+<span style="font-size:13px;font-weight:600">Estilo</span>
+<div style="display:flex;flex-wrap:wrap;gap:8px">
+<sc-for list="{{styles}}" as="s" hint-placeholder-count="5"><button onClick="{{s.pick}}" aria-pressed="{{s.on}}" style="{{s.css}}">{{s.label}}</button></sc-for>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px">
+<span style="font-size:13px;font-weight:600">Número de convidados</span>
+<div style="display:flex;align-items:center;justify-content:space-between;height:52px;border-radius:14px;border:1.5px solid #CDB9B3;background:#FFFFFF;padding:0 6px">
+<button onClick="{{minus}}" aria-label="Diminuir" style="width:44px;height:44px;border:0;border-radius:22px;background:#F7ECE8;font:700 20px -apple-system,BlinkMacSystemFont,Roboto,system-ui,sans-serif;color:#9A5A50;cursor:pointer">−</button>
+<span style="font-size:18px;font-weight:700">{{guests}}</span>
+<button onClick="{{plus}}" aria-label="Aumentar" style="width:44px;height:44px;border:0;border-radius:22px;background:#F7ECE8;font:700 20px -apple-system,BlinkMacSystemFont,Roboto,system-ui,sans-serif;color:#9A5A50;cursor:pointer">+</button>
+</div>
+</div>
+<label style="display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:600">Orçamento total (opcional)<input type="text" value="R$ 60.000" style="height:50px;border-radius:14px;border:1.5px solid #CDB9B3;background:#FFFFFF;padding:0 14px;font:400 16px -apple-system,BlinkMacSystemFont,Roboto,system-ui,sans-serif"></label>
+</div>
+<div style="flex:1"></div>
+<a href="Ob3Casa.dc.html" style="height:52px;border-radius:26px;background:#9A5A50;color:#FFFFFF;font-weight:700;font-size:16px;display:flex;align-items:center;justify-content:center;text-decoration:none">Continuar</a>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+constructor(p){ super(p); this.state = { style: 'Civil + religioso', guests: 140 }; }
+renderVals() {
+const list = ['Só civil', 'Civil + religioso', 'Mini wedding', 'Festa grande', 'Destination'];
+const chip = (on) => 'min-height:44px;padding:0 16px;border-radius:22px;font:600 14px -apple-system,BlinkMacSystemFont,Roboto,system-ui,sans-serif;cursor:pointer;' + (on ? 'background:#9A5A50;color:#FFFFFF;border:1.5px solid #9A5A50' : 'background:#FFFFFF;color:#2D1F1C;border:1.5px solid #CDB9B3');
+return {
+styles: list.map((l) => ({ label: l, on: String(l === this.state.style), css: chip(l === this.state.style), pick: () => this.setState({ style: l }) })),
+guests: this.state.guests,
+minus: () => this.setState({ guests: Math.max(10, this.state.guests - 10) }),
+plus: () => this.setState({ guests: this.state.guests + 10 })
+};
+}
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,136 @@
+{
+  "versao": 1,
+  "status": "rascunho; classificação simplificada para o MVP",
+  "regra": "Procure a cidade em excecoes_por_cidade; se não houver, use padrao_por_uf. Valores: frio, temperado, quente.",
+  "padrao_por_uf": {
+    "AC": "quente",
+    "AL": "quente",
+    "AP": "quente",
+    "AM": "quente",
+    "BA": "quente",
+    "CE": "quente",
+    "DF": "temperado",
+    "ES": "quente",
+    "GO": "quente",
+    "MA": "quente",
+    "MT": "quente",
+    "MS": "quente",
+    "MG": "temperado",
+    "PA": "quente",
+    "PB": "quente",
+    "PR": "frio",
+    "PE": "quente",
+    "PI": "quente",
+    "RJ": "quente",
+    "RN": "quente",
+    "RS": "frio",
+    "RO": "quente",
+    "RR": "quente",
+    "SC": "frio",
+    "SP": "temperado",
+    "SE": "quente",
+    "TO": "quente"
+  },
+  "excecoes_por_cidade": [
+    {
+      "cidade": "Campos do Jordão",
+      "uf": "SP",
+      "clima": "frio"
+    },
+    {
+      "cidade": "São Paulo",
+      "uf": "SP",
+      "clima": "temperado"
+    },
+    {
+      "cidade": "Campinas",
+      "uf": "SP",
+      "clima": "temperado"
+    },
+    {
+      "cidade": "Santos",
+      "uf": "SP",
+      "clima": "quente"
+    },
+    {
+      "cidade": "Ribeirão Preto",
+      "uf": "SP",
+      "clima": "quente"
+    },
+    {
+      "cidade": "Petrópolis",
+      "uf": "RJ",
+      "clima": "temperado"
+    },
+    {
+      "cidade": "Teresópolis",
+      "uf": "RJ",
+      "clima": "frio"
+    },
+    {
+      "cidade": "Nova Friburgo",
+      "uf": "RJ",
+      "clima": "frio"
+    },
+    {
+      "cidade": "Poços de Caldas",
+      "uf": "MG",
+      "clima": "frio"
+    },
+    {
+      "cidade": "Monte Verde",
+      "uf": "MG",
+      "clima": "frio"
+    },
+    {
+      "cidade": "Belo Horizonte",
+      "uf": "MG",
+      "clima": "temperado"
+    },
+    {
+      "cidade": "Uberlândia",
+      "uf": "MG",
+      "clima": "quente"
+    },
+    {
+      "cidade": "Montes Claros",
+      "uf": "MG",
+      "clima": "quente"
+    },
+    {
+      "cidade": "Gramado",
+      "uf": "RS",
+      "clima": "frio"
+    },
+    {
+      "cidade": "Florianópolis",
+      "uf": "SC",
+      "clima": "temperado"
+    },
+    {
+      "cidade": "Curitiba",
+      "uf": "PR",
+      "clima": "frio"
+    },
+    {
+      "cidade": "Londrina",
+      "uf": "PR",
+      "clima": "temperado"
+    },
+    {
+      "cidade": "Foz do Iguaçu",
+      "uf": "PR",
+      "clima": "quente"
+    },
+    {
+      "cidade": "Garanhuns",
+      "uf": "PE",
+      "clima": "temperado"
+    },
+    {
+      "cidade": "Vitória da Conquista",
+      "uf": "BA",
+      "clima": "temperado"
+    }
+  ]
+}

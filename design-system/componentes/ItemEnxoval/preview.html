@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><link rel="stylesheet" href="../../tokens.css"><title>Item do enxoval</title>
+<style>
+body{margin:0;background:var(--background);font-family:var(--font-ios);color:var(--on-surface)}
+.list{display:flex;flex-direction:column;gap:8px;padding:20px;max-width:420px}
+.it{display:flex;align-items:center;gap:10px;min-height:64px;padding:8px 10px 8px 14px;box-sizing:border-box;border-radius:var(--radius-lg);background:var(--surface);border:1px solid var(--outline-variant)}
+.txt{flex:1;min-width:0;display:flex;flex-direction:column}
+.n{font:600 17px/22px var(--font-ios)}
+.m{font:400 15px/20px var(--font-ios);color:var(--on-surface-variant)}
+.s{min-width:92px;min-height:44px;padding:0 10px;border-radius:var(--radius-md);border:0;font:600 13px/18px var(--font-ios);cursor:pointer}
+.falta{background:var(--error-container);color:var(--error)}
+.tenho{background:var(--home);color:var(--on-primary)}
+.lista{background:var(--info-container);color:var(--info)}
+</style></head>
+<body>
+<div class="list">
+<div class="it"><div class="txt"><span class="n">Geladeira</span><span class="m">1 · Primeira noite · R$ 3.200</span></div><button class="s falta">Falta</button></div>
+<div class="it"><div class="txt"><span class="n">Fogão 4 bocas</span><span class="m">1 · Primeira noite</span></div><button class="s tenho">Já tenho</button></div>
+<div class="it"><div class="txt"><span class="n">Jogo de panelas</span><span class="m">1 · Primeira noite</span></div><button class="s lista">Na lista</button></div>
+</div>
+</body></html>

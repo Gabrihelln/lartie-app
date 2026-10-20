@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Cômodo: cozinha</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&amp;display=swap" rel="stylesheet">
+<style>body{margin:0}a{color:#9A5A50}a:hover{color:#7E463E}</style>
+</helmet>
+<div style="width:390px;height:844px;box-sizing:border-box;background:#FBF6F3;font-family:-apple-system,BlinkMacSystemFont,Roboto,system-ui,sans-serif;color:#2D1F1C;display:flex;flex-direction:column;position:relative;overflow:hidden">
+<div style="display:flex;align-items:center;justify-content:space-between;padding:12px 12px 0 8px">
+<a href="Casa.dc.html" aria-label="Voltar" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;color:#2D1F1C"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></a>
+<div style="display:flex;gap:8px">
+<a href="Medidas.dc.html" style="min-height:44px;padding:0 14px;border-radius:22px;background:#FFFFFF;border:1px solid #E6D8D3;display:flex;align-items:center;gap:6px;font-size:14px;font-weight:700;text-decoration:none;color:#2D1F1C"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17 17 3l4 4L7 21z"/><path d="M7 13l2 2M10 10l2 2M13 7l2 2"/></svg>Medidas</a>
+<a href="Item.dc.html" aria-label="Adicionar item" style="width:44px;height:44px;border-radius:22px;background:#9A5A50;color:#FFFFFF;display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></a>
+</div></div>
+<div style="padding:4px 20px 0">
+<h1 style="margin:0;font-family:-apple-system,BlinkMacSystemFont,Roboto,system-ui,sans-serif;font-weight:700;font-size:28px">Cozinha</h1>
+<div style="display:flex;align-items:center;gap:10px;margin:8px 0 12px"><div style="flex:1;height:8px;border-radius:4px;background:#DCE9E2"><div style="{{bar}}"></div></div><span style="font-size:13px;font-weight:700">{{have}} de {{total}}</span></div>
+<div style="display:flex;gap:8px;overflow-x:auto;margin:0 -20px;padding:0 20px 4px">
+<sc-for list="{{filters}}" as="f" hint-placeholder-count="4"><button onClick="{{f.pick}}" aria-pressed="{{f.on}}" style="{{f.css}}">{{f.label}}</button></sc-for>
+</div>
+</div>
+<div style="flex:1;overflow-y:auto;padding:12px 20px 24px;display:flex;flex-direction:column;gap:8px">
+<sc-for list="{{items}}" as="i" hint-placeholder-count="8">
+<div style="display:flex;align-items:center;gap:10px;padding:10px 10px 10px 14px;border-radius:16px;background:#FFFFFF;border:1px solid #E6D8D3">
+<a href="Item.dc.html" style="flex:1;min-width:0;min-height:44px;display:flex;flex-direction:column;justify-content:center;text-decoration:none;color:#2D1F1C"><span style="font-weight:700;font-size:15px">{{i.name}}</span><span style="font-size:13px;color:#6B5550">{{i.meta}}</span></a>
+<button onClick="{{i.cycle}}" aria-label="Mudar estado de {{i.name}}" style="{{i.css}}">{{i.state}}</button>
+</div>
+</sc-for>
+<p style="margin:6px 0 0;font-size:12px;color:#6B5550;text-align:center">Toque no estado para alternar entre Falta, Já tenho e Na lista de presentes.</p>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+constructor(p){
+super(p);
+this.items = [
+['Geladeira', '1 · Primeira noite · R$ 3.200'], ['Fogão 4 bocas', '1 · Primeira noite · R$ 1.400'], ['Jogo de panelas', '1 · Primeira noite'],
+['Pratos rasos', '6 · Primeiro mês'], ['Copos', '6 · Primeiro mês'], ['Faqueiro 24 peças', '1 · Primeiro mês'],
+['Panos de prato', '6 · Primeiro mês'], ['Air fryer', '1 · Com calma · R$ 450'], ['Micro-ondas', '1 · Primeiro mês']
+];
+this.state = { filter: 'Todos', st: { 'Geladeira': 'Falta', 'Fogão 4 bocas': 'Já tenho', 'Jogo de panelas': 'Na lista', 'Pratos rasos': 'Falta', 'Copos': 'Já tenho', 'Faqueiro 24 peças': 'Na lista', 'Panos de prato': 'Falta', 'Air fryer': 'Na lista', 'Micro-ondas': 'Já tenho' } };
+}
+renderVals() {
+const st = this.state.st, f = this.state.filter;
+const next = { 'Falta': 'Já tenho', 'Já tenho': 'Na lista', 'Na lista': 'Falta' };
+const colors = { 'Falta': 'color:#8C1D18;background:#F9DEDC;border:1.5px solid #F9DEDC', 'Já tenho': 'color:#FFFFFF;background:#4F7564;border:1.5px solid #4F7564', 'Na lista': 'color:#3E5A8A;background:#E2E7F3;border:1.5px solid #E2E7F3' };
+const map = { 'Todos': null, 'Falta': 'Falta', 'Já tenho': 'Já tenho', 'Na lista de presentes': 'Na lista' };
+const chip = (on) => 'min-height:40px;padding:0 14px;border-radius:20px;white-space:nowrap;font:600 13px -apple-system,BlinkMacSystemFont,Roboto,system-ui,sans-serif;cursor:pointer;' + (on ? 'background:#2D1F1C;color:#FFFFFF;border:1.5px solid #2D1F1C' : 'background:#FFFFFF;color:#2D1F1C;border:1.5px solid #CDB9B3');
+const have = this.items.filter((i) => st[i[0]] === 'Já tenho').length + 15;
+return {
+have, total: 52, bar: 'width:' + Math.round(have / 52 * 100) + '%;height:100%;border-radius:4px;background:#4F7564',
+filters: Object.keys(map).map((l) => ({ label: l, on: String(l === f), css: chip(l === f), pick: () => this.setState({ filter: l }) })),
+items: this.items.filter((i) => !map[f] || st[i[0]] === map[f]).map((i) => ({ name: i[0], meta: i[1], state: st[i[0]],
+css: 'flex:none;min-width:92px;min-height:44px;padding:0 10px;border-radius:12px;font:700 13px -apple-system,BlinkMacSystemFont,Roboto,system-ui,sans-serif;cursor:pointer;' + colors[st[i[0]]],
+cycle: () => this.setState({ st: Object.assign({}, st, { [i[0]]: next[st[i[0]]] }) }) }))
+};
+}
+}
+</script>
+</body>
+</html>

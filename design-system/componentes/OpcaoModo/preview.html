@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><link rel="stylesheet" href="../../tokens.css"><title>Opção de modo</title>
+<style>
+body{margin:0;background:var(--background);color:var(--on-surface)}
+.wrap{display:flex;flex-direction:column;gap:10px;padding:20px;width:350px}
+.opt{display:flex;align-items:center;gap:14px;padding:12px 14px;border-radius:18px;background:var(--surface);border:2px solid var(--outline-variant)}
+.opt.on{border-color:var(--primary);box-shadow:0 6px 16px rgba(90,42,35,.12)}
+.ic{flex:none;width:46px;height:46px;border-radius:23px;display:flex;align-items:center;justify-content:center}
+.ic svg{width:24px;height:24px}
+.tx{flex:1;display:flex;flex-direction:column;gap:3px;align-items:flex-start}
+.t{font:700 16px/21px var(--font-ios)}
+.d{font:400 13px/18px var(--font-ios);color:var(--on-surface-variant)}
+.badge{font:700 11px/14px var(--font-ios);color:var(--on-primary-container);background:var(--primary-container);padding:3px 8px;border-radius:8px}
+.r{flex:none;width:24px;height:24px;border-radius:12px;box-sizing:border-box;border:2px solid var(--outline);display:flex;align-items:center;justify-content:center}
+.on .r{background:var(--primary);border-color:var(--primary)}
+.r i{width:10px;height:10px;border-radius:5px;background:var(--on-primary)}
+.link{align-self:center;font:700 15px/20px var(--font-ios);color:var(--primary);padding:12px}
+</style></head>
+<body>
+<div class="wrap">
+<div class="opt"><span class="ic" style="background:var(--primary-container);color:var(--primary)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="13.5" r="5.5"/><circle cx="15" cy="13.5" r="5.5"/><path d="M10.5 4.5h3L12 6.8z"/></svg></span><span class="tx"><span class="t">Só o casamento</span><span class="d">Checklist, orçamento, fornecedores e convidados.</span></span><span class="r"></span></div><div class="opt"><span class="ic" style="background:var(--home-container);color:var(--home)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11l8-6.5 8 6.5"/><path d="M6 9.5V20h12V9.5"/><path d="M10 20v-5h4v5"/></svg></span><span class="tx"><span class="t">Só a casa nova</span><span class="d">Enxoval por cômodo, medidas e cadastro por foto.</span></span><span class="r"></span></div><div class="opt on"><span class="ic" style="background:var(--primary-container);color:var(--on-primary-container)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7.5l5-4 5 4"/><circle cx="9.5" cy="15" r="4.6"/><circle cx="14.5" cy="15" r="4.6"/></svg></span><span class="tx"><span class="t">Casamento e casa nova</span><span class="badge">Mais completo</span><span class="d">Tudo junto, com os dois progressos.</span></span><span class="r"><i></i></span></div><span class="link">Decidir depois</span>
+</div>
+</body></html>

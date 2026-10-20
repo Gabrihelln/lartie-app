@@ -1,0 +1,1019 @@
+{
+  "versao": 1,
+  "status": "rascunho para revisão do dono do produto",
+  "regras": {
+    "prazo": "prazo = data_casamento - dias_antes_do_casamento (Seção 13.1). Se cair no passado, distribuir até hoje + 7 dias.",
+    "estilos": "A tarefa só entra se o estilo do casal estiver na lista.",
+    "exige_religioso": "Tarefas com true só entram no estilo civil_religioso. Nos outros estilos, só se o casal marcar cerimônia religiosa (pendência P05).",
+    "categoria_orcamento": "Categoria sugerida ao vincular um fornecedor criado a partir da tarefa.",
+    "fases": {
+      "decisoes_iniciais": "12 meses antes",
+      "fornecedores_principais": "10 a 8 meses",
+      "detalhes": "7 a 4 meses",
+      "documentos_reta_final": "3 a 1 mês",
+      "semana_casamento": "últimos 7 dias"
+    }
+  },
+  "tarefas": [
+    {
+      "id": "T001",
+      "titulo": "Definir orçamento total",
+      "fase": "decisoes_iniciais",
+      "dias_antes_do_casamento": 365,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "so_civil",
+        "civil_religioso",
+        "mini_wedding",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": null
+    },
+    {
+      "id": "T002",
+      "titulo": "Escolher data e estilo",
+      "fase": "decisoes_iniciais",
+      "dias_antes_do_casamento": 360,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "so_civil",
+        "civil_religioso",
+        "mini_wedding",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": null
+    },
+    {
+      "id": "T003",
+      "titulo": "Fazer a lista inicial de convidados",
+      "fase": "decisoes_iniciais",
+      "dias_antes_do_casamento": 350,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "so_civil",
+        "civil_religioso",
+        "mini_wedding",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": null
+    },
+    {
+      "id": "T004",
+      "titulo": "Pesquisar locais para a festa",
+      "fase": "decisoes_iniciais",
+      "dias_antes_do_casamento": 345,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "civil_religioso",
+        "mini_wedding",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": "local_buffet"
+    },
+    {
+      "id": "T005",
+      "titulo": "Fechar local da festa",
+      "fase": "decisoes_iniciais",
+      "dias_antes_do_casamento": 320,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "civil_religioso",
+        "mini_wedding",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": "local_buffet"
+    },
+    {
+      "id": "T006",
+      "titulo": "Reservar igreja ou templo da cerimônia",
+      "fase": "decisoes_iniciais",
+      "dias_antes_do_casamento": 320,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "so_civil",
+        "civil_religioso",
+        "mini_wedding",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": true,
+      "categoria_orcamento": null
+    },
+    {
+      "id": "T007",
+      "titulo": "Contratar assessoria ou cerimonial",
+      "fase": "decisoes_iniciais",
+      "dias_antes_do_casamento": 310,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "civil_religioso",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": "imprevistos"
+    },
+    {
+      "id": "T008",
+      "titulo": "Escolher destino e época da lua de mel",
+      "fase": "decisoes_iniciais",
+      "dias_antes_do_casamento": 300,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "so_civil",
+        "civil_religioso",
+        "mini_wedding",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": "lua_de_mel"
+    },
+    {
+      "id": "T009",
+      "titulo": "Escolher o destino do casamento",
+      "fase": "decisoes_iniciais",
+      "dias_antes_do_casamento": 360,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": "local_buffet"
+    },
+    {
+      "id": "T010",
+      "titulo": "Consultar a agenda do cartório",
+      "fase": "decisoes_iniciais",
+      "dias_antes_do_casamento": 300,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "so_civil",
+        "civil_religioso",
+        "mini_wedding",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": null
+    },
+    {
+      "id": "T011",
+      "titulo": "Fechar buffet",
+      "fase": "fornecedores_principais",
+      "dias_antes_do_casamento": 290,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "civil_religioso",
+        "mini_wedding",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": "local_buffet"
+    },
+    {
+      "id": "T012",
+      "titulo": "Degustação do buffet",
+      "fase": "fornecedores_principais",
+      "dias_antes_do_casamento": 280,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "civil_religioso",
+        "mini_wedding",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": "local_buffet"
+    },
+    {
+      "id": "T013",
+      "titulo": "Fechar fotógrafo",
+      "fase": "fornecedores_principais",
+      "dias_antes_do_casamento": 280,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "so_civil",
+        "civil_religioso",
+        "mini_wedding",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": "foto_video"
+    },
+    {
+      "id": "T014",
+      "titulo": "Fechar filmagem",
+      "fase": "fornecedores_principais",
+      "dias_antes_do_casamento": 270,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "civil_religioso",
+        "festa_grande",
+        "destination",
+        "mini_wedding"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": "foto_video"
+    },
+    {
+      "id": "T015",
+      "titulo": "Contratar banda ou DJ",
+      "fase": "fornecedores_principais",
+      "dias_antes_do_casamento": 260,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "civil_religioso",
+        "mini_wedding",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": "musica"
+    },
+    {
+      "id": "T016",
+      "titulo": "Fechar decoração e flores",
+      "fase": "fornecedores_principais",
+      "dias_antes_do_casamento": 260,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "civil_religioso",
+        "mini_wedding",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": "decoracao_flores"
+    },
+    {
+      "id": "T017",
+      "titulo": "Escolher e encomendar o vestido",
+      "fase": "fornecedores_principais",
+      "dias_antes_do_casamento": 250,
+      "responsavel_sugerido": "noivo_1",
+      "estilos": [
+        "so_civil",
+        "civil_religioso",
+        "mini_wedding",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": "roupas_beleza"
+    },
+    {
+      "id": "T018",
+      "titulo": "Contratar celebrante",
+      "fase": "fornecedores_principais",
+      "dias_antes_do_casamento": 250,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "mini_wedding",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": "musica"
+    },
+    {
+      "id": "T019",
+      "titulo": "Fechar bolo e doces",
+      "fase": "fornecedores_principais",
+      "dias_antes_do_casamento": 240,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "civil_religioso",
+        "mini_wedding",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": "local_buffet"
+    },
+    {
+      "id": "T020",
+      "titulo": "Fechar bebidas e bar",
+      "fase": "fornecedores_principais",
+      "dias_antes_do_casamento": 240,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "civil_religioso",
+        "mini_wedding",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": "local_buffet"
+    },
+    {
+      "id": "T021",
+      "titulo": "Reservar hospedagem para os convidados",
+      "fase": "fornecedores_principais",
+      "dias_antes_do_casamento": 270,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": "imprevistos"
+    },
+    {
+      "id": "T022",
+      "titulo": "Enviar save the date",
+      "fase": "fornecedores_principais",
+      "dias_antes_do_casamento": 240,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "civil_religioso",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": "convites_papelaria"
+    },
+    {
+      "id": "T023",
+      "titulo": "Definir padrinhos",
+      "fase": "detalhes",
+      "dias_antes_do_casamento": 210,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "so_civil",
+        "civil_religioso",
+        "mini_wedding",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": null
+    },
+    {
+      "id": "T024",
+      "titulo": "Convidar os padrinhos",
+      "fase": "detalhes",
+      "dias_antes_do_casamento": 200,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "so_civil",
+        "civil_religioso",
+        "mini_wedding",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": null
+    },
+    {
+      "id": "T025",
+      "titulo": "Escolher o traje do noivo",
+      "fase": "detalhes",
+      "dias_antes_do_casamento": 180,
+      "responsavel_sugerido": "noivo_2",
+      "estilos": [
+        "so_civil",
+        "civil_religioso",
+        "mini_wedding",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": "roupas_beleza"
+    },
+    {
+      "id": "T026",
+      "titulo": "Contratar maquiagem e cabelo",
+      "fase": "detalhes",
+      "dias_antes_do_casamento": 180,
+      "responsavel_sugerido": "noivo_1",
+      "estilos": [
+        "so_civil",
+        "civil_religioso",
+        "mini_wedding",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": "roupas_beleza"
+    },
+    {
+      "id": "T027",
+      "titulo": "Escolher as alianças",
+      "fase": "detalhes",
+      "dias_antes_do_casamento": 170,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "so_civil",
+        "civil_religioso",
+        "mini_wedding",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": "roupas_beleza"
+    },
+    {
+      "id": "T028",
+      "titulo": "Fazer os convites",
+      "fase": "detalhes",
+      "dias_antes_do_casamento": 180,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "so_civil",
+        "civil_religioso",
+        "mini_wedding",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": "convites_papelaria"
+    },
+    {
+      "id": "T029",
+      "titulo": "Planejar o chá de panela ou chá bar",
+      "fase": "detalhes",
+      "dias_antes_do_casamento": 160,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "so_civil",
+        "civil_religioso",
+        "mini_wedding",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": null
+    },
+    {
+      "id": "T030",
+      "titulo": "Publicar a lista de presentes do chá",
+      "fase": "detalhes",
+      "dias_antes_do_casamento": 150,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "so_civil",
+        "civil_religioso",
+        "mini_wedding",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": null
+    },
+    {
+      "id": "T031",
+      "titulo": "Publicar a lista de presentes do casamento",
+      "fase": "detalhes",
+      "dias_antes_do_casamento": 140,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "so_civil",
+        "civil_religioso",
+        "mini_wedding",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": null
+    },
+    {
+      "id": "T032",
+      "titulo": "Contratar papelaria e lembrancinhas",
+      "fase": "detalhes",
+      "dias_antes_do_casamento": 150,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "civil_religioso",
+        "mini_wedding",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": "convites_papelaria"
+    },
+    {
+      "id": "T033",
+      "titulo": "Reservar a lua de mel",
+      "fase": "detalhes",
+      "dias_antes_do_casamento": 150,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "so_civil",
+        "civil_religioso",
+        "mini_wedding",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": "lua_de_mel"
+    },
+    {
+      "id": "T034",
+      "titulo": "Fazer o curso de noivos",
+      "fase": "detalhes",
+      "dias_antes_do_casamento": 150,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "so_civil",
+        "civil_religioso",
+        "mini_wedding",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": true,
+      "categoria_orcamento": null
+    },
+    {
+      "id": "T035",
+      "titulo": "Definir o cardápio final",
+      "fase": "detalhes",
+      "dias_antes_do_casamento": 140,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "civil_religioso",
+        "mini_wedding",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": "local_buffet"
+    },
+    {
+      "id": "T036",
+      "titulo": "Contratar transporte dos noivos",
+      "fase": "detalhes",
+      "dias_antes_do_casamento": 130,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "civil_religioso",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": "imprevistos"
+    },
+    {
+      "id": "T037",
+      "titulo": "Escolher as músicas da cerimônia",
+      "fase": "detalhes",
+      "dias_antes_do_casamento": 130,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "civil_religioso",
+        "mini_wedding",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": "musica"
+    },
+    {
+      "id": "T038",
+      "titulo": "Enviar os convites",
+      "fase": "detalhes",
+      "dias_antes_do_casamento": 120,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "so_civil",
+        "civil_religioso",
+        "mini_wedding",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": "convites_papelaria"
+    },
+    {
+      "id": "T039",
+      "titulo": "Primeira prova do vestido",
+      "fase": "detalhes",
+      "dias_antes_do_casamento": 120,
+      "responsavel_sugerido": "noivo_1",
+      "estilos": [
+        "so_civil",
+        "civil_religioso",
+        "mini_wedding",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": "roupas_beleza"
+    },
+    {
+      "id": "T040",
+      "titulo": "Dar entrada na habilitação de casamento no cartório",
+      "fase": "documentos_reta_final",
+      "dias_antes_do_casamento": 90,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "so_civil",
+        "civil_religioso",
+        "mini_wedding",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": null
+    },
+    {
+      "id": "T041",
+      "titulo": "Entregar documentos do processo religioso",
+      "fase": "documentos_reta_final",
+      "dias_antes_do_casamento": 90,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "so_civil",
+        "civil_religioso",
+        "mini_wedding",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": true,
+      "categoria_orcamento": null
+    },
+    {
+      "id": "T042",
+      "titulo": "Confirmar presença dos convidados",
+      "fase": "documentos_reta_final",
+      "dias_antes_do_casamento": 60,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "so_civil",
+        "civil_religioso",
+        "mini_wedding",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": null
+    },
+    {
+      "id": "T043",
+      "titulo": "Lembrar quem ainda não respondeu",
+      "fase": "documentos_reta_final",
+      "dias_antes_do_casamento": 50,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "so_civil",
+        "civil_religioso",
+        "mini_wedding",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": null
+    },
+    {
+      "id": "T044",
+      "titulo": "Organizar hospedagem e transporte de convidados de fora",
+      "fase": "documentos_reta_final",
+      "dias_antes_do_casamento": 60,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "civil_religioso",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": null
+    },
+    {
+      "id": "T045",
+      "titulo": "Comprar sapatos e acessórios",
+      "fase": "documentos_reta_final",
+      "dias_antes_do_casamento": 60,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "so_civil",
+        "civil_religioso",
+        "mini_wedding",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": "roupas_beleza"
+    },
+    {
+      "id": "T046",
+      "titulo": "Teste de maquiagem e cabelo",
+      "fase": "documentos_reta_final",
+      "dias_antes_do_casamento": 45,
+      "responsavel_sugerido": "noivo_1",
+      "estilos": [
+        "so_civil",
+        "civil_religioso",
+        "mini_wedding",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": "roupas_beleza"
+    },
+    {
+      "id": "T047",
+      "titulo": "Despedida de solteiro(a)",
+      "fase": "documentos_reta_final",
+      "dias_antes_do_casamento": 45,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "so_civil",
+        "civil_religioso",
+        "mini_wedding",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": null
+    },
+    {
+      "id": "T048",
+      "titulo": "Montar o mapa de mesas",
+      "fase": "documentos_reta_final",
+      "dias_antes_do_casamento": 40,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "civil_religioso",
+        "mini_wedding",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": null
+    },
+    {
+      "id": "T049",
+      "titulo": "Escrever os votos",
+      "fase": "documentos_reta_final",
+      "dias_antes_do_casamento": 40,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "civil_religioso",
+        "mini_wedding",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": null
+    },
+    {
+      "id": "T050",
+      "titulo": "Fechar o cronograma do dia com o cerimonial",
+      "fase": "documentos_reta_final",
+      "dias_antes_do_casamento": 35,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "civil_religioso",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": null
+    },
+    {
+      "id": "T051",
+      "titulo": "Prova final do vestido e do traje",
+      "fase": "documentos_reta_final",
+      "dias_antes_do_casamento": 30,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "so_civil",
+        "civil_religioso",
+        "mini_wedding",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": "roupas_beleza"
+    },
+    {
+      "id": "T052",
+      "titulo": "Confirmar todos os fornecedores",
+      "fase": "documentos_reta_final",
+      "dias_antes_do_casamento": 30,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "so_civil",
+        "civil_religioso",
+        "mini_wedding",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": null
+    },
+    {
+      "id": "T053",
+      "titulo": "Pagar as parcelas finais",
+      "fase": "documentos_reta_final",
+      "dias_antes_do_casamento": 30,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "so_civil",
+        "civil_religioso",
+        "mini_wedding",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": null
+    },
+    {
+      "id": "T054",
+      "titulo": "Agendar o dia de beleza",
+      "fase": "documentos_reta_final",
+      "dias_antes_do_casamento": 30,
+      "responsavel_sugerido": "noivo_1",
+      "estilos": [
+        "so_civil",
+        "civil_religioso",
+        "mini_wedding",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": "roupas_beleza"
+    },
+    {
+      "id": "T055",
+      "titulo": "Enviar a lista final de convidados ao buffet",
+      "fase": "semana_casamento",
+      "dias_antes_do_casamento": 7,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "civil_religioso",
+        "mini_wedding",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": null
+    },
+    {
+      "id": "T056",
+      "titulo": "Separar os pagamentos do dia",
+      "fase": "semana_casamento",
+      "dias_antes_do_casamento": 5,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "so_civil",
+        "civil_religioso",
+        "mini_wedding",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": null
+    },
+    {
+      "id": "T057",
+      "titulo": "Ensaio da cerimônia",
+      "fase": "semana_casamento",
+      "dias_antes_do_casamento": 3,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "civil_religioso",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": null
+    },
+    {
+      "id": "T058",
+      "titulo": "Buscar o vestido e o traje",
+      "fase": "semana_casamento",
+      "dias_antes_do_casamento": 3,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "so_civil",
+        "civil_religioso",
+        "mini_wedding",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": null
+    },
+    {
+      "id": "T059",
+      "titulo": "Montar o kit de emergência",
+      "fase": "semana_casamento",
+      "dias_antes_do_casamento": 3,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "so_civil",
+        "civil_religioso",
+        "mini_wedding",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": null
+    },
+    {
+      "id": "T060",
+      "titulo": "Fazer a mala da lua de mel",
+      "fase": "semana_casamento",
+      "dias_antes_do_casamento": 2,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "so_civil",
+        "civil_religioso",
+        "mini_wedding",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": null
+    },
+    {
+      "id": "T061",
+      "titulo": "Separar os documentos para o cartório e a cerimônia",
+      "fase": "semana_casamento",
+      "dias_antes_do_casamento": 1,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "so_civil",
+        "civil_religioso",
+        "mini_wedding",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": null
+    },
+    {
+      "id": "T062",
+      "titulo": "Entregar as alianças a quem vai levar",
+      "fase": "semana_casamento",
+      "dias_antes_do_casamento": 1,
+      "responsavel_sugerido": "os_dois",
+      "estilos": [
+        "so_civil",
+        "civil_religioso",
+        "mini_wedding",
+        "festa_grande",
+        "destination"
+      ],
+      "exige_religioso": false,
+      "categoria_orcamento": null
+    }
+  ],
+  "tarefas_mudanca": {
+    "observacao": "Usadas no módulo casa (prazo relativo à data da mudança). Onde aparecem na interface é a pendência P04.",
+    "itens": [
+      {
+        "id": "M001",
+        "titulo": "Fazer a vistoria de entrada com fotos",
+        "dias_antes_da_mudanca": 15,
+        "condicao": {
+          "posse": "alugado"
+        }
+      },
+      {
+        "id": "M002",
+        "titulo": "Ler e assinar o contrato de locação",
+        "dias_antes_da_mudanca": 30,
+        "condicao": {
+          "posse": "alugado"
+        }
+      },
+      {
+        "id": "M003",
+        "titulo": "Contratar a mudança",
+        "dias_antes_da_mudanca": 30,
+        "condicao": {}
+      },
+      {
+        "id": "M004",
+        "titulo": "Pedir a ligação de luz e água no novo endereço",
+        "dias_antes_da_mudanca": 15,
+        "condicao": {}
+      },
+      {
+        "id": "M005",
+        "titulo": "Contratar internet",
+        "dias_antes_da_mudanca": 20,
+        "condicao": {}
+      },
+      {
+        "id": "M006",
+        "titulo": "Atualizar o endereço nos bancos e serviços",
+        "dias_antes_da_mudanca": 0,
+        "condicao": {}
+      }
+    ]
+  }
+}

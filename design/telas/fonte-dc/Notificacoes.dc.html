@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Notificações</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&amp;display=swap" rel="stylesheet">
+<style>body{margin:0}a{color:#9A5A50}a:hover{color:#7E463E}</style>
+</helmet>
+<div style="width:390px;height:844px;box-sizing:border-box;background:#FBF6F3;font-family:-apple-system,BlinkMacSystemFont,Roboto,system-ui,sans-serif;color:#2D1F1C;display:flex;flex-direction:column">
+<div style="display:flex;align-items:center;justify-content:space-between;padding:12px 12px 0 8px">
+<a href="Inicio.dc.html" aria-label="Voltar" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;color:#2D1F1C"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></a>
+<button onClick="{{readAll}}" style="min-height:44px;padding:0 8px;border:0;background:none;font:700 14px -apple-system,BlinkMacSystemFont,Roboto,system-ui,sans-serif;color:#9A5A50;cursor:pointer">Marcar todas como lidas</button>
+</div>
+<h1 style="margin:0 20px 12px;font-family:-apple-system,BlinkMacSystemFont,Roboto,system-ui,sans-serif;font-weight:700;font-size:28px">Notificações</h1>
+<div style="flex:1;overflow-y:auto;padding:0 20px 20px;display:flex;flex-direction:column;gap:8px">
+<sc-for list="{{list}}" as="n" hint-placeholder-count="6">
+<a href="{{n.href}}" style="{{n.css}}">
+<span style="{{n.dot}}"></span>
+<span style="flex:1"><span style="display:block;font-size:15px;line-height:21px">{{n.text}}</span><span style="display:block;font-size:12px;color:#6B5550;margin-top:3px">{{n.when}}</span></span>
+</a>
+</sc-for>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+constructor(p){ super(p); this.state = { read: false }; }
+renderVals() {
+const data = [
+['Tia Bia reservou o jogo de panelas no Chá de panela.', 'Há 2 h', 'ListaPresentes.dc.html', true, '#3E5A8A'],
+['A tarefa "Fechar fotógrafo" está atrasada há 12 dias.', 'Hoje, 9h', 'Tarefa.dc.html', true, '#B3261E'],
+['Parcela do Espaço Jardim vence em 3 dias: R$ 3.000.', 'Hoje, 8h', 'Orcamento.dc.html', true, '#8A5A06'],
+['Família Souza confirmou presença: 3 de 4 pessoas.', 'Ontem', 'Convidados.dc.html', false, '#9A5A50'],
+['Pedro marcou "Cama e colchão" como Já tenho.', 'Ontem', 'Comodo.dc.html', false, '#9A5A50'],
+['A reserva de Carla e Diego expira em 2 dias.', '2 dias atrás', 'ListaPresentes.dc.html', false, '#3E5A8A'],
+['Quarto completo! Todos os itens da primeira noite estão prontos.', '3 dias atrás', 'Casa.dc.html', false, '#9A5A50']
+];
+const r = this.state.read;
+return {
+readAll: () => this.setState({ read: true }),
+list: data.map((d) => { const unread = d[3] && !r; return { text: d[0], when: d[1], href: d[2],
+css: 'display:flex;gap:12px;align-items:flex-start;padding:14px;border-radius:16px;text-decoration:none;color:#2D1F1C;' + (unread ? 'background:#FFFFFF;border:1px solid #E6D0C9' : 'background:transparent;border:1px solid #E6D8D3'),
+dot: 'width:10px;height:10px;flex:none;margin-top:6px;border-radius:5px;background:' + (unread ? d[4] : '#CDB9B3') }; })
+};
+}
+}
+</script>
+</body>
+</html>

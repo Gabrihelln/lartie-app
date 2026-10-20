@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><link rel="stylesheet" href="../../tokens.css"><title>Campo de texto</title>
+<style>
+body{margin:0;background:var(--background);font-family:var(--font-ios);color:var(--on-surface)}
+.wrap{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;padding:20px;max-width:720px}
+label{display:flex;flex-direction:column;gap:6px;font:600 13px/18px var(--font-ios)}
+input{height:52px;box-sizing:border-box;border-radius:var(--radius-md);border:1.5px solid var(--outline);background:var(--surface);color:var(--on-surface);padding:0 14px;font:400 17px/22px var(--font-ios);min-width:0}
+.focus{border:2px solid var(--primary)}
+.err{border-color:var(--error)}
+.help{font:400 13px/18px var(--font-ios);color:var(--on-surface-variant)}
+.msg{font:400 13px/18px var(--font-ios);color:var(--error)}
+</style></head>
+<body>
+<div class="wrap">
+<label>Seu nome<input type="text" value="Ana"><span class="help">Aparece na tela inicial.</span></label>
+<label>Cidade<input class="focus" type="text" value="Curitiba, PR"><span class="help">Define o clima do enxoval.</span></label>
+<label>Data do casamento<input class="err" type="text" value="10/01/2025"><span class="msg">Informe uma data depois de hoje.</span></label>
+</div>
+</body></html>
