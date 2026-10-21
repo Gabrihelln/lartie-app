@@ -1,0 +1,25 @@
+{
+  "name": "@lartie/api",
+  "version": "0.0.0",
+  "private": true,
+  "description": "API do Lartiê na VPS: tudo que o app não pode gravar sozinho (Firebase Admin)",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "dev:demo": "FIREBASE_PROJECT_ID=demo-lartie FIREBASE_AUTH_EMULATOR_HOST=127.0.0.1:9099 FIRESTORE_EMULATOR_HOST=127.0.0.1:8080 tsx watch src/index.ts",
+    "dev:dev": "FIREBASE_PROJECT_ID=lartie-dev GOOGLE_APPLICATION_CREDENTIALS=$HOME/.config/lartie/lartie-dev-admin.json tsx watch src/index.ts",
+    "start": "tsx src/index.ts",
+    "typecheck": "tsc --noEmit",
+    "test:emulador": "cd .. && firebase emulators:exec --only auth,firestore --project demo-lartie \"npm run test:api -w @lartie/api\"",
+    "test:api": "FIREBASE_PROJECT_ID=demo-lartie FIREBASE_AUTH_EMULATOR_HOST=127.0.0.1:9099 FIRESTORE_EMULATOR_HOST=127.0.0.1:8080 vitest run"
+  },
+  "dependencies": {
+    "@lartie/modelo": "*",
+    "fastify": "5.12.7",
+    "firebase-admin": "13.10.0"
+  },
+  "devDependencies": {
+    "tsx": "4.23.15"
+  }
+}
