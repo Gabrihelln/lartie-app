@@ -1,0 +1,8 @@
+{
+  "projects": {
+    "default": "demo-lartie",
+    "demo": "demo-lartie",
+    "dev": "lartie-dev",
+    "prod": "lartie"
+  }
+}

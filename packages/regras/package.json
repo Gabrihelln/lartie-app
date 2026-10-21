@@ -1,0 +1,16 @@
+{
+  "name": "@lartie/regras",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Regras de negócio da Seção 13 da especificação, compartilhadas entre app, web e API",
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@lartie/modelo": "*"
+  }
+}
