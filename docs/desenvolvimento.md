@@ -51,7 +51,7 @@ Para testar a sincronização entre dois aparelhos: abra um simulador com Ana e 
 | --- | --- | --- |
 | demo | `demo-lartie` | Emuladores locais. Configuração falsa, já no repositório |
 | dev | `lartie-dev` | Testes no celular com dados de teste |
-| prod | `lartie-prod` | Usuários reais |
+| prod | `lartie` | Usuários reais |
 
 - **iOS:** coloque o `GoogleService-Info.plist` de cada projeto em `mobile/ios/Lartie/Firebase/<ambiente>/` e rode
   `npm run ambiente -- dev` (ou `prod`) antes de compilar. `LARTIE_AMBIENTE=dev npm run ios` faz os dois.

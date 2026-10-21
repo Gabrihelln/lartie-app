@@ -89,7 +89,7 @@ android {
         versionName "0.1.0"
     }
     // Ambientes do Firebase (mesma ideia de mobile/scripts/ambiente.sh no iOS):
-    // demo = emuladores locais; dev = lartie-dev; prod = lartie-prod. Cada um lê app/src/<ambiente>/google-services.json.
+    // demo = emuladores locais; dev = lartie-dev; prod = lartie. Cada um lê app/src/<ambiente>/google-services.json.
     flavorDimensions "ambiente"
     productFlavors {
         demo { dimension "ambiente" }

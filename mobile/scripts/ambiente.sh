@@ -1,5 +1,5 @@
 #!/bin/sh
-# Escolhe o ambiente do Firebase do app: demo (emuladores locais), dev (lartie-dev) ou prod (lartie-prod).
+# Escolhe o ambiente do Firebase do app: demo (emuladores locais), dev (lartie-dev) ou prod (lartie).
 #   npm run ambiente -- demo
 # iOS: copia ios/Lartie/Firebase/<ambiente>/GoogleService-Info.plist para ios/Lartie/GoogleService-Info.plist.
 # Android: cada ambiente é um flavor (demoDebug, devDebug, prodRelease) e lê app/src/<ambiente>/google-services.json.
