@@ -5,8 +5,16 @@ export type ParamsAbas = { [K in Aba]: undefined };
 
 export type ParamsRaiz = {
   Abas: NavigatorScreenParams<ParamsAbas> | undefined;
-  /** Provisória até a Etapa 1 (acesso e login). Só existe em desenvolvimento. */
-  AcessoProvisorio: undefined;
+  /** Acesso (Etapa 1): T01 a T05. */
+  Abertura: undefined;
+  BoasVindas: undefined;
+  CriarConta: undefined;
+  Entrar: { email?: string } | undefined;
+  EsqueciSenha: { email?: string } | undefined;
+  /** Logado, mas o servidor ainda não criou o casal (claim casal_id). */
+  PreparandoConta: undefined;
+  /** Provisória até a Etapa 2 (T06 a T11). */
+  OnboardingProvisorio: undefined;
   /** Deep link do convite do parceiro (T66 na Etapa 2). */
   Convite: { codigo: string };
   /** Catálogo interno de componentes (só em desenvolvimento). */
