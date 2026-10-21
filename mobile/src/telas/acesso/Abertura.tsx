@@ -1,5 +1,5 @@
 import React from 'react';
-import { ActivityIndicator, Pressable, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Pressable, StatusBar, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Circle } from 'react-native-svg';
 import { raios, tamanhos } from '@lartie/tokens';
@@ -24,6 +24,8 @@ export function Abertura({ carregando = false, onComecar, onJaTenhoConta }: Prop
 
   return (
     <Degrade nome="gradientSplash" style={estilos.raiz}>
+      {/* Sobre o degradê da splash, hora e bateria em claro (a tela de lançamento nativa faz o mesmo). */}
+      <StatusBar barStyle="light-content" />
       {/* Anéis decorativos do protótipo (creme a 8% e 6%), saindo pelo canto inferior esquerdo. */}
       <Svg width={520} height={520} style={estilos.aneis} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
         <Circle cx={230} cy={260} r={170} stroke={cores.brandCream} strokeOpacity={0.08} strokeWidth={22} fill="none" />

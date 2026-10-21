@@ -24,7 +24,8 @@ export interface Leitura<T> {
   erro: Error | null;
 }
 
-export function useDocumento<T>(caminho: string | null): Leitura<(T & { id: string }) | null> {
+/** `recarregar`: mude o número para refazer a inscrição (ex.: depois de renovar o token). */
+export function useDocumento<T>(caminho: string | null, recarregar = 0): Leitura<(T & { id: string }) | null> {
   const [estado, setEstado] = useState<Leitura<(T & { id: string }) | null>>({
     dados: null,
     carregando: !!caminho,
@@ -56,7 +57,7 @@ export function useDocumento<T>(caminho: string | null): Leitura<(T & { id: stri
         setEstado((e) => ({ ...e, carregando: false, erro }));
       },
     );
-  }, [caminho]);
+  }, [caminho, recarregar]);
 
   return estado;
 }

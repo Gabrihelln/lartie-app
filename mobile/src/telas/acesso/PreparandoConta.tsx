@@ -4,6 +4,7 @@ import { prepararConta, sair } from '../../servicos/acesso';
 import { registrarErro } from '../../servicos/analytics';
 import { TelaSemConexao } from '../../feedback/TelaSemConexao';
 import { TelaEstado } from '../../feedback/TelaEstado';
+import { useSessao } from '../../dados/Sessao';
 import { Abertura } from './Abertura';
 
 // Depois do login, enquanto o usuário ainda não tem casal (claim casal_id): chama a API, que cria
@@ -12,12 +13,14 @@ import { Abertura } from './Abertura';
 
 export function PreparandoConta() {
   const [estado, setEstado] = useState<'preparando' | 'sem_conexao' | 'erro'>('preparando');
+  const { recarregarCasal } = useSessao();
 
   const tentar = useCallback(async () => {
     setEstado('preparando');
     try {
       await prepararConta();
-      // O token renovado traz o casal; a navegação segue sozinha.
+      // O token renovado traz o casal; a navegação segue sozinha quando o casal carregar.
+      recarregarCasal();
     } catch (erro) {
       if (erro instanceof ErroSemConexao) setEstado('sem_conexao');
       else {
@@ -25,7 +28,7 @@ export function PreparandoConta() {
         setEstado('erro');
       }
     }
-  }, []);
+  }, [recarregarCasal]);
 
   useEffect(() => {
     tentar();

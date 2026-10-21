@@ -65,7 +65,7 @@ function AberturaComBotoes({ navigation }: { navigation: { replace: (r: 'BoasVin
 /**
  * Regra de roteamento do T01 (especificação Seção 4):
  * - sem sessão → T01 com "Começar" (primeira abertura) ou T02; sessão expirada → T04 com o aviso;
- * - sessão sem casal → preparar a conta (API);
+ * - sessão sem casal (ou casal que não carregou) → preparar a conta (API);
  * - onboarding incompleto → onboarding (provisório até a Etapa 2);
  * - onboarding completo → tela inicial do modo (abas).
  * A versão mínima (T67) é conferida antes, no App.
@@ -102,9 +102,9 @@ export function Raiz() {
             <Pilha.Screen name="Entrar" component={Entrar} />
             <Pilha.Screen name="EsqueciSenha" component={EsqueciSenha} />
           </Pilha.Group>
-        ) : !casalId ? (
+        ) : !casalId || !casal ? (
           <Pilha.Screen name="PreparandoConta" component={PreparandoConta} options={{ animation: 'fade' }} />
-        ) : casal && !casal.onboarding_concluido ? (
+        ) : !casal.onboarding_concluido ? (
           <Pilha.Screen name="OnboardingProvisorio" component={OnboardingProvisorio} options={{ animation: 'fade' }} />
         ) : (
           <Pilha.Screen name="Abas" component={Abas} options={{ animation: 'fade' }} />
