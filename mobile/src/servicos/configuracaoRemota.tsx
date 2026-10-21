@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import { getApp } from '@react-native-firebase/app';
 import { fetchAndActivate, getBoolean, getRemoteConfig, getString } from '@react-native-firebase/remote-config';
+import { ambienteAtual } from './ambiente';
 import { registrarErro } from './analytics';
 
 // Chaves do Remote Config:
@@ -21,6 +22,11 @@ export function ConfiguracaoRemotaProvider({ children }: { children: ReactNode }
   const [config, setConfig] = useState<Configuracao>(PADRAO);
 
   useEffect(() => {
+    // Os emuladores não têm Remote Config: no ambiente demo valem os padrões.
+    if (ambienteAtual() === 'demo') {
+      setConfig({ ...PADRAO, carregada: true });
+      return;
+    }
     const rc = getRemoteConfig(getApp());
     rc.defaultConfig = { versao_minima: PADRAO.versaoMinima, ia_ativa: PADRAO.iaAtiva };
     rc.settings = { minimumFetchIntervalMillis: __DEV__ ? 0 : 60 * 60 * 1000, fetchTimeoutMillis: 10000 };
