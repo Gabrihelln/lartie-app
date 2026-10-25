@@ -6,6 +6,7 @@ import { BarraNavegacao } from '../componentes/BarraNavegacao';
 import { Botao } from '../componentes/Botao';
 import { FabAssistente } from '../componentes/FabAssistente';
 import { useSessao } from '../dados/Sessao';
+import { sair } from '../servicos/acesso';
 import { TelaProvisoria } from '../telas/TelaProvisoria';
 import type { ParamsAbas } from './tipos';
 
@@ -43,13 +44,22 @@ function provisoria(aba: Aba) {
   };
 }
 
+/** Perfil provisório com o "Sair" temporário da Etapa 1 (o T41 definitivo entra na Etapa 3). */
+function Perfil() {
+  return (
+    <TelaProvisoria titulo="Perfil" id="T33" etapa={3}>
+      <Botao rotulo="Sair da conta" variante="contornado" onPress={sair} />
+    </TelaProvisoria>
+  );
+}
+
 const TELAS: Record<Aba, React.ComponentType> = {
   inicio: Inicio,
   casamento: provisoria('casamento'),
   convidados: provisoria('convidados'),
   casa: provisoria('casa'),
   presentes: provisoria('presentes'),
-  perfil: provisoria('perfil'),
+  perfil: Perfil,
 };
 
 export function Abas() {

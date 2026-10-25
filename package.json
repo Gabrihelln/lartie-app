@@ -5,7 +5,8 @@
   "description": "Lartiê: casamento e casa nova",
   "workspaces": [
     "packages/*",
-    "firebase"
+    "firebase",
+    "api"
   ],
   "engines": {
     "node": ">=20.19"
@@ -16,7 +17,9 @@
     "test": "npm run test --workspaces --if-present",
     "test:regras-firestore": "npm run test:emulador -w @lartie/firebase",
     "emuladores": "npm run emuladores -w @lartie/firebase",
-    "semear": "npm run semear -w @lartie/firebase"
+    "semear": "npm run semear -w @lartie/firebase",
+    "api": "npm run dev:demo -w @lartie/api",
+    "test:api": "npm run test:emulador -w @lartie/api"
   },
   "devDependencies": {
     "@types/node": "24.19.2",

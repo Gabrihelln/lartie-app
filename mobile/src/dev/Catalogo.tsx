@@ -2,7 +2,6 @@ import React, { useEffect, useState, type ReactNode } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { useNavigation, useRoute, type RouteProp } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { signOut } from '@react-native-firebase/auth';
 import { MODOS_APP, type EstadoItem, type ModoApp } from '@lartie/modelo';
 import { abasDoModo, telaInicial, type Aba } from '@lartie/regras';
 import { raios, type NomeCor } from '@lartie/tokens';
@@ -33,7 +32,7 @@ import { useDescartarAlteracoes } from '../feedback/useDescartarAlteracoes';
 import type { EstadoCatalogo, ParamsRaiz } from '../navegacao/tipos';
 import { registrarEvento } from '../servicos/analytics';
 import { useConexao } from '../servicos/conexao';
-import { auth } from '../servicos/firebase';
+import { sair } from '../servicos/acesso';
 import { espacos, useTema } from '../tema';
 
 // Catálogo interno (só em desenvolvimento, plano 2.2 item 9): todos os componentes e os padrões de
@@ -414,7 +413,7 @@ function TesteModoESincronizacao() {
           aparelho, com a outra conta, e confira o valor.
         </Texto>
       ) : null}
-      <Botao rotulo="Sair da conta de teste" variante="texto" onPress={() => signOut(auth())} />
+      <Botao rotulo="Sair da conta" variante="texto" onPress={sair} />
     </Secao>
   );
 }

@@ -19,6 +19,11 @@ import Evento from '@material-symbols/svg-400/rounded/event.svg';
 import Excluir from '@material-symbols/svg-400/rounded/delete.svg';
 import Fechar from '@material-symbols/svg-400/rounded/close.svg';
 import Info from '@material-symbols/svg-400/rounded/info.svg';
+import Email from '@material-symbols/svg-400/rounded/mail.svg';
+import Mostrar from '@material-symbols/svg-400/rounded/visibility.svg';
+import Ocultar from '@material-symbols/svg-400/rounded/visibility_off.svg';
+import CaixaMarcada from '@material-symbols/svg-400/rounded/check_box-fill.svg';
+import CaixaVazia from '@material-symbols/svg-400/rounded/check_box_outline_blank.svg';
 import Inicio from '@material-symbols/svg-400/rounded/home.svg';
 import InicioCheio from '@material-symbols/svg-400/rounded/home-fill.svg';
 import Lista from '@material-symbols/svg-400/rounded/checklist.svg';
@@ -71,6 +76,11 @@ const ICONES = {
   excluir: { normal: Excluir, sf: 'trash' },
   fechar: { normal: Fechar, sf: 'xmark' },
   info: { normal: Info, sf: 'info.circle' },
+  email: { normal: Email, sf: 'envelope' },
+  mostrar: { normal: Mostrar, sf: 'eye' },
+  ocultar: { normal: Ocultar, sf: 'eye.slash' },
+  caixaMarcada: { normal: CaixaMarcada, sf: 'checkmark.square.fill' },
+  caixaVazia: { normal: CaixaVazia, sf: 'square' },
   lista: { normal: Lista, sf: 'checklist' },
   notificacoes: { normal: Notificacoes, sf: 'bell' },
   semConexao: { normal: SemConexao, sf: 'wifi.slash' },

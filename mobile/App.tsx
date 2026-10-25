@@ -10,11 +10,13 @@ import { DialogoProvider } from './src/feedback/Dialogo';
 import { Raiz } from './src/navegacao/Raiz';
 import { ConexaoProvider } from './src/servicos/conexao';
 import { ConfiguracaoRemotaProvider, useConfiguracaoRemota } from './src/servicos/configuracaoRemota';
+import { configurarAcesso } from './src/servicos/acesso';
 import { iniciarFirebase } from './src/servicos/firebase';
 import { versaoAbaixoDe } from './src/servicos/versao';
 import { TemaProvider, useTema } from './src/tema';
 
 iniciarFirebase();
+configurarAcesso();
 
 /** T67: com a versão abaixo da mínima (Remote Config), o app mostra só a tela de atualização. */
 function Conteudo() {
