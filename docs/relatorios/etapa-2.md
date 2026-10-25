@@ -165,5 +165,16 @@ A especificação só previa "Aceitar e criar conta" e "Já tenho conta" no T66.
 - **Perfil (Etapa 3):** ganha a mesma opção de cancelar ou gerar outro convite.
 - **Testes:** 2 novos na API (recusar sem conta; cancelar e gerar outro). Total: **100 testes, todos passando**.
 
+## Correção (25/10/2026): convite com o app já aberto
+
+- **Problema:** no iOS, o link do convite só funcionava com o app fechado.
+- **Causa:** o `AppDelegate` não repassava ao React Native os links recebidos com o app aberto ou em segundo plano.
+- **Correção:** o `AppDelegate` agora repassa:
+  - os links do app (`lartie://…`);
+  - os universal links (`https://lartie.app/…`), que entram quando houver domínio.
+- **Testes:**
+  - **Android:** link enviado com o app aberto chegou à tela que já estava aberta.
+  - **iOS:** com o app aberto, o sistema pergunta "Abrir com 'Lartiê'?" e depois entrega o link.
+
 ---
 Aguardando: `APROVADO ETAPA 2` ou `AJUSTES ETAPA 2: …`
