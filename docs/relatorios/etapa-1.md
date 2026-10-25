@@ -123,5 +123,14 @@ O CI roda todos, inclusive os da API nos emuladores.
 3. Quer que eu aplique agora o texto do e-mail de recuperação no Firebase do `lartie-dev` (Divergência 4)? É pelo console; eu passo o passo a passo.
 4. Quando colocamos a API na VPS? Precisa do domínio, ou de um subdomínio provisório num domínio que você já tenha.
 
+## Respostas do dono do produto (25/10/2026)
+
+- Sincronização entre um Android e um iPhone testada e funcionando (completa a Etapa 0 no Android).
+- Textos da Divergência 5: aprovados como estão (aprovação da etapa sem ajustes).
+- Tela de nova senha dentro do app: fica para quando houver domínio (P13).
+- Texto do e-mail de recuperação no Firebase: por enquanto não.
+- API: continua no Mac; a VPS só será configurada depois da compra do domínio.
+- TestFlight: mais para frente.
+
 ---
-Aguardando: `APROVADO ETAPA 1` ou `AJUSTES ETAPA 1: …`
+**APROVADO ETAPA 1** em 25/10/2026.
