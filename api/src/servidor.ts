@@ -2,7 +2,7 @@ import Fastify, { type FastifyReply, type FastifyRequest } from 'fastify';
 import multipart from '@fastify/multipart';
 import { CLAIM_CASAL } from '@lartie/modelo';
 import { ErroValidacao, inicializarConta, type DadosToken } from './conta';
-import { aceitarConvite, consultarConvite, criarConvite, ErroConvite } from './convites';
+import { aceitarConvite, cancelarConvites, consultarConvite, criarConvite, ErroConvite, recusarConvite } from './convites';
 import { abrirArquivo, ErroArquivo, removerFotoCasal, salvarFotoCasal, TAMANHO_MAXIMO } from './fotos';
 import { auth, PROJETO } from './firebase';
 import { gerarPlano } from './plano';
@@ -83,8 +83,16 @@ export function criarServidor() {
   // T11: convite do parceiro.
   app.post('/v1/convites', { preHandler: exigirCasal }, async (req) => criarConvite(req.token!, req.casalId!));
 
+  app.delete('/v1/convites', { preHandler: exigirCasal }, async (req) => cancelarConvites(req.token!, req.casalId!));
+
   // T66: consulta pública (sem login) de quem convidou e se o convite vale.
   app.get<{ Params: { codigo: string } }>('/v1/convites/:codigo', async (req) => consultarConvite(req.params.codigo));
+
+  // T66 "Recusar convite": sem login, o código é a chave.
+  app.post<{ Params: { codigo: string } }>('/v1/convites/:codigo/recusar', async (req) => {
+    await recusarConvite(req.params.codigo);
+    return { ok: true };
+  });
 
   app.post<{ Params: { codigo: string }; Body: { nome?: string } | undefined }>(
     '/v1/convites/:codigo/aceitar',

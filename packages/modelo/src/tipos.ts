@@ -381,6 +381,8 @@ export const TIPOS_NOTIFICACAO = [
   'comodo_completo',
   'orcamento_estourado',
   'parceiro_entrou',
+  /** Ajuste da Etapa 2: o convite foi recusado por quem recebeu o link. */
+  'convite_recusado',
   'modo_alterado',
   'escolher_por_onde_comecar',
 ] as const;

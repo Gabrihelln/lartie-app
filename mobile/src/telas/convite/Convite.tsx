@@ -6,7 +6,8 @@ import { useDialogo } from '../../feedback/Dialogo';
 import { TelaEstado } from '../../feedback/TelaEstado';
 import { TelaSemConexao } from '../../feedback/TelaSemConexao';
 import type { ParamsRaiz } from '../../navegacao/tipos';
-import { aceitarConvite, consultarConvite, ErroApi, ErroSemConexao, type SituacaoConvite } from '../../servicos/api';
+import { aceitarConvite, consultarConvite, ErroApi, ErroSemConexao, recusarConvite, type SituacaoConvite } from '../../servicos/api';
+import { useAvisos } from '../../feedback/Avisos';
 import { armazenamento } from '../../servicos/armazenamento';
 import { auth } from '../../servicos/firebase';
 import { Abertura } from '../acesso/Abertura';
@@ -58,6 +59,7 @@ export function Convite() {
   const navigation = useNavigation();
   const { usuario, recarregarCasal } = useSessao();
   const { confirmar } = useDialogo();
+  const avisos = useAvisos();
   const [estado, setEstado] = useState<Estado>({ tipo: 'carregando' });
   const codigo = params.codigo.toUpperCase();
 
@@ -103,6 +105,27 @@ export function Convite() {
     }
   };
 
+  // Ajuste da Etapa 2: convite recebido por engano. Confirma, cancela o convite e avisa quem convidou.
+  const recusar = async () => {
+    const ok = await confirmar({
+      tom: 'destrutivo',
+      titulo: 'Recusar o convite?',
+      texto: `Vamos avisar ${estado.nome_1}, que pode enviar um novo convite se tiver sido engano.`,
+      cancelar: 'Voltar',
+      confirmar: 'Recusar',
+    });
+    if (!ok) return;
+    try {
+      await recusarConvite(codigo);
+      esquecerConvitePendente();
+      avisos.mostrar({ texto: 'Convite recusado' });
+      sair();
+    } catch (erro) {
+      if (erro instanceof ErroSemConexao) avisos.mostrar({ texto: 'Sem conexão com a internet. Confira e tente de novo.', tipo: 'erro' });
+      else consultar();
+    }
+  };
+
   return (
     <TelaEstado
       icone="coracao"
@@ -121,6 +144,10 @@ export function Convite() {
               },
             }
       }
+      extras={[
+        ...(usuario ? [] : [{ rotulo: 'Agora não', onPress: sair }]),
+        { rotulo: 'Recusar convite', onPress: recusar, destrutiva: true },
+      ]}
       secundaria={
         usuario
           ? { rotulo: 'Agora não', onPress: sair }

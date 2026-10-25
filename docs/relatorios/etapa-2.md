@@ -152,5 +152,18 @@ Total: **98 testes, todos passando**:
 3. Conta que já tem casal e recebe convite: avisamos e pedimos confirmação (sugestão), ou bloqueamos?
 4. Quando você revisa os catálogos de `dados/` (P03)? As observações acima podem ajudar.
 
+## Ajuste pedido pelo dono do produto (25/10/2026): recusar e cancelar convite
+
+A especificação só previa "Aceitar e criar conta" e "Já tenho conta" no T66. Agora:
+
+- **T66, quem recebeu o convite:**
+  - **"Agora não"** fecha a tela sem mexer no convite;
+  - **"Recusar convite"** pede confirmação ("Recusar o convite?"), cancela o convite e avisa quem convidou;
+  - funciona com ou sem conta, e o código do link serve de chave.
+- **T11, quem convidou:** **"Cancelar este convite e gerar outro"**, com confirmação. O link antigo deixa de funcionar.
+- **Aviso:** "O convite para planejar juntos foi recusado. Se foi engano, envie um novo." Aparece no onboarding e no Início. O tipo de notificação `convite_recusado` é novo e não estava na Seção 12.
+- **Perfil (Etapa 3):** ganha a mesma opção de cancelar ou gerar outro convite.
+- **Testes:** 2 novos na API (recusar sem conta; cancelar e gerar outro). Total: **100 testes, todos passando**.
+
 ---
 Aguardando: `APROVADO ETAPA 2` ou `AJUSTES ETAPA 2: …`

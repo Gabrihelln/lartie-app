@@ -2,6 +2,7 @@ import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import type { PassoOnboarding } from '@lartie/regras';
 import { useSessao } from '../../dados/Sessao';
+import { useAvisoParceiro } from '../../dados/useAvisoParceiro';
 import { ExplicacaoPermissao } from '../../feedback/ExplicacaoPermissao';
 import { pedirPermissaoNotificacoes } from '../../servicos/notificacoes';
 import { useOnboarding, type ParamsOnboarding } from './comum';
@@ -35,6 +36,7 @@ function PermNotificacoes() {
 export function Onboarding() {
   const { casal } = useSessao();
   const passo: PassoOnboarding = casal?.onboarding_passo ?? 'T06';
+  useAvisoParceiro();
 
   return (
     <Pilha.Navigator screenOptions={{ headerShown: false }} initialRouteName={passo}>

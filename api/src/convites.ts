@@ -85,6 +85,42 @@ export async function consultarConvite(codigo: string) {
   return { situacao: situacao(c), nome_1: (casal?.nome_1 as string) ?? '', nome_2: (casal?.nome_2 as string | null) ?? null };
 }
 
+/**
+ * T66 · "Recusar convite" (ajuste da Etapa 2): quem recebeu o link cancela o convite, sem precisar de
+ * conta (o código funciona como chave), e quem convidou é avisado para enviar outro se foi engano.
+ */
+export async function recusarConvite(codigo: string) {
+  const ref = refConvite(codigo);
+  await db.runTransaction(async (tx) => {
+    const doc = await tx.get(ref);
+    if (!doc.exists) throw new ErroConvite('nao_encontrado');
+    const c = doc.data() as ConviteParceiro;
+    const s = situacao(c);
+    if (s === 'usado') throw new ErroConvite('usado');
+    if (s === 'expirado') throw new ErroConvite('expirado');
+    tx.update(ref, { status: 'cancelado', recusado_em: FieldValue.serverTimestamp() });
+    tx.set(db.collection(caminhos.subcolecao(c.casal_id, 'notificacoes')).doc(), {
+      usuario_id: c.criado_por,
+      tipo: 'convite_recusado',
+      texto: 'O convite para planejar juntos foi recusado. Se foi engano, envie um novo.',
+      destino: 'perfil',
+      lida: false,
+      criada_em: FieldValue.serverTimestamp(),
+    });
+  });
+}
+
+/** T11 · "Cancelar este convite e gerar outro": cancela os convites pendentes do casal. */
+export async function cancelarConvites(token: DadosToken, casalId: string) {
+  const usuario = (await db.doc(caminhos.usuario(token.uid)).get()).data();
+  if (usuario?.casal_id !== casalId || usuario?.papel !== 'noivo_1') throw new ErroConvite('sem_permissao');
+  const pendentes = await db.collection('convites_parceiro').where('casal_id', '==', casalId).where('status', '==', 'pendente').get();
+  const lote = db.batch();
+  pendentes.docs.forEach((d) => lote.update(d.ref, { status: 'cancelado' }));
+  await lote.commit();
+  return { cancelados: pendentes.size };
+}
+
 /** T66 → T03/T04: entra no casal como noivo_2. */
 export async function aceitarConvite(token: DadosToken, codigo: string, nomeDigitado?: string) {
   const ref = refConvite(codigo);

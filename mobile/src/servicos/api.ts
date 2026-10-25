@@ -98,6 +98,16 @@ export function aceitarConvite(codigo: string, nome?: string) {
   return chamar<{ casal_id: string }>(`/v1/convites/${encodeURIComponent(codigo)}/aceitar`, { corpo: nome ? { nome } : {} });
 }
 
+/** T66 "Recusar convite": sem login; cancela o convite e avisa quem convidou. */
+export function recusarConvite(codigo: string) {
+  return chamar<{ ok: boolean }>(`/v1/convites/${encodeURIComponent(codigo)}/recusar`, { semLogin: true });
+}
+
+/** T11 "Cancelar este convite e gerar outro": cancela os pendentes do casal. */
+export function cancelarConvites() {
+  return chamar<{ cancelados: number }>('/v1/convites', { metodo: 'DELETE' });
+}
+
 /** T06: envia a foto do casal (arquivo local escolhido na câmera ou na galeria). */
 export function enviarFotoCasal(arquivo: { uri: string; tipo: string; nome: string }) {
   const formulario = new FormData();

@@ -181,6 +181,36 @@ describe('convite do parceiro', () => {
   });
 });
 
+describe('recusar e cancelar convite (ajuste da Etapa 2)', () => {
+  it('quem recebeu recusa sem conta; o convite deixa de valer e quem convidou é avisado', async () => {
+    const ana = await contaComCasal('ana@ex.com', 'Ana');
+    const { codigo } = (await post('/v1/convites', ana.token)).json();
+    const r = await post(`/v1/convites/${codigo}/recusar`, null);
+    expect(r.statusCode).toBe(200);
+    expect((await app.inject({ method: 'GET', url: `/v1/convites/${codigo}` })).json().situacao).toBe('usado');
+    const avisos = (await db.collection(`casais/${ana.casalId}/notificacoes`).get()).docs.map((d) => d.data());
+    expect(avisos).toEqual([expect.objectContaining({ usuario_id: ana.uid, tipo: 'convite_recusado', lida: false })]);
+    // Recusado não pode ser aceito nem recusado de novo.
+    await auth.createUser({ email: 'pedro@ex.com', password: 'senha-forte-123' });
+    expect((await post(`/v1/convites/${codigo}/aceitar`, await entrar('pedro@ex.com'))).statusCode).toBe(410);
+    expect((await post(`/v1/convites/${codigo}/recusar`, null)).statusCode).toBe(410);
+    // Quem convidou gera outro.
+    const novo = (await post('/v1/convites', ana.token)).json();
+    expect(novo.codigo).not.toBe(codigo);
+  });
+
+  it('quem convidou cancela o pendente e gera outro; o antigo deixa de valer', async () => {
+    const ana = await contaComCasal('ana@ex.com', 'Ana');
+    const antigo = (await post('/v1/convites', ana.token)).json().codigo;
+    const cancelar = await app.inject({ method: 'DELETE', url: '/v1/convites', headers: { authorization: `Bearer ${ana.token}` } });
+    expect(cancelar.json()).toEqual({ cancelados: 1 });
+    const novo = (await post('/v1/convites', ana.token)).json().codigo;
+    expect(novo).not.toBe(antigo);
+    expect((await app.inject({ method: 'GET', url: `/v1/convites/${antigo}` })).json().situacao).toBe('usado');
+    expect((await app.inject({ method: 'GET', url: `/v1/convites/${novo}` })).json().situacao).toBe('valido');
+  });
+});
+
 describe('foto do casal', () => {
   const PNG = Buffer.from('89504e470d0a1a0a0000000d4948445200000001000000010806000000', 'hex');
 

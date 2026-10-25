@@ -5,8 +5,9 @@ import { useAvisos } from '../feedback/Avisos';
 import { db } from '../servicos/firebase';
 import { useSessao } from './Sessao';
 
-// "Parceiro entrou" (Seção 12): a API cria a notificação quando o convite é aceito. Até o push e a
-// tela de notificações (Etapa 9), o app mostra um aviso rápido e marca como lida.
+// Avisos do convite para quem convidou: "Parceiro entrou" (Seção 12) e "convite recusado" (ajuste da
+// Etapa 2). A API cria a notificação; até o push e a tela de notificações (Etapa 9), o app mostra um
+// aviso rápido e marca como lida.
 export function useAvisoParceiro() {
   const { usuario, casalId } = useSessao();
   const avisos = useAvisos();
@@ -16,14 +17,15 @@ export function useAvisoParceiro() {
     const consulta = query(
       collection(db(), caminhos.subcolecao(casalId, 'notificacoes')),
       where('usuario_id', '==', usuario.uid),
-      where('tipo', '==', 'parceiro_entrou'),
+      where('tipo', 'in', ['parceiro_entrou', 'convite_recusado']),
       where('lida', '==', false),
     );
     return onSnapshot(
       consulta,
       (snap) => {
         snap.docs.forEach((d) => {
-          avisos.mostrar({ texto: String(d.get('texto') ?? 'Seu par entrou no plano de vocês.'), tipo: 'sucesso' });
+          const recusado = d.get('tipo') === 'convite_recusado';
+          avisos.mostrar({ texto: String(d.get('texto') ?? ''), tipo: recusado ? 'neutro' : 'sucesso' });
           updateDoc(doc(db(), caminhos.documento(casalId, 'notificacoes', d.id)), { lida: true }).catch(() => {});
         });
       },

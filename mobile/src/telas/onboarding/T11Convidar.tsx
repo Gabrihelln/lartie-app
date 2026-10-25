@@ -11,7 +11,7 @@ import { Texto } from '../../componentes/Texto';
 import { atualizarPreferencias } from '../../dados/gravacao';
 import { useAvisos } from '../../feedback/Avisos';
 import { useDialogo } from '../../feedback/Dialogo';
-import { criarConvite } from '../../servicos/api';
+import { cancelarConvites, criarConvite } from '../../servicos/api';
 import { useConexao } from '../../servicos/conexao';
 import { jaPediuNotificacoes } from '../../servicos/notificacoes';
 import { espacos, useTema } from '../../tema';
@@ -79,6 +79,25 @@ export function T11Convidar() {
       confirmar: 'Entendi',
     });
 
+  // Ajuste da Etapa 2: enviou para a pessoa errada? Cancela o convite atual e gera outro.
+  const gerarOutro = async () => {
+    const ok = await confirmar({
+      titulo: 'Cancelar este convite?',
+      texto: 'O link enviado deixa de funcionar e criamos um novo para vocês enviarem.',
+      cancelar: 'Manter',
+      confirmar: 'Gerar outro',
+    });
+    if (!ok) return;
+    setCodigo(null);
+    try {
+      await cancelarConvites();
+      setCodigo((await criarConvite()).codigo);
+      avisos.mostrar({ texto: 'Novo convite criado', tipo: 'sucesso' });
+    } catch {
+      setErroConvite(true);
+    }
+  };
+
   const irParaInicio = () => {
     const ativas = lembretes;
     atualizarPreferencias({
@@ -142,6 +161,10 @@ export function T11Convidar() {
           </Texto>
         </Pressable>
       </View>
+
+      {codigo ? (
+        <Botao rotulo="Cancelar este convite e gerar outro" variante="texto" onPress={gerarOutro} />
+      ) : null}
 
       <CampoTexto
         rotulo="Ou envie por e-mail"
