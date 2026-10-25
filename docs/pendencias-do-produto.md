@@ -6,9 +6,9 @@ Decisões e itens que **não** estão definidos nos documentos. O Claude Code n�
 | --- | --- | --- | --- |
 | P01 | Tecnologia do app e do backend | Etapa 0 (`APROVADO STACK`) | O Claude Code propõe; você aprova |
 | P02 | Contas e acessos: Apple Developer, Google Play Console, domínio `lartie.app` / `lartie.com.br`, backend, chave de IA, e-mail transacional | Etapa 0 (backend) e Etapa 1 (login Apple/Google) | Só você pode criar e pagar |
-| P03 | Revisar os catálogos de `dados/` (tarefas, enxoval, clima, preços de referência) | Etapa 2 | São rascunhos; os números do protótipo (64 tarefas, 182 itens) são ilustrativos |
+| P03 | Revisar os catálogos de `dados/` (tarefas, enxoval, clima, preços de referência) | Etapa 2 | São rascunhos; os números do protótipo (64 tarefas, 182 itens) são ilustrativos. **25/10/2026:** seguir com o rascunho e revisar depois (observações no relatório da Etapa 2) |
 | P04 | Onde aparecem as tarefas da mudança (`tarefas_mudanca` em `dados/catalogo-tarefas.json`), especialmente no modo "Só casa nova", que não tem checklist | Etapa 4 | Sugestão: seção "Mudança" na tela Casa |
-| P05 | Estilos sem "religioso" no nome podem ter cerimônia religiosa? (ex.: festa grande com igreja) | Etapa 2 | Sugestão: perguntar "Terá cerimônia religiosa?" no T07 |
+| P05 | Estilos sem "religioso" no nome podem ter cerimônia religiosa? (ex.: festa grande com igreja) | Etapa 2 | **Decidido em 25/10/2026:** perguntar "Terá cerimônia religiosa?" no T07 |
 | P06 | Aprovar os textos de `docs/textos-e-mensagens.md` | Etapas 2, 5 e 6 | |
 | P07 | Preço, plano e assinatura (item "Assinatura" do perfil) | Etapa 10 | No MVP fica como espaço reservado |
 | P08 | E-mail de contato, razão social e CNPJ | Etapa 10 | Aparecem nas lojas, nos termos e no rodapé da web |
