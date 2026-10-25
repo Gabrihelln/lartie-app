@@ -26,6 +26,8 @@ jobs:
         run: npm test
       - name: Regras de segurança do Firestore (emulador)
         run: npx --yes firebase-tools@15.18.0 emulators:exec --only firestore --project demo-lartie "npm run test:regras -w @lartie/firebase"
+      - name: API (emuladores de Auth e Firestore)
+        run: npx --yes firebase-tools@15.18.0 emulators:exec --only auth,firestore --project demo-lartie "npm run test:api -w @lartie/api"
 
   app:
     name: App (tipos e testes)
