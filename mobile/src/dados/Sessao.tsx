@@ -1,6 +1,6 @@
 import React, { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 import { getIdToken, getIdTokenResult, onIdTokenChanged, type User } from '@react-native-firebase/auth';
-import { CLAIM_CASAL, caminhos, type Casal, type ModoApp } from '@lartie/modelo';
+import { CLAIM_CASAL, caminhos, type Casal, type ModoApp, type Papel, type Usuario } from '@lartie/modelo';
 import { consumirSaidaVoluntaria } from '../servicos/acesso';
 import { auth } from '../servicos/firebase';
 import { useDocumento } from './leitura';
@@ -13,6 +13,8 @@ interface ValorSessao {
   usuario: User | null;
   casalId: string | null;
   casal: (Casal & { id: string }) | null;
+  /** Papel no casal (usuarios/{uid}). Só o noivo_1 faz o onboarding; o noivo_2 entra pelo convite. */
+  papel: Papel | null;
   /** indefinido enquanto não há casal carregado. */
   modo: ModoApp;
   carregando: boolean;
@@ -76,13 +78,16 @@ export function SessaoProvider({ children }: { children: ReactNode }) {
     return () => clearTimeout(t);
   }, [casal.erro, usuario, tentativa]);
 
+  const perfil = useDocumento<Usuario>(usuario && casalId ? caminhos.usuario(usuario.uid) : null, tentativa);
+
   const valor: ValorSessao = {
     usuario,
     casalId,
     casal: casal.dados,
+    papel: perfil.dados?.papel ?? null,
     modo: casal.dados?.modo_app ?? 'indefinido',
     // Com casal mas sem o documento ainda (primeira leitura ou nova tentativa), ainda está carregando.
-    carregando: carregandoAuth || casal.carregando || (!!casalId && !casal.dados && !(casal.erro && tentativa >= 5)),
+    carregando: carregandoAuth || casal.carregando || perfil.carregando || (!!casalId && !casal.dados && !(casal.erro && tentativa >= 5)),
     sessaoExpirada,
     limparAvisoSessao,
     recarregarCasal,

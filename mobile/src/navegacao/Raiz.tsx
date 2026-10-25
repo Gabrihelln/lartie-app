@@ -9,8 +9,8 @@ import { CriarConta } from '../telas/acesso/CriarConta';
 import { Entrar } from '../telas/acesso/Entrar';
 import { EsqueciSenha } from '../telas/acesso/EsqueciSenha';
 import { PreparandoConta } from '../telas/acesso/PreparandoConta';
-import { OnboardingProvisorio } from '../telas/OnboardingProvisorio';
-import { TelaProvisoria } from '../telas/TelaProvisoria';
+import { Convite } from '../telas/convite/Convite';
+import { Onboarding } from '../telas/onboarding/Onboarding';
 import { registrarTela } from '../servicos/analytics';
 import { armazenamento, CHAVES } from '../servicos/armazenamento';
 import { useTema } from '../tema';
@@ -41,10 +41,6 @@ const linking: LinkingOptions<ParamsRaiz> = {
   },
 };
 
-function Convite({ route }: { route: { params: { codigo: string } } }) {
-  return <TelaProvisoria titulo="Convite" id={`T66 · código ${route.params.codigo}`} etapa={2} />;
-}
-
 /** T01 na primeira abertura sem sessão: "Começar" → T02, "Já tenho conta" → T04. */
 function AberturaComBotoes({ navigation }: { navigation: { replace: (r: 'BoasVindas') => void; navigate: (r: 'Entrar', p: object) => void } }) {
   const marcar = () => armazenamento.set(CHAVES.jaAbriu, true);
@@ -66,12 +62,12 @@ function AberturaComBotoes({ navigation }: { navigation: { replace: (r: 'BoasVin
  * Regra de roteamento do T01 (especificação Seção 4):
  * - sem sessão → T01 com "Começar" (primeira abertura) ou T02; sessão expirada → T04 com o aviso;
  * - sessão sem casal (ou casal que não carregou) → preparar a conta (API);
- * - onboarding incompleto → onboarding (provisório até a Etapa 2);
+ * - onboarding incompleto → onboarding (só o noivo_1; o noivo_2 entra pelo convite e vai direto ao início);
  * - onboarding completo → tela inicial do modo (abas).
  * A versão mínima (T67) é conferida antes, no App.
  */
 export function Raiz() {
-  const { usuario, casalId, casal, carregando, sessaoExpirada } = useSessao();
+  const { usuario, casalId, casal, papel, carregando, sessaoExpirada } = useSessao();
   const { tema, cores } = useTema();
   const base = tema === 'escuro' ? DarkTheme : DefaultTheme;
   const temaNavegacao = {
@@ -104,8 +100,8 @@ export function Raiz() {
           </Pilha.Group>
         ) : !casalId || !casal ? (
           <Pilha.Screen name="PreparandoConta" component={PreparandoConta} options={{ animation: 'fade' }} />
-        ) : !casal.onboarding_concluido ? (
-          <Pilha.Screen name="OnboardingProvisorio" component={OnboardingProvisorio} options={{ animation: 'fade' }} />
+        ) : !casal.onboarding_concluido && papel !== 'noivo_2' ? (
+          <Pilha.Screen name="Onboarding" component={Onboarding} options={{ animation: 'fade' }} />
         ) : (
           <Pilha.Screen name="Abas" component={Abas} options={{ animation: 'fade' }} />
         )}

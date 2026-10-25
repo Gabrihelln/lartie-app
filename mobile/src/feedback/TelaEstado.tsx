@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { type ReactNode } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { raios, type NomeCor } from '@lartie/tokens';
@@ -24,9 +24,11 @@ interface Props {
   secundaria?: AcaoEstado;
   /** Dentro de uma aba (estado vazio de lista), sem ocupar a área segura inferior. */
   embutido?: boolean;
+  /** Conteúdo extra abaixo do texto (ex.: avatares do casal no T66). */
+  children?: ReactNode;
 }
 
-export function TelaEstado({ icone, fundoIcone, corIcone, titulo, texto, principal, secundaria, embutido }: Props) {
+export function TelaEstado({ icone, fundoIcone, corIcone, titulo, texto, principal, secundaria, embutido, children }: Props) {
   const { cores } = useTema();
   const inset = useSafeAreaInsets();
   return (
@@ -41,6 +43,7 @@ export function TelaEstado({ icone, fundoIcone, corIcone, titulo, texto, princip
         <Texto papel="corpo" cor="onSurfaceVariant" alinhamento="center" style={estilos.texto}>
           {texto}
         </Texto>
+        {children}
       </View>
       {principal || secundaria ? (
         <View style={[estilos.acoes, { paddingBottom: (embutido ? 0 : inset.bottom) + espacos.space10 }]}>
