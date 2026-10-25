@@ -18,6 +18,8 @@ import { getApp } from '@react-native-firebase/app';
 import { armazenamento, CHAVES } from './armazenamento';
 import { inicializarConta } from './api';
 import { auth } from './firebase';
+import { ambienteAtual } from './ambiente';
+import { GOOGLE_WEB_CLIENT_ID } from './loginSocial';
 import { registrarErro } from './analytics';
 
 // Acesso e login (T03, T04, T05). Base: o serviço de login do Newzi.
@@ -104,7 +106,11 @@ export async function entrarComEmail(email: string, senha: string) {
 
 export async function entrarComGoogle() {
   try {
-    GoogleSignin.configure({});
+    const webClientId = GOOGLE_WEB_CLIENT_ID[ambienteAtual()];
+    // Sem o Google configurado no ambiente (demo, ou prod antes da Etapa 10), o botão avisa que não está disponível.
+    if (!webClientId) throw new ErroAcesso('indisponivel');
+    GoogleSignin.configure({ webClientId });
+    if (Platform.OS === 'android') await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
     const resposta = await GoogleSignin.signIn().catch((erro) => {
       if (isErrorWithCode(erro) && erro.code === statusCodes.SIGN_IN_CANCELLED) throw new ErroAcesso('cancelado');
       throw erro;
