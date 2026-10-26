@@ -75,3 +75,22 @@ export function gerarChecklist(dados: DadosChecklist, catalogo: CatalogoTarefas)
   });
   return tarefas;
 }
+
+/**
+ * Perfil › Dados do casamento: mudar a data recalcula os prazos sugeridos das tarefas do plano que
+ * não tiveram o prazo editado à mão. Concluídas não mudam. Devolve só o que muda.
+ */
+export function recalcularPrazos(
+  tarefas: readonly { id: string; catalogo_id: string | null; prazo: string | null; prazo_manual?: boolean; status: string }[],
+  dados: DadosChecklist,
+  catalogo: CatalogoTarefas,
+): { id: string; prazo: string | null }[] {
+  const novos = new Map(gerarChecklist(dados, catalogo).map((t) => [t.catalogo_id, t.prazo]));
+  const mudancas: { id: string; prazo: string | null }[] = [];
+  for (const t of tarefas) {
+    if (!t.catalogo_id || t.prazo_manual || t.status === 'concluida' || !novos.has(t.catalogo_id)) continue;
+    const prazo = novos.get(t.catalogo_id)!;
+    if (prazo !== t.prazo) mudancas.push({ id: t.id, prazo });
+  }
+  return mudancas;
+}

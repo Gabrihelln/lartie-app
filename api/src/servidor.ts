@@ -3,7 +3,18 @@ import multipart from '@fastify/multipart';
 import { CLAIM_CASAL } from '@lartie/modelo';
 import { ErroValidacao, inicializarConta, type DadosToken } from './conta';
 import { aceitarConvite, cancelarConvites, consultarConvite, criarConvite, ErroConvite, recusarConvite } from './convites';
-import { abrirArquivo, ErroArquivo, removerFotoCasal, salvarFotoCasal, TAMANHO_MAXIMO } from './fotos';
+import { excluirConta, removerParceiro, trocarModo } from './casal';
+import {
+  abrirArquivo,
+  assinaturaValida,
+  ErroArquivo,
+  linkAssinado,
+  removerContrato,
+  removerFotoCasal,
+  salvarContrato,
+  salvarFotoCasal,
+  TAMANHO_MAXIMO_CONTRATO,
+} from './fotos';
 import { auth, PROJETO } from './firebase';
 import { gerarPlano } from './plano';
 
@@ -49,7 +60,7 @@ const STATUS_CONVITE: Record<ErroConvite['codigo'], number> = {
 
 export function criarServidor() {
   const app = Fastify({ logger: { level: process.env.LOG_LEVEL ?? 'info' } });
-  app.register(multipart, { limits: { fileSize: TAMANHO_MAXIMO, files: 1 } });
+  app.register(multipart, { limits: { fileSize: TAMANHO_MAXIMO_CONTRATO, files: 1 } });
 
   app.setErrorHandler((erro, _req, resposta) => {
     if (erro instanceof ErroValidacao) return resposta.code(400).send({ erro: 'validacao', mensagem: erro.message });
@@ -118,10 +129,67 @@ export function criarServidor() {
     return { ok: true };
   });
 
-  // Arquivos do casal: só quem é do casal lê.
-  app.get<{ Params: { casal: string; arquivo: string } }>(
+  // Etapa 3 · T33b: troca de modo (gera o que falta e avisa o parceiro).
+  app.post<{ Body: { modo: string; origem?: string } }>(
+    '/v1/casal/modo',
+    {
+      preHandler: exigirCasal,
+      schema: {
+        body: {
+          type: 'object',
+          required: ['modo'],
+          properties: { modo: { type: 'string', maxLength: 20 }, origem: { type: 'string', maxLength: 30 } },
+          additionalProperties: false,
+        },
+      },
+    },
+    async (req) => trocarModo(req.token!, req.casalId!, req.body.modo),
+  );
+
+  // T43: remover o parceiro do plano.
+  app.delete('/v1/casal/parceiro', { preHandler: exigirCasal }, async (req) => removerParceiro(req.token!, req.casalId!));
+
+  // T42: excluir a conta e todos os dados do casal.
+  app.delete('/v1/conta', { preHandler: exigirCasal }, async (req) => excluirConta(req.token!, req.casalId!));
+
+  // T17: contrato do fornecedor (PDF ou foto).
+  app.post<{ Params: { id: string } }>('/v1/fornecedores/:id/contrato', { preHandler: exigirCasal }, async (req, resposta) => {
+    const arquivo = await req.file();
+    if (!arquivo) return resposta.code(400).send({ erro: 'sem_arquivo' });
+    const conteudo = await arquivo.toBuffer();
+    return salvarContrato(req.token!.uid, req.casalId!, req.params.id, conteudo, arquivo.mimetype);
+  });
+
+  app.delete<{ Params: { id: string } }>('/v1/fornecedores/:id/contrato', { preHandler: exigirCasal }, async (req) => {
+    await removerContrato(req.token!.uid, req.casalId!, req.params.id);
+    return { ok: true };
+  });
+
+  // Link de 10 minutos para abrir um arquivo do casal no navegador do sistema (contrato do T17).
+  app.post<{ Body: { caminho: string } }>(
+    '/v1/arquivos/link',
+    {
+      preHandler: exigirCasal,
+      schema: { body: { type: 'object', required: ['caminho'], properties: { caminho: { type: 'string', maxLength: 300 } } } },
+    },
+    async (req) => {
+      if (!req.body.caminho.startsWith(`/v1/arquivos/${req.casalId}/`)) throw new ErroArquivo('nao_encontrado');
+      return { link: linkAssinado(req.casalId!, req.body.caminho) };
+    },
+  );
+
+  // Arquivos do casal: só quem é do casal lê (com o token ou com um link assinado).
+  app.get<{ Params: { casal: string; arquivo: string }; Querystring: { expira?: string; assinatura?: string } }>(
     '/v1/arquivos/:casal/:arquivo',
-    { preHandler: exigirCasal },
+    {
+      preHandler: async (req, resposta) => {
+        if (assinaturaValida(req.params.casal, req.params.arquivo, req.query.expira, req.query.assinatura)) {
+          req.casalId = req.params.casal;
+          return;
+        }
+        await exigirCasal(req, resposta);
+      },
+    },
     async (req, resposta) => {
       if (req.params.casal !== req.casalId) return resposta.code(404).send({ erro: 'nao_encontrado' });
       const { fluxo, tipo } = abrirArquivo(req.params.casal, req.params.arquivo);

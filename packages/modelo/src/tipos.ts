@@ -66,6 +66,10 @@ export interface Casal extends Auditoria {
   /** 3.16: configuração do RSVP. */
   rsvp_prazo: DataCalendario | null;
   buffet_valor_por_pessoa: Dinheiro | null;
+  /** Gravado só pelo servidor: o noivo_2 que entrou pelo convite (null = parceiro ainda não entrou). */
+  parceiro: { uid: string; nome: string } | null;
+  /** T56 aparece uma vez por fase do checklist (13.3). */
+  fases_celebradas: FaseTarefa[];
 }
 
 // 3.2 Usuário -----------------------------------------------------------------
@@ -105,6 +109,8 @@ export interface Usuario {
   preferencias_notificacao: PreferenciasNotificacao;
   /** Tokens de push (FCM) dos aparelhos do usuário. */
   tokens_push: string[];
+  /** T43: gravado pelo servidor quando a pessoa é removida do plano; o app avisa uma vez. */
+  removido_do_plano: { nome: string; em: Instante } | null;
   criado_em: Instante;
   atualizado_em: Instante;
 }
@@ -225,6 +231,8 @@ export interface Tarefa extends Auditoria {
   gerada_pelo_plano: boolean;
   /** Id no catálogo de dados/ (tarefas geradas pelo plano). */
   catalogo_id: string | null;
+  /** O prazo foi mudado à mão no T14: mudar a data do casamento não recalcula este prazo. */
+  prazo_manual: boolean;
 }
 
 // 3.8 Fornecedor ------------------------------------------------------------------
@@ -234,7 +242,7 @@ export type StatusFornecedor = (typeof STATUS_FORNECEDOR)[number];
 
 export interface Fornecedor extends Auditoria {
   nome: string;
-  /** Nome de uma categoria de orçamento do casamento (13.4). */
+  /** Id da categoria de orçamento do casamento (categorias_orcamento/{id}, 13.4). */
   categoria: string;
   contato_whatsapp: string | null;
   contato_instagram: string | null;
