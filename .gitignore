@@ -51,3 +51,6 @@ mobile/.metro-health-check*
 
 # Cópia do ambiente ativo (gerada por mobile/scripts/ambiente.sh)
 mobile/ios/Lartie/GoogleService-Info.plist
+
+# Arquivos guardados pela API no Mac (fotos do casal)
+api/dados-locais/

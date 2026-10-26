@@ -6,7 +6,7 @@ import {
   setDoc,
   updateDoc,
 } from '@react-native-firebase/firestore';
-import { caminhos, type ModoApp, type Subcolecao } from '@lartie/modelo';
+import { caminhos, type Imovel, type ModoApp, type PreferenciasNotificacao, type Subcolecao } from '@lartie/modelo';
 import { registrarErro } from '../servicos/analytics';
 import { auth, db } from '../servicos/firebase';
 
@@ -71,6 +71,27 @@ export function atualizar(
  */
 export function trocarModoApp(casalId: string, novo: ModoApp, aoFalhar?: (erro: unknown) => void) {
   atualizar(casalId, null, null, { modo_app: novo, modo_alterado_por: uid(), modo_alterado_em: serverTimestamp() }, aoFalhar);
+}
+
+type DadosImovel = Omit<Imovel, 'criado_por' | 'criado_em' | 'atualizado_por' | 'atualizado_em'>;
+
+/** T08: imóvel do casal (casais/{casal}/imovel/principal). Cria na primeira vez; depois, atualiza. */
+export function gravarImovel(casalId: string, dados: DadosImovel, jaExiste: boolean, aoFalhar?: (erro: unknown) => void) {
+  const ref = doc(db(), caminhos.imovel(casalId));
+  const quem = uid();
+  const gravacao = jaExiste
+    ? updateDoc(ref, { ...dados, atualizado_por: quem, atualizado_em: serverTimestamp() })
+    : setDoc(ref, { ...dados, criado_por: quem, criado_em: serverTimestamp(), atualizado_por: quem, atualizado_em: serverTimestamp() });
+  acompanhar(gravacao, 'gravar imovel', aoFalhar);
+}
+
+/** T11 "Ativar lembretes" e, depois, as preferências do Perfil. */
+export function atualizarPreferencias(preferencias: PreferenciasNotificacao, aoFalhar?: (erro: unknown) => void) {
+  acompanhar(
+    updateDoc(doc(db(), caminhos.usuario(uid())), { preferencias_notificacao: preferencias, atualizado_em: serverTimestamp() }),
+    'preferencias',
+    aoFalhar,
+  );
 }
 
 /** Exclusão definitiva (13.8). Quem chama já pediu confirmação ao usuário. */

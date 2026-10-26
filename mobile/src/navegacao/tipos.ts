@@ -13,8 +13,8 @@ export type ParamsRaiz = {
   EsqueciSenha: { email?: string } | undefined;
   /** Logado, mas o servidor ainda não criou o casal (claim casal_id). */
   PreparandoConta: undefined;
-  /** Provisória até a Etapa 2 (T06 a T11). */
-  OnboardingProvisorio: undefined;
+  /** Onboarding (T06 a T11, T57). */
+  Onboarding: undefined;
   /** Deep link do convite do parceiro (T66 na Etapa 2). */
   Convite: { codigo: string };
   /** Catálogo interno de componentes (só em desenvolvimento). */

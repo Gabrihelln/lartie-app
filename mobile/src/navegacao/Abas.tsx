@@ -6,6 +6,7 @@ import { BarraNavegacao } from '../componentes/BarraNavegacao';
 import { Botao } from '../componentes/Botao';
 import { FabAssistente } from '../componentes/FabAssistente';
 import { useSessao } from '../dados/Sessao';
+import { useAvisoParceiro } from '../dados/useAvisoParceiro';
 import { sair } from '../servicos/acesso';
 import { TelaProvisoria } from '../telas/TelaProvisoria';
 import type { ParamsAbas } from './tipos';
@@ -64,6 +65,7 @@ const TELAS: Record<Aba, React.ComponentType> = {
 
 export function Abas() {
   const { modo } = useSessao();
+  useAvisoParceiro();
   const abas = abasDoModo(modo);
   return (
     <Tab.Navigator

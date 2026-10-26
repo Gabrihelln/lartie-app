@@ -13,6 +13,7 @@ import { useAvisos } from '../../feedback/Avisos';
 import { criarContaComEmail, entrarComApple, entrarComGoogle, ErroAcesso } from '../../servicos/acesso';
 import { useConexao } from '../../servicos/conexao';
 import { espacos, useTema } from '../../tema';
+import { AvisoConvitePendente } from '../convite/AvisoConvitePendente';
 import { FundoAcesso } from './FundoAcesso';
 import { useAbrirDocumentoLegal, useTratarErroSocial } from './comum';
 import { TEXTOS_VALIDACAO, validarEmail, validarNome, validarSenhaNova } from './validacao';
@@ -100,6 +101,8 @@ export function CriarConta() {
           Comecem a planejar o casamento e a casa nova.
         </Texto>
       </View>
+
+      <AvisoConvitePendente />
 
       <BotoesSociais
         modo="criar"

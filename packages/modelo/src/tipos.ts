@@ -52,6 +52,17 @@ export interface Casal extends Auditoria {
   /** Gravado só pelo servidor, ao gerar checklist e enxoval. Trocar de modo nunca apaga nada. */
   modulos_gerados: { casamento: boolean; casa: boolean };
   onboarding_concluido: boolean;
+  /** Passo do onboarding em que o casal parou (retoma daí se o app fechar). */
+  onboarding_passo: 'T06' | 'T06b' | 'T07' | 'T08' | 'T09' | 'T10' | 'T11' | null;
+  /** Respostas do onboarding que não viram campos próprios (T09). */
+  onboarding_respostas: {
+    ja_mora_sozinho: boolean | null;
+    /** Quem já mora sozinho (decisão de 26/10/2026): os itens marcados ficam como "já era de" essa pessoa. */
+    quem_mora_sozinho: 'noivo_1' | 'noivo_2' | 'os_dois' | null;
+    ja_temos: string[];
+  } | null;
+  /** P05: "Terá cerimônia religiosa?" (T07) para estilos sem "religioso" no nome. */
+  cerimonia_religiosa: boolean | null;
   /** 3.16: configuração do RSVP. */
   rsvp_prazo: DataCalendario | null;
   buffet_valor_por_pessoa: Dinheiro | null;
@@ -103,9 +114,11 @@ export interface Usuario {
 export const STATUS_CONVITE = ['pendente', 'aceito', 'expirado', 'cancelado'] as const;
 export type StatusConvite = (typeof STATUS_CONVITE)[number];
 
-/** convites_parceiro/{id}. Gravado só pelo servidor. */
+/** convites_parceiro/{codigo}. Gravado só pelo servidor. */
 export interface ConviteParceiro {
   casal_id: string;
+  criado_por: string;
+  aceito_por: string | null;
   codigo: string;
   email: string | null;
   criado_em: Instante;
@@ -164,6 +177,8 @@ export interface Item extends Auditoria {
   origem: OrigemItem | null;
   /** Só quando origem = ganhado. */
   quem_deu: string | null;
+  /** Só quando origem = ja_era_nosso e o item já era de uma das duas pessoas (T09). */
+  era_de: 'noivo_1' | 'noivo_2' | null;
   preco_estimado: Dinheiro | null;
   link_loja: string | null;
   medidas: { largura_cm: number | null; profundidade_cm: number | null; altura_cm: number | null } | null;
@@ -172,6 +187,10 @@ export interface Item extends Auditoria {
   observacao: string | null;
   foto: Arquivo | null;
   gerado_pelo_plano: boolean;
+  /** Id no catálogo de dados/ (itens gerados pelo plano). */
+  catalogo_id: string | null;
+  /** Sugestão do catálogo para a lista de presentes. */
+  bom_para_presente: boolean;
 }
 
 // 3.7 Tarefa --------------------------------------------------------------------
@@ -204,6 +223,8 @@ export interface Tarefa extends Auditoria {
   oculta: boolean;
   ordem: number;
   gerada_pelo_plano: boolean;
+  /** Id no catálogo de dados/ (tarefas geradas pelo plano). */
+  catalogo_id: string | null;
 }
 
 // 3.8 Fornecedor ------------------------------------------------------------------
@@ -367,6 +388,8 @@ export const TIPOS_NOTIFICACAO = [
   'comodo_completo',
   'orcamento_estourado',
   'parceiro_entrou',
+  /** Ajuste da Etapa 2: o convite foi recusado por quem recebeu o link. */
+  'convite_recusado',
   'modo_alterado',
   'escolher_por_onde_comecar',
 ] as const;
