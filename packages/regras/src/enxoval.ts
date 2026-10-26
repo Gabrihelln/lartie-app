@@ -11,6 +11,8 @@ export interface DadosEnxoval {
   clima: Clima;
   /** Opções marcadas no T09 ("Cozinha montada", "Geladeira"…). */
   ja_temos: string[];
+  /** T09 "Algum de vocês já mora sozinho?" → quem. Os itens marcados ficam como "já era de" essa pessoa. */
+  quem_mora_sozinho?: 'noivo_1' | 'noivo_2' | 'os_dois' | null;
 }
 
 export interface ComodoGerado {
@@ -28,6 +30,8 @@ export interface ItemGerado {
   fase: FaseItem;
   quantidade: number;
   ja_tenho: boolean;
+  /** De quem o item já era (só quando ja_tenho e só uma pessoa mora sozinha). */
+  era_de: 'noivo_1' | 'noivo_2' | null;
   /** Preço de referência por unidade, em centavos. */
   preco_estimado: number | null;
   bom_para_presente: boolean;
@@ -98,6 +102,10 @@ export function gerarEnxoval(dados: DadosEnxoval, catalogo: CatalogoEnxoval): { 
         fase,
         quantidade: quantidade(item, dados.moradores),
         ja_tenho: marcados.has(item.id),
+        era_de:
+          marcados.has(item.id) && (dados.quem_mora_sozinho === 'noivo_1' || dados.quem_mora_sozinho === 'noivo_2')
+            ? dados.quem_mora_sozinho
+            : null,
         preco_estimado: item.preco_referencia === null ? null : Math.round(item.preco_referencia * 100),
         bom_para_presente: item.bom_para_presente,
       });

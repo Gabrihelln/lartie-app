@@ -80,7 +80,7 @@ export function TelaConviteExpirado({ nome1, onEntendi }: { nome1: string | null
 export function Convite() {
   const { params } = useRoute<RouteProp<ParamsRaiz, 'Convite'>>();
   const navigation = useNavigation();
-  const { usuario, recarregarCasal } = useSessao();
+  const { usuario, casalId, casal, recarregarCasal } = useSessao();
   const { confirmar } = useDialogo();
   const avisos = useAvisos();
   const [estado, setEstado] = useState<Estado>({ tipo: 'carregando' });
@@ -101,15 +101,33 @@ export function Convite() {
     consultar();
   }, [consultar]);
 
-  const sair = () => (navigation.canGoBack() ? navigation.goBack() : navigation.navigate(usuario ? 'Abas' : 'BoasVindas'));
+  const sair = () => {
+    // Logado, o convite guardado já foi visto aqui: não volta a abrir sozinho.
+    if (usuario) esquecerConvitePendente();
+    if (navigation.canGoBack()) navigation.goBack();
+    else navigation.navigate(usuario ? 'Abas' : 'BoasVindas');
+  };
 
   if (estado.tipo === 'carregando') return <Abertura carregando />;
   if (estado.tipo === 'sem_conexao') return <TelaSemConexao onTentarDeNovo={consultar} />;
   if (estado.tipo === 'invalido') return <TelaConviteExpirado nome1={estado.nome_1} onEntendi={sair} />;
 
   const aceitarLogado = async () => {
+    // Decisão de 26/10/2026: quem já tem um plano confirma antes de trocar. O plano atual não é apagado.
+    if (casalId) {
+      const nomesAtuais = casal ? (casal.nome_2 ? `${casal.nome_1} & ${casal.nome_2}` : casal.nome_1) : null;
+      const trocar = await confirmar({
+        icone: 'aviso',
+        titulo: 'Trocar de plano?',
+        texto: `Você já faz parte ${nomesAtuais ? `do plano de ${nomesAtuais}` : 'de outro plano'}. Ao aceitar, passa a ver e editar o plano de ${estado.nome_1}. O plano atual fica guardado, mas você deixa de vê-lo.`,
+        cancelar: 'Manter o meu',
+        confirmar: 'Aceitar e trocar',
+      });
+      if (!trocar) return;
+    }
     try {
       await aceitarConvite(codigo);
+      esquecerConvitePendente();
       if (auth().currentUser) await getIdToken(auth().currentUser!, true);
       recarregarCasal();
       sair();

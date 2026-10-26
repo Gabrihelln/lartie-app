@@ -55,7 +55,12 @@ export interface Casal extends Auditoria {
   /** Passo do onboarding em que o casal parou (retoma daí se o app fechar). */
   onboarding_passo: 'T06' | 'T06b' | 'T07' | 'T08' | 'T09' | 'T10' | 'T11' | null;
   /** Respostas do onboarding que não viram campos próprios (T09). */
-  onboarding_respostas: { ja_mora_sozinho: boolean | null; ja_temos: string[] } | null;
+  onboarding_respostas: {
+    ja_mora_sozinho: boolean | null;
+    /** Quem já mora sozinho (decisão de 26/10/2026): os itens marcados ficam como "já era de" essa pessoa. */
+    quem_mora_sozinho: 'noivo_1' | 'noivo_2' | 'os_dois' | null;
+    ja_temos: string[];
+  } | null;
   /** P05: "Terá cerimônia religiosa?" (T07) para estilos sem "religioso" no nome. */
   cerimonia_religiosa: boolean | null;
   /** 3.16: configuração do RSVP. */
@@ -172,6 +177,8 @@ export interface Item extends Auditoria {
   origem: OrigemItem | null;
   /** Só quando origem = ganhado. */
   quem_deu: string | null;
+  /** Só quando origem = ja_era_nosso e o item já era de uma das duas pessoas (T09). */
+  era_de: 'noivo_1' | 'noivo_2' | null;
   preco_estimado: Dinheiro | null;
   link_loja: string | null;
   medidas: { largura_cm: number | null; profundidade_cm: number | null; altura_cm: number | null } | null;

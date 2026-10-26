@@ -119,6 +119,7 @@ export async function gerarPlano(uid: string, casalId: string): Promise<ResumoPl
         moradores: imovel.moradores,
         clima,
         ja_temos: casal.onboarding_respostas?.ja_temos ?? [],
+        quem_mora_sozinho: casal.onboarding_respostas?.quem_mora_sozinho ?? null,
       },
       catalogos.enxoval,
     );
@@ -140,6 +141,7 @@ export async function gerarPlano(uid: string, casalId: string): Promise<ResumoPl
             estado: i.ja_tenho ? 'ja_tenho' : 'falta',
             origem: i.ja_tenho ? 'ja_era_nosso' : null,
             quem_deu: null,
+            era_de: i.era_de,
             preco_estimado: i.preco_estimado,
             link_loja: null,
             medidas: null,

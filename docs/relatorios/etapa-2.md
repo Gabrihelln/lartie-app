@@ -141,9 +141,9 @@ Total: **98 testes, todos passando**:
 
 ## Pendências e riscos
 
-- **Conta que já tem casal e aceita um convite:** ela passa para o casal do convite, e o casal antigo fica sem uso, mas não é apagado. A especificação não trata esse caso. Sugestão: na Etapa 3, avisar antes de aceitar.
+- **Conta que já tem casal e aceita um convite:** decidido em 26/10/2026, ver a seção no fim. O casal antigo fica sem uso, mas não é apagado.
 - **API e fotos no Mac:** valem as mesmas observações da Etapa 1, e tudo isso vai para a VPS junto com o domínio.
-- **Revisão dos catálogos (P03):** continua em aberto. Mudanças nos arquivos valem para os próximos planos gerados.
+- **Revisão dos catálogos (P03):** no MVP fica o rascunho atual (decidido em 26/10/2026). Mudanças nos arquivos valem para os próximos planos gerados.
 
 ## Perguntas para o dono do produto
 
@@ -182,6 +182,20 @@ A especificação só previa "Aceitar e criar conta" e "Já tenho conta" no T66.
 - **Correção:**
   - o T03 e o T04 mostram "Você vai entrar no plano de {nome}…", com **"Não usar este convite"**;
   - o convite guardado vale por 30 minutos e depois é descartado.
+
+## Respostas do dono do produto (26/10/2026)
+
+1. **Moradores:** fica sempre 2 no MVP. Mudar depois, se houver demanda.
+2. **"Já mora sozinho":**
+   - com "Sim", o T09 pergunta **"Quem?"** (nome 1, nome 2 ou "Os dois");
+   - o rótulo passa a ser "Marque o que {nome} já tem";
+   - os itens marcados entram como "Já tenho" com o campo novo `era_de` (`noivo_1` ou `noivo_2`), para mostrar "já era de {nome}" no enxoval (Etapa 4);
+   - teste novo nas regras: **36 testes**, todos passando.
+3. **Conta que já tem casal e recebe convite:**
+   - ao tocar em "Aceitar convite", aparece **"Trocar de plano?"**, com "Manter o meu" e "Aceitar e trocar";
+   - vale também para "Já tenho conta" no T66: depois do login, o app reabre o convite para a pessoa confirmar (antes, nesse caminho, o convite era ignorado);
+   - "Agora não" ou aceitar descartam o convite guardado.
+4. **Catálogos (P03):** ficam como estão no MVP.
 
 ---
 Aguardando: `APROVADO ETAPA 2` ou `AJUSTES ETAPA 2: …`

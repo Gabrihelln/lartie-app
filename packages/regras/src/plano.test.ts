@@ -166,6 +166,15 @@ describe('enxoval (13.2)', () => {
     expect(itens.find((i) => i.catalogo_id === 'I002')!.ja_tenho).toBe(false);
   });
 
+  it('T09: quem mora sozinho fica registrado nos itens que já tem', () => {
+    const base = { quartos: 1, banheiros: 1, mobiliado: 'nao' as const, tem_pets: false, moradores: 2, clima: 'quente' as const, ja_temos: ['Geladeira'] };
+    const so = gerarEnxoval({ ...base, quem_mora_sozinho: 'noivo_2' }, enxoval).itens;
+    expect(so.find((i) => i.catalogo_id === 'I001')).toMatchObject({ ja_tenho: true, era_de: 'noivo_2' });
+    expect(so.find((i) => i.catalogo_id === 'I002')!.era_de).toBeNull();
+    const dois = gerarEnxoval({ ...base, quem_mora_sozinho: 'os_dois' }, enxoval).itens;
+    expect(dois.find((i) => i.catalogo_id === 'I001')!.era_de).toBeNull();
+  });
+
   it('mobiliado: "sim" tira os móveis grandes; "em parte" deixa para "com calma"', () => {
     const base = { quartos: 1, banheiros: 1, tem_pets: false, moradores: 2, clima: 'temperado' as const, ja_temos: [] };
     const sim = gerarEnxoval({ ...base, mobiliado: 'sim' }, enxoval).itens;

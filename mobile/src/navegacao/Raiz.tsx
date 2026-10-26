@@ -1,5 +1,5 @@
-import React from 'react';
-import { NavigationContainer, DefaultTheme, DarkTheme, type LinkingOptions } from '@react-navigation/native';
+import React, { useEffect } from 'react';
+import { createNavigationContainerRef, NavigationContainer, DefaultTheme, DarkTheme, type LinkingOptions } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useSessao } from '../dados/Sessao';
 import { Catalogo, CatalogoEstado, CatalogoFormulario } from '../dev/Catalogo';
@@ -9,7 +9,7 @@ import { CriarConta } from '../telas/acesso/CriarConta';
 import { Entrar } from '../telas/acesso/Entrar';
 import { EsqueciSenha } from '../telas/acesso/EsqueciSenha';
 import { PreparandoConta } from '../telas/acesso/PreparandoConta';
-import { Convite } from '../telas/convite/Convite';
+import { Convite, conviteGuardado } from '../telas/convite/Convite';
 import { Onboarding } from '../telas/onboarding/Onboarding';
 import { registrarTela } from '../servicos/analytics';
 import { armazenamento, CHAVES } from '../servicos/armazenamento';
@@ -18,6 +18,7 @@ import { Abas } from './Abas';
 import type { ParamsRaiz } from './tipos';
 
 const Pilha = createNativeStackNavigator<ParamsRaiz>();
+const navegacao = createNavigationContainerRef<ParamsRaiz>();
 
 // Deep links (plano 2.2 item 7). O domínio lartie.app ainda será comprado (P13): até lá vale o
 // esquema lartie://. As páginas públicas do convidado (lartie.app/{slug}/…) são da web, não do app.
@@ -75,6 +76,18 @@ export function Raiz() {
     colors: { ...base.colors, primary: cores.primary, background: cores.background, card: cores.surface, text: cores.onSurface, border: cores.outlineVariant },
   };
 
+  // "Já tenho conta" no T66 com uma conta que já tem plano: depois do login, reabre o convite para a
+  // pessoa confirmar a troca (contas novas aceitam na tela "Preparando a conta").
+  const pronto = !carregando && !!usuario && !!casal;
+  useEffect(() => {
+    if (!pronto) return;
+    const c = conviteGuardado();
+    if (!c) return;
+    const abrir = () => navegacao.isReady() && navegacao.navigate('Convite', { codigo: c.codigo });
+    const t = setTimeout(abrir, 300);
+    return () => clearTimeout(t);
+  }, [pronto]);
+
   if (carregando) return <Abertura carregando />;
 
   const jaAbriu = armazenamento.getBoolean(CHAVES.jaAbriu) ?? false;
@@ -82,6 +95,7 @@ export function Raiz() {
 
   return (
     <NavigationContainer
+      ref={navegacao}
       linking={linking}
       theme={temaNavegacao}
       onStateChange={(estado) => {
