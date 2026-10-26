@@ -19,6 +19,7 @@ import { limpar, minutosRestantes, registrarFalha, situacao, type Tentativas } f
 import { useConexao } from '../../servicos/conexao';
 import { espacos, estiloMarca, useTema } from '../../tema';
 import { Separador } from './CriarConta';
+import { AvisoConvitePendente } from '../convite/AvisoConvitePendente';
 import { FundoAcesso } from './FundoAcesso';
 import { useTratarErroSocial } from './comum';
 import { validarEmail, validarSenhaLogin } from './validacao';
@@ -137,6 +138,8 @@ export function Entrar() {
           Entre para continuar o planejamento.
         </Texto>
       </View>
+
+      <AvisoConvitePendente />
 
       {aviso ? <AvisoTopo texto={aviso} tom={aviso === TEXTOS_ENTRAR.sessaoExpirada ? 'aviso' : 'erro'} /> : null}
 

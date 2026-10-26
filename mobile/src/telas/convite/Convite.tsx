@@ -21,13 +21,36 @@ import { espacos } from '../../tema';
 // convite em vez de criar um casal novo. Já logado: aceita direto.
 
 export const CHAVE_CONVITE_PENDENTE = 'convite.pendente';
+/** O convite guardado só vale para o cadastro logo em seguida (correção da Etapa 2). */
+export const VALIDADE_CONVITE_PENDENTE_MS = 30 * 60 * 1000;
 
-export function guardarConvitePendente(codigo: string) {
-  armazenamento.set(CHAVE_CONVITE_PENDENTE, codigo.toUpperCase());
+interface ConviteGuardado {
+  codigo: string;
+  nome_1: string;
+  guardado_em: number;
+}
+
+export function guardarConvitePendente(codigo: string, nome1: string) {
+  const c: ConviteGuardado = { codigo: codigo.toUpperCase(), nome_1: nome1, guardado_em: Date.now() };
+  armazenamento.set(CHAVE_CONVITE_PENDENTE, JSON.stringify(c));
+}
+
+/** Convite guardado no T66 e ainda dentro da validade; o vencido é descartado. */
+export function conviteGuardado(agora = Date.now()): ConviteGuardado | null {
+  const bruto = armazenamento.getString(CHAVE_CONVITE_PENDENTE);
+  if (!bruto) return null;
+  try {
+    const c = JSON.parse(bruto) as ConviteGuardado;
+    if (c.codigo && agora - c.guardado_em < VALIDADE_CONVITE_PENDENTE_MS) return c;
+  } catch {
+    // formato antigo (só o código): descarta
+  }
+  armazenamento.remove(CHAVE_CONVITE_PENDENTE);
+  return null;
 }
 
 export function convitePendente(): string | null {
-  return armazenamento.getString(CHAVE_CONVITE_PENDENTE) ?? null;
+  return conviteGuardado()?.codigo ?? null;
 }
 
 export function esquecerConvitePendente() {
@@ -139,7 +162,7 @@ export function Convite() {
           : {
               rotulo: 'Aceitar e criar conta',
               onPress: () => {
-                guardarConvitePendente(codigo);
+                guardarConvitePendente(codigo, estado.nome_1);
                 navigation.navigate('CriarConta');
               },
             }
@@ -154,7 +177,7 @@ export function Convite() {
           : {
               rotulo: 'Já tenho conta',
               onPress: () => {
-                guardarConvitePendente(codigo);
+                guardarConvitePendente(codigo, estado.nome_1);
                 navigation.navigate('Entrar', {});
               },
             }

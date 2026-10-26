@@ -176,5 +176,12 @@ A especificação só previa "Aceitar e criar conta" e "Já tenho conta" no T66.
   - **Android:** link enviado com o app aberto chegou à tela que já estava aberta.
   - **iOS:** com o app aberto, o sistema pergunta "Abrir com 'Lartiê'?" e depois entrega o link.
 
+## Correção (26/10/2026): convite guardado usado sem aviso
+
+- **Problema:** ao tocar em "Aceitar e criar conta" ou "Já tenho conta" no T66, o código ficava guardado no aparelho. Se a pessoa voltasse sem criar a conta, o próximo cadastro entrava no casal do convite, em silêncio. Foi o caso da conta de teste `b@b.com`, que entrou como `noivo_2` no casal "Aa & Bb" e pulou o onboarding.
+- **Correção:**
+  - o T03 e o T04 mostram "Você vai entrar no plano de {nome}…", com **"Não usar este convite"**;
+  - o convite guardado vale por 30 minutos e depois é descartado.
+
 ---
 Aguardando: `APROVADO ETAPA 2` ou `AJUSTES ETAPA 2: …`
