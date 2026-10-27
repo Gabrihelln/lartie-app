@@ -45,7 +45,9 @@
 		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>O Lartiê usa a câmera para a foto do casal e, mais tarde, para fotografar itens da casa.</string>
+	<string>O Lartiê usa a câmera para a foto do casal, dos itens da casa e dos contratos.</string>
+	<key>NSContactsUsageDescription</key>
+	<string>O Lartiê usa os contatos só quando vocês escolhem importar convidados da agenda. Nada é enviado sem vocês confirmarem.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
 	<key>NSPhotoLibraryUsageDescription</key>

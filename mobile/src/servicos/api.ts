@@ -222,3 +222,10 @@ export function removerDaLista(ids: string[]) {
 export function cancelarReserva(reservaId: string) {
   return chamar<{ aviso: AvisoConvidado }>(`/v1/reservas/${encodeURIComponent(reservaId)}/cancelar`);
 }
+
+// Etapa 6 ---------------------------------------------------------------------------------------
+
+/** T29 e T38: token do link de RSVP de cada grupo (o servidor cria na primeira vez). */
+export function tokensDosGrupos(ids: string[]) {
+  return chamar<{ tokens: Record<string, string> }>('/v1/grupos/tokens', { corpo: { ids } });
+}

@@ -1,4 +1,4 @@
-import type { Ocasiao, StatusReserva } from '@lartie/modelo';
+import type { Ocasiao, Presenca, RestricaoAlimentar, StatusReserva } from '@lartie/modelo';
 
 // Chamadas à API do Lartiê feitas pelo servidor da web. Em desenvolvimento a API roda no Mac
 // (porta 8100); na VPS, em 127.0.0.1 atrás do nginx. O navegador nunca fala direto com a API.
@@ -51,3 +51,21 @@ export function reais(centavos: number | null): string {
   if (centavos === null) return '';
   return `R$ ${Math.round(centavos / 100).toLocaleString('pt-BR')}`;
 }
+
+export interface PaginaRsvp {
+  casal: { nome_1: string; nome_2: string | null };
+  data: string | null;
+  horario: string | null;
+  local: string | null;
+  cidade: string | null;
+  uf: string | null;
+  prazo: string | null;
+  encerrado: boolean;
+  grupo: string;
+  recado: string | null;
+  respondido: boolean;
+  pessoas: { id: string; nome: string; faixa: 'adulto' | 'crianca'; presenca: Presenca; restricao: RestricaoAlimentar; restricao_outra: string | null }[];
+  lista: { slug: string; slug_lista: string } | null;
+}
+
+export const caminhoRsvp = (token: string) => `/v1/publico/rsvp/${encodeURIComponent(token)}`;
