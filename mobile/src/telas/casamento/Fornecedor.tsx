@@ -22,7 +22,7 @@ import { Botao } from '../../componentes/Botao';
 import { CampoData } from '../../componentes/CampoData';
 import { CampoSelecao } from '../../componentes/CampoSelecao';
 import { CampoTexto } from '../../componentes/CampoTexto';
-import { CampoMoeda, formatarReais } from '../../componentes/CamposMascarados';
+import { CampoMoeda, formatarReais, mascararTelefone } from '../../componentes/CamposMascarados';
 import { Chip } from '../../componentes/Chip';
 import { Contador } from '../../componentes/Contador';
 import { AvatarIniciais, Cartao, Divisoria } from '../../componentes/Estrutura';
@@ -415,7 +415,14 @@ function TelaFornecedor() {
         <>
           <CampoTexto rotulo="Nome" value={c.nome} onChangeText={(t) => mudar('nome', t)} maxLength={80} erro={erros.nome} autoCapitalize="words" />
           <CampoSelecao rotulo="Categoria" opcoes={opcoesCategoria} valor={c.categoria} onMudar={(v) => mudar('categoria', v)} erro={erros.categoria} />
-          <CampoTexto rotulo="WhatsApp" value={c.contato_whatsapp} onChangeText={(t) => mudar('contato_whatsapp', t)} keyboardType="phone-pad" placeholder="(41) 99999-0000" />
+          <CampoTexto
+            rotulo="WhatsApp"
+            value={c.contato_whatsapp}
+            onChangeText={(t) => mudar('contato_whatsapp', mascararTelefone(t))}
+            keyboardType="phone-pad"
+            placeholder="(41) 99999-0000"
+            maxLength={15}
+          />
           <CampoTexto
             rotulo="Instagram"
             value={c.contato_instagram}
@@ -424,7 +431,14 @@ function TelaFornecedor() {
             autoCorrect={false}
             placeholder="@studioluz"
           />
-          <CampoTexto rotulo="Telefone" value={c.contato_telefone} onChangeText={(t) => mudar('contato_telefone', t)} keyboardType="phone-pad" />
+          <CampoTexto
+            rotulo="Telefone"
+            value={c.contato_telefone}
+            onChangeText={(t) => mudar('contato_telefone', mascararTelefone(t))}
+            keyboardType="phone-pad"
+            placeholder="(41) 3333-0000"
+            maxLength={15}
+          />
           <CampoData rotulo="Data do orçamento" valor={c.data_orcamento} onMudar={(d) => mudar('data_orcamento', d)} />
         </>
       ) : (
@@ -641,8 +655,12 @@ function FolhaParcela({
     <FolhaInferior visivel={!!parcela} titulo={parcela?.id ? 'Parcela' : 'Nova parcela'} onFechar={onFechar}>
       <CampoTexto rotulo="Descrição" value={descricao} onChangeText={setDescricao} maxLength={40} />
       <View style={estilos.linha}>
-        <CampoMoeda rotulo="Valor" valor={valor} onMudar={setValor} />
-        <CampoData rotulo="Vencimento" valor={vencimento} onMudar={setVencimento} />
+        <View style={estilos.flex}>
+          <CampoMoeda rotulo="Valor" valor={valor} onMudar={setValor} />
+        </View>
+        <View style={estilos.flex}>
+          <CampoData rotulo="Vencimento" valor={vencimento} onMudar={setVencimento} />
+        </View>
       </View>
       <Chip rotulo={paga ? 'Paga' : 'Marcar como paga'} selecionado={paga} onPress={() => setPaga((p) => !p)} />
       <Botao rotulo="Salvar" larguraTotal desativado={!valor} onPress={salvar} />
@@ -703,7 +721,9 @@ function FolhaGerarParcelas({
       </Texto>
       <View style={estilos.linha}>
         <Contador rotulo="Parcelas" valor={n} onMudar={setN} minimo={1} maximo={24} />
-        <CampoData rotulo="Entrada em" valor={entrada} onMudar={setEntrada} />
+        <View style={estilos.flex}>
+          <CampoData rotulo="Entrada em" valor={entrada} onMudar={setEntrada} />
+        </View>
       </View>
       <Botao rotulo="Gerar" larguraTotal onPress={gerarAgora} />
     </FolhaInferior>

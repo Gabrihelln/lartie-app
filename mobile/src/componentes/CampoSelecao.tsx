@@ -70,7 +70,7 @@ export function CampoSelecao<T extends string>({ rotulo, opcoes, valor, onMudar,
 }
 
 const estilos = StyleSheet.create({
-  grupo: { gap: espacos.space1 + 2, flex: 1 },
+  grupo: { gap: espacos.space1 + 2 },
   caixa: { flexDirection: 'row', alignItems: 'center', borderWidth: 1, borderRadius: raios.radiusMd, paddingHorizontal: espacos.space4, gap: espacos.space2 },
   flex: { flex: 1 },
   opcao: { flexDirection: 'row', alignItems: 'center', borderBottomWidth: StyleSheet.hairlineWidth },

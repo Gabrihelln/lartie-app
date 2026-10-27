@@ -178,5 +178,21 @@ A API ganhou as rotas do que o app não pode gravar sozinho: troca de modo, remo
 2. Só quem criou o plano pode remover o parceiro (Divergência 6). Está bom assim?
 3. Itens comprados entram em "Enxoval" até a Etapa 4 (Divergência 5). Na Etapa 4, quer escolher a categoria de cada item, ou usar uma regra por cômodo (por exemplo, eletrodomésticos e móveis)?
 
+## Ajustes pedidos pelo dono do produto (26/10/2026)
+
+- **WhatsApp e Telefone (T17):**
+  - máscara brasileira: "(41) 99999-0000" para celular, "(41) 3333-0000" para fixo;
+  - o campo para de aceitar números depois de 11 dígitos, mesmo colando um número maior;
+  - 4 testes novos.
+- **Folha "Novo gasto" (T15):**
+  - o campo Valor ficava espremido ao lado da Data e agora divide a linha por igual;
+  - a Categoria sumia atrás do "Salvar" e agora aparece.
+  - A mesma correção vale para a folha de parcela, "Gerar parcelas", a categoria e a data do orçamento no T17, e Fase e Prazo no T14.
+  - **Causa:** dentro das folhas, os campos de data e de seleção encolhiam até sumir.
+- **Tema:**
+  - Perfil › Aparência ganhou **Automático**, **Claro** e **Escuro**;
+  - **Automático** segue o celular, como antes;
+  - a escolha vale para este aparelho e muda também o teclado, os seletores de data e a barra de status.
+
 ---
 Aguardando: `APROVADO ETAPA 3` ou `AJUSTES ETAPA 3: …`

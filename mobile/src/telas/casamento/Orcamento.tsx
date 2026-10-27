@@ -271,8 +271,12 @@ function FolhaNovoGasto({ visivel, onFechar, escopo: e, categorias }: { visivel:
     <FolhaInferior visivel={visivel} titulo="Novo gasto" onFechar={onFechar}>
       <CampoTexto rotulo="Descrição" value={descricao} onChangeText={setDescricao} maxLength={80} erro={tentou ? erros.descricao : null} />
       <View style={estilos.linhaCampos}>
-        <CampoMoeda rotulo="Valor" valor={valor} onMudar={setValor} erro={tentou ? erros.valor : null} />
-        <CampoData rotulo="Data" valor={data} onMudar={setData} />
+        <View style={estilos.flex}>
+          <CampoMoeda rotulo="Valor" valor={valor} onMudar={setValor} erro={tentou ? erros.valor : null} />
+        </View>
+        <View style={estilos.flex}>
+          <CampoData rotulo="Data" valor={data} onMudar={setData} />
+        </View>
       </View>
       <CampoSelecao
         rotulo="Categoria"

@@ -1,8 +1,19 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Switch, TextInput, View } from 'react-native';
-import { useNavigation, useRoute, type RouteProp } from '@react-navigation/native';
+import {
+  useNavigation,
+  useRoute,
+  type RouteProp,
+} from '@react-navigation/native';
 import { raios, tamanhos } from '@lartie/tokens';
-import { caminhos, FASES_TAREFA, type FaseTarefa, type Responsavel, type StatusTarefa, type Tarefa as TipoTarefa } from '@lartie/modelo';
+import {
+  caminhos,
+  FASES_TAREFA,
+  type FaseTarefa,
+  type Responsavel,
+  type StatusTarefa,
+  type Tarefa as TipoTarefa,
+} from '@lartie/modelo';
 import {
   diasDeAtraso,
   faseSugeridaPelaData,
@@ -22,7 +33,12 @@ import { CampoSelecao } from '../../componentes/CampoSelecao';
 import { CampoTexto } from '../../componentes/CampoTexto';
 import { formatarReais } from '../../componentes/CamposMascarados';
 import { EscolhaUnica } from '../../componentes/EscolhaUnica';
-import { AvatarIniciais, Cartao, Divisoria, TelaPilha } from '../../componentes/Estrutura';
+import {
+  AvatarIniciais,
+  Cartao,
+  Divisoria,
+  TelaPilha,
+} from '../../componentes/Estrutura';
 import { FolhaInferior } from '../../componentes/FolhaInferior';
 import { Icone } from '../../componentes/Icone';
 import { Selo } from '../../componentes/Selo';
@@ -77,14 +93,20 @@ function TelaTarefa() {
   const avisos = useAvisos();
   const excluirTarefa = useExcluirTarefa();
   const novo = !params?.id;
-  const id = useMemo(() => params?.id ?? (casalId ? novoId(casalId, 'tarefas') : ''), [params?.id, casalId]);
-  const leitura = useDocumento<TipoTarefa>(casalId && !novo ? caminhos.documento(casalId, 'tarefas', id) : null);
+  const id = useMemo(
+    () => params?.id ?? (casalId ? novoId(casalId, 'tarefas') : ''),
+    [params?.id, casalId],
+  );
+  const leitura = useDocumento<TipoTarefa>(
+    casalId && !novo ? caminhos.documento(casalId, 'tarefas', id) : null,
+  );
   const t = leitura.dados;
   const todas = useTarefas().dados;
   const fornecedores = useFornecedores().dados;
   const hoje = hojeLocal();
 
-  const faseInicial = params?.fase ?? faseSugeridaPelaData(casal?.data_casamento ?? null, hoje);
+  const faseInicial =
+    params?.fase ?? faseSugeridaPelaData(casal?.data_casamento ?? null, hoje);
   const vazio: Campos = {
     titulo: '',
     fase: faseInicial,
@@ -120,11 +142,17 @@ function TelaTarefa() {
     setC(campos);
   }, [t]);
 
-  const mudar = <K extends keyof Campos>(k: K, v: Campos[K]) => setC((x) => ({ ...x, [k]: v }));
+  const mudar = <K extends keyof Campos>(k: K, v: Campos[K]) =>
+    setC(x => ({ ...x, [k]: v }));
   const alterado = JSON.stringify(c) !== inicial.current;
-  useDescartarAlteracoes({ temAlteracoes: alterado, oQue: 'esta tarefa', liberado: saindo });
+  useDescartarAlteracoes({
+    temAlteracoes: alterado,
+    oQue: 'esta tarefa',
+    liberado: saindo,
+  });
 
-  if (!novo && leitura.carregando) return <TelaPilha titulo="Tarefa">{null}</TelaPilha>;
+  if (!novo && leitura.carregando)
+    return <TelaPilha titulo="Tarefa">{null}</TelaPilha>;
   if (!novo && !t) {
     return (
       <TelaPilha titulo="Tarefa">
@@ -137,11 +165,13 @@ function TelaTarefa() {
 
   const valido = c.titulo.trim().length > 0;
   const atraso = diasDeAtraso({ status: c.status, prazo: c.prazo }, hoje);
-  const fornecedor = fornecedores.find((f) => f.id === c.fornecedor_id);
+  const fornecedor = fornecedores.find(f => f.id === c.fornecedor_id);
   const aoFalhar = () => erroAoSalvar();
 
   const dados = () => {
-    const prazo = c.prazo ?? prazoSugeridoDaFase(c.fase, casal?.data_casamento ?? null, hoje);
+    const prazo =
+      c.prazo ??
+      prazoSugeridoDaFase(c.fase, casal?.data_casamento ?? null, hoje);
     return {
       titulo: c.titulo.trim(),
       fase: c.fase,
@@ -163,14 +193,31 @@ function TelaTarefa() {
         casalId,
         'tarefas',
         id,
-        { ...d, oculta: false, ordem: proximaOrdem(todas, c.fase), gerada_pelo_plano: false, catalogo_id: null, prazo_manual: !!c.prazo },
+        {
+          ...d,
+          oculta: false,
+          ordem: proximaOrdem(todas, c.fase),
+          gerada_pelo_plano: false,
+          catalogo_id: null,
+          prazo_manual: !!c.prazo,
+        },
         aoFalhar,
       );
       registrarEvento({ nome: 'tarefa_criada', params: { fase: c.fase } });
     } else {
       const prazoMudou = t!.prazo !== d.prazo;
-      atualizar(casalId, 'tarefas', id, { ...d, ...(prazoMudou ? { prazo_manual: true } : {}) }, aoFalhar);
-      if (t!.status !== 'concluida' && d.status === 'concluida') registrarEvento({ nome: 'tarefa_concluida', params: { origem: 'tarefa' } });
+      atualizar(
+        casalId,
+        'tarefas',
+        id,
+        { ...d, ...(prazoMudou ? { prazo_manual: true } : {}) },
+        aoFalhar,
+      );
+      if (t!.status !== 'concluida' && d.status === 'concluida')
+        registrarEvento({
+          nome: 'tarefa_concluida',
+          params: { origem: 'tarefa' },
+        });
     }
     navigation.goBack();
     avisos.mostrar({ texto: 'Tarefa salva', tipo: 'sucesso' });
@@ -182,7 +229,9 @@ function TelaTarefa() {
     saindo.current = true;
     atualizar(casalId, 'tarefas', id, { oculta: true }, aoFalhar);
     navigation.goBack();
-    avisos.comDesfazer('Tarefa oculta', () => atualizar(casalId, 'tarefas', id, { oculta: false }, aoFalhar));
+    avisos.comDesfazer('Tarefa oculta', () =>
+      atualizar(casalId, 'tarefas', id, { oculta: false }, aoFalhar),
+    );
   };
 
   const duplicar = () => {
@@ -193,7 +242,15 @@ function TelaTarefa() {
       casalId,
       'tarefas',
       copia,
-      { ...dados(), titulo: `${c.titulo.trim()} (cópia)`.slice(0, 80), oculta: false, ordem: proximaOrdem(todas, c.fase), gerada_pelo_plano: false, catalogo_id: null, prazo_manual: true },
+      {
+        ...dados(),
+        titulo: `${c.titulo.trim()} (cópia)`.slice(0, 80),
+        oculta: false,
+        ordem: proximaOrdem(todas, c.fase),
+        gerada_pelo_plano: false,
+        catalogo_id: null,
+        prazo_manual: true,
+      },
       aoFalhar,
     );
     saindo.current = true;
@@ -211,12 +268,20 @@ function TelaTarefa() {
 
   // Categoria sugerida pelo catálogo ao criar um fornecedor a partir da tarefa (dados/catalogo-tarefas).
   const categoriaSugerida = (() => {
-    const cat = CATALOGO.tarefas.find((x) => x.id === t?.catalogo_id)?.categoria_orcamento;
+    const cat = CATALOGO.tarefas.find(
+      x => x.id === t?.catalogo_id,
+    )?.categoria_orcamento;
     return cat ? `casamento_${cat}` : undefined;
   })();
 
   const lista = fornecedores
-    .filter((f) => f.status !== 'descartado' && f.nome.toLocaleLowerCase('pt-BR').includes(busca.trim().toLocaleLowerCase('pt-BR')))
+    .filter(
+      f =>
+        f.status !== 'descartado' &&
+        f.nome
+          .toLocaleLowerCase('pt-BR')
+          .includes(busca.trim().toLocaleLowerCase('pt-BR')),
+    )
     .sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
 
   return (
@@ -224,37 +289,67 @@ function TelaTarefa() {
       titulo={novo ? 'Nova tarefa' : 'Tarefa'}
       direita={
         novo ? null : (
-          <Pressable onPress={() => setMenu(true)} accessibilityRole="button" accessibilityLabel="Mais opções" hitSlop={8}>
+          <Pressable
+            onPress={() => setMenu(true)}
+            accessibilityRole="button"
+            accessibilityLabel="Mais opções"
+            hitSlop={8}
+          >
             <Icone nome="mais" cor={cores.onSurface} />
           </Pressable>
         )
       }
-      rodape={<Botao rotulo="Salvar" larguraTotal desativado={!valido} onPress={salvar} />}
+      rodape={
+        <Botao
+          rotulo="Salvar"
+          larguraTotal
+          desativado={!valido}
+          onPress={salvar}
+        />
+      }
     >
       {atraso > 0 ? (
         <View style={estilos.seloTopo}>
-          <Selo texto={`Atrasada ${atraso} ${atraso === 1 ? 'dia' : 'dias'}`} tom="error" />
+          <Selo
+            texto={`Atrasada ${atraso} ${atraso === 1 ? 'dia' : 'dias'}`}
+            tom="error"
+          />
         </View>
       ) : null}
       <TextInput
         value={c.titulo}
-        onChangeText={(v) => mudar('titulo', v)}
+        onChangeText={v => mudar('titulo', v)}
         placeholder="Nome da tarefa"
         placeholderTextColor={cores.onSurfaceVariant}
         maxLength={80}
         multiline
         accessibilityLabel="Título da tarefa"
-        style={[estiloTexto('tituloDestaque'), estilos.titulo, { color: cores.onSurface }]}
+        style={[
+          estiloTexto('tituloDestaque'),
+          estilos.titulo,
+          { color: cores.onSurface },
+        ]}
       />
 
       <View style={estilos.linha}>
-        <CampoSelecao
-          rotulo="Fase"
-          opcoes={FASES_TAREFA.map((f) => ({ valor: f, rotulo: FASES_CHECKLIST[f].nome }))}
-          valor={c.fase}
-          onMudar={(f) => mudar('fase', f)}
-        />
-        <CampoData rotulo="Prazo" valor={c.prazo} onMudar={(d) => mudar('prazo', d)} />
+        <View style={estilos.flex}>
+          <CampoSelecao
+            rotulo="Fase"
+            opcoes={FASES_TAREFA.map(f => ({
+              valor: f,
+              rotulo: FASES_CHECKLIST[f].nome,
+            }))}
+            valor={c.fase}
+            onMudar={f => mudar('fase', f)}
+          />
+        </View>
+        <View style={estilos.flex}>
+          <CampoData
+            rotulo="Prazo"
+            valor={c.prazo}
+            onMudar={d => mudar('prazo', d)}
+          />
+        </View>
       </View>
       {!c.prazo && casal?.data_casamento ? (
         <Texto papel="ajuda" cor="onSurfaceVariant">
@@ -270,7 +365,7 @@ function TelaTarefa() {
           { valor: 'os_dois', rotulo: 'Os dois' },
         ]}
         selecionado={c.responsavel}
-        onMudar={(r) => mudar('responsavel', r)}
+        onMudar={r => mudar('responsavel', r)}
       />
       <EscolhaUnica
         rotulo="Status"
@@ -280,13 +375,20 @@ function TelaTarefa() {
           { valor: 'concluida', rotulo: 'Concluída' },
         ]}
         selecionado={c.status}
-        onMudar={(s) => mudar('status', s)}
+        onMudar={s => mudar('status', s)}
       />
 
       <View style={estilos.grupo}>
         <Texto papel="rotuloCampo">Fornecedor vinculado</Texto>
         {fornecedor ? (
-          <Cartao onPress={() => navigation.navigate('Fornecedor', { id: fornecedor.id })} rotuloAcessivel={`${fornecedor.nome}, ${STATUS_FORNECEDOR_ROTULO[fornecedor.status]}`}>
+          <Cartao
+            onPress={() =>
+              navigation.navigate('Fornecedor', { id: fornecedor.id })
+            }
+            rotuloAcessivel={`${fornecedor.nome}, ${
+              STATUS_FORNECEDOR_ROTULO[fornecedor.status]
+            }`}
+          >
             <View style={estilos.linhaCentro}>
               <AvatarIniciais texto={iniciais(fornecedor.nome)} />
               <View style={estilos.flex}>
@@ -295,19 +397,39 @@ function TelaTarefa() {
                 </Texto>
                 <Texto papel="metadado" cor="onSurfaceVariant">
                   {STATUS_FORNECEDOR_ROTULO[fornecedor.status]}
-                  {fornecedor.valor ? ` · ${formatarReais(fornecedor.valor)}` : ''}
+                  {fornecedor.valor
+                    ? ` · ${formatarReais(fornecedor.valor)}`
+                    : ''}
                 </Texto>
               </View>
               <Icone nome="setaDireita" cor={cores.onSurfaceVariant} />
             </View>
           </Cartao>
         ) : (
-          <Botao rotulo="Vincular fornecedor" variante="contornado" larguraTotal onPress={() => setVincular(true)} />
+          <Botao
+            rotulo="Vincular fornecedor"
+            variante="contornado"
+            larguraTotal
+            onPress={() => setVincular(true)}
+          />
         )}
-        {fornecedor ? <Botao rotulo="Desvincular" variante="texto" compacto onPress={() => mudar('fornecedor_id', null)} /> : null}
+        {fornecedor ? (
+          <Botao
+            rotulo="Desvincular"
+            variante="texto"
+            compacto
+            onPress={() => mudar('fornecedor_id', null)}
+          />
+        ) : null}
       </View>
 
-      <CampoTexto rotulo="Notas" value={c.notas} onChangeText={(v) => mudar('notas', v)} multiline maxLength={1000} />
+      <CampoTexto
+        rotulo="Notas"
+        value={c.notas}
+        onChangeText={v => mudar('notas', v)}
+        multiline
+        maxLength={1000}
+      />
 
       <Cartao>
         <View style={[estilos.linhaCentro, { minHeight: alvoToque }]}>
@@ -316,7 +438,7 @@ function TelaTarefa() {
           </Texto>
           <Switch
             value={c.lembrete_ativo}
-            onValueChange={(v) => mudar('lembrete_ativo', v)}
+            onValueChange={v => mudar('lembrete_ativo', v)}
             accessibilityLabel="Lembrar 3 dias antes do prazo"
             trackColor={{ true: cores.primary, false: cores.outlineSoft }}
             thumbColor={cores.surface}
@@ -325,16 +447,53 @@ function TelaTarefa() {
         </View>
       </Cartao>
 
-      {novo ? null : <Botao rotulo="Excluir tarefa" variante="destrutivo" onPress={excluirEsta} style={estilos.esquerda} />}
+      {novo ? null : (
+        <Botao
+          rotulo="Excluir tarefa"
+          variante="destrutivo"
+          onPress={excluirEsta}
+          style={estilos.esquerda}
+        />
+      )}
 
       <FolhaInferior visivel={menu} onFechar={() => setMenu(false)}>
-        <Botao rotulo="Ocultar tarefa" variante="tonal" icone="ocultar" larguraTotal onPress={ocultar} />
-        <Botao rotulo="Duplicar" variante="tonal" larguraTotal onPress={duplicar} />
-        <Botao rotulo="Excluir tarefa" variante="destrutivo" icone="excluir" larguraTotal onPress={excluirEsta} />
+        <Botao
+          rotulo="Ocultar tarefa"
+          variante="tonal"
+          icone="ocultar"
+          larguraTotal
+          onPress={ocultar}
+        />
+        <Botao
+          rotulo="Duplicar"
+          variante="tonal"
+          larguraTotal
+          onPress={duplicar}
+        />
+        <Botao
+          rotulo="Excluir tarefa"
+          variante="destrutivo"
+          icone="excluir"
+          larguraTotal
+          onPress={excluirEsta}
+        />
       </FolhaInferior>
 
-      <FolhaInferior visivel={vincular} titulo="Vincular fornecedor" onFechar={() => setVincular(false)}>
-        <View style={[estilos.busca, { backgroundColor: cores.surface, borderColor: cores.outlineSoft, minHeight: tamanhos.fieldHeight }]}>
+      <FolhaInferior
+        visivel={vincular}
+        titulo="Vincular fornecedor"
+        onFechar={() => setVincular(false)}
+      >
+        <View
+          style={[
+            estilos.busca,
+            {
+              backgroundColor: cores.surface,
+              borderColor: cores.outlineSoft,
+              minHeight: tamanhos.fieldHeight,
+            },
+          ]}
+        >
           <Icone nome="busca" cor={cores.onSurfaceVariant} />
           <TextInput
             value={busca}
@@ -342,7 +501,11 @@ function TelaTarefa() {
             placeholder="Buscar"
             placeholderTextColor={cores.onSurfaceVariant}
             accessibilityLabel="Buscar fornecedor"
-            style={[estiloTexto('corpo'), estilos.flex, { color: cores.onSurface }]}
+            style={[
+              estiloTexto('corpo'),
+              estilos.flex,
+              { color: cores.onSurface },
+            ]}
           />
         </View>
         <Cartao semPadding>
@@ -360,7 +523,11 @@ function TelaTarefa() {
                     setVincular(false);
                   }}
                   accessibilityRole="button"
-                  style={[estilos.linhaCentro, estilos.opcao, { minHeight: alvoToque + espacos.space2 }]}
+                  style={[
+                    estilos.linhaCentro,
+                    estilos.opcao,
+                    { minHeight: alvoToque + espacos.space2 },
+                  ]}
                 >
                   <AvatarIniciais texto={iniciais(f.nome)} tamanho={36} />
                   <Texto papel="nomeItem" style={estilos.flex}>
@@ -380,10 +547,15 @@ function TelaTarefa() {
             setVincular(false);
             // A tarefa precisa existir para o fornecedor novo ser ligado a ela.
             if (novo) {
-              avisos.mostrar({ texto: 'Salvem a tarefa antes de criar o fornecedor.' });
+              avisos.mostrar({
+                texto: 'Salvem a tarefa antes de criar o fornecedor.',
+              });
               return;
             }
-            navigation.navigate('Fornecedor', { tarefaId: id, categoria: categoriaSugerida });
+            navigation.navigate('Fornecedor', {
+              tarefaId: id,
+              categoria: categoriaSugerida,
+            });
           }}
         />
       </FolhaInferior>
@@ -395,11 +567,26 @@ const estilos = StyleSheet.create({
   flex: { flex: 1 },
   seloTopo: { flexDirection: 'row' },
   titulo: { paddingVertical: espacos.space1 },
-  linha: { flexDirection: 'row', gap: espacos.space3, alignItems: 'flex-start' },
-  linhaCentro: { flexDirection: 'row', alignItems: 'center', gap: espacos.space3 },
+  linha: {
+    flexDirection: 'row',
+    gap: espacos.space3,
+    alignItems: 'flex-start',
+  },
+  linhaCentro: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: espacos.space3,
+  },
   grupo: { gap: espacos.space2 },
   esquerda: { alignSelf: 'flex-start' },
-  busca: { flexDirection: 'row', alignItems: 'center', gap: espacos.space2, borderWidth: 1, borderRadius: raios.radiusMd, paddingHorizontal: espacos.space3 },
+  busca: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: espacos.space2,
+    borderWidth: 1,
+    borderRadius: raios.radiusMd,
+    paddingHorizontal: espacos.space3,
+  },
   vazio: { padding: espacos.space4 },
   opcao: { paddingHorizontal: espacos.space4 },
 });

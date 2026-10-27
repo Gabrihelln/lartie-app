@@ -8,6 +8,7 @@ import { caminhos, PREFERENCIAS_PADRAO, type PreferenciasNotificacao, type Usuar
 import { formatarData, moduloVisivel, ROTULO_MODO } from '@lartie/regras';
 import { AvatarDuplo } from '../../componentes/AvatarDuplo';
 import { Botao } from '../../componentes/Botao';
+import { EscolhaUnica } from '../../componentes/EscolhaUnica';
 import { Cartao, Divisoria, LinhaNavegavel, RotuloGrupo, TelaAba } from '../../componentes/Estrutura';
 import { FolhaInferior } from '../../componentes/FolhaInferior';
 import { Texto } from '../../componentes/Texto';
@@ -110,6 +111,7 @@ function LinhaInterruptor({ titulo, valor, onMudar }: { titulo: string; valor: b
 
 export function Perfil() {
   const navigation = useNavigation();
+  const { aparencia, mudarAparencia } = useTema();
   const { casal, usuario, papel, modo } = useSessao();
   const { nome1, nome2, saudacao } = useNomes();
   const { online } = useConexao();
@@ -255,6 +257,23 @@ export function Perfil() {
         <LinhaNavegavel titulo="Central de ajuda" onPress={() => aDefinir('Central de ajuda')} />
         <Divisoria />
         <LinhaNavegavel titulo="Termos e privacidade" onPress={() => aDefinir('Termos e privacidade')} />
+      </Cartao>
+
+      <RotuloGrupo texto="Aparência" />
+      <Cartao>
+        <EscolhaUnica
+          rotulo="Tema"
+          opcoes={[
+            { valor: 'sistema', rotulo: 'Automático' },
+            { valor: 'claro', rotulo: 'Claro' },
+            { valor: 'escuro', rotulo: 'Escuro' },
+          ]}
+          selecionado={aparencia}
+          onMudar={mudarAparencia}
+        />
+        <Texto papel="metadado" cor="onSurfaceVariant">
+          Automático segue o tema do celular.
+        </Texto>
       </Cartao>
 
       <RotuloGrupo texto="Lembretes" />

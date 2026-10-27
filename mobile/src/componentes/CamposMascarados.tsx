@@ -81,3 +81,6 @@ export function CampoMesAno({ rotulo, texto, onMudarTexto, erro, onBlur }: Props
     />
   );
 }
+
+
+export { mascararTelefone } from './mascaras';

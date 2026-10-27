@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
-import { Platform, useColorScheme, type ViewStyle } from 'react-native';
+import React, { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react';
+import { Appearance, Platform, useColorScheme, type ViewStyle } from 'react-native';
 import {
   alvoToque,
   coresDoTema,
@@ -10,6 +10,22 @@ import {
   type Plataforma,
   type Tema,
 } from '@lartie/tokens';
+import { armazenamento } from '../servicos/armazenamento';
+
+/** Perfil › Aparência: seguir o celular (padrão, 2.4) ou fixar claro/escuro. Fica neste aparelho. */
+export type Aparencia = 'sistema' | 'claro' | 'escuro';
+const CHAVE_APARENCIA = 'tema.aparencia';
+
+function aparenciaSalva(): Aparencia {
+  const v = armazenamento.getString(CHAVE_APARENCIA);
+  return v === 'claro' || v === 'escuro' ? v : 'sistema';
+}
+
+/** O sistema também troca: teclado, seletores de data, alertas e barra de status nativos. */
+function aplicarNoSistema(a: Aparencia) {
+  Appearance.setColorScheme(a === 'sistema' ? 'unspecified' : a === 'escuro' ? 'dark' : 'light');
+}
+aplicarNoSistema(aparenciaSalva());
 
 interface ValorTema {
   tema: Tema;
@@ -22,6 +38,8 @@ interface ValorTema {
   /** Só no catálogo de desenvolvimento: força claro ou escuro para conferir as telas. */
   forcarTema: (tema: Tema | null) => void;
   temaForcado: Tema | null;
+  aparencia: Aparencia;
+  mudarAparencia: (aparencia: Aparencia) => void;
 }
 
 const ContextoTema = createContext<ValorTema | null>(null);
@@ -29,7 +47,14 @@ const ContextoTema = createContext<ValorTema | null>(null);
 export function TemaProvider({ children }: { children: ReactNode }) {
   const esquema = useColorScheme();
   const [temaForcado, forcarTema] = useState<Tema | null>(null);
-  const tema: Tema = temaForcado ?? (esquema === 'dark' ? 'escuro' : 'claro');
+  const [aparencia, setAparencia] = useState<Aparencia>(aparenciaSalva);
+  const mudarAparencia = useCallback((a: Aparencia) => {
+    armazenamento.set(CHAVE_APARENCIA, a);
+    aplicarNoSistema(a);
+    setAparencia(a);
+  }, []);
+  const doSistema: Tema = esquema === 'dark' ? 'escuro' : 'claro';
+  const tema: Tema = temaForcado ?? (aparencia === 'sistema' ? doSistema : aparencia);
   const plataforma: Plataforma = Platform.OS === 'ios' ? 'ios' : 'android';
 
   const valor = useMemo<ValorTema>(
@@ -45,8 +70,10 @@ export function TemaProvider({ children }: { children: ReactNode }) {
       },
       forcarTema,
       temaForcado,
+      aparencia,
+      mudarAparencia,
     }),
-    [tema, plataforma, temaForcado],
+    [tema, plataforma, temaForcado, aparencia, mudarAparencia],
   );
 
   return <ContextoTema.Provider value={valor}>{children}</ContextoTema.Provider>;
