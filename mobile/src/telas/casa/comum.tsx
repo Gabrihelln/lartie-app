@@ -46,6 +46,7 @@ import { removerDaLista, type AvisoConvidado } from '../../servicos/api';
 import { FolhaAvisarConvidados } from '../presentes/comum';
 import { db } from '../../servicos/firebase';
 import { espacos, useTema } from '../../tema';
+import * as C from '../../feedback/confirmacoes';
 
 // Peças da Casa nova (T18 a T21): botão de estado do item, "Como chegou?", a lista de presentes
 // do botão "Na lista" e a celebração do cômodo completo (T55).
@@ -413,15 +414,7 @@ export function useEstadoItem() {
       naLista.map(l => l.id),
     ).catch(() => []);
     if (reservas.length) {
-      const ok = await confirmar({
-        icone: 'aviso',
-        titulo: 'Tirar da lista?',
-        texto: `Este item tem reserva de ${
-          reservas[0]!.nome_convidado
-        }. Tirar da lista mesmo assim?`,
-        cancelar: 'Manter',
-        confirmar: 'Tirar da lista',
-      });
+      const ok = await confirmar(C.tirarDaListaComReserva(reservas[0]!.nome_convidado));
       if (!ok) return;
       // Com reserva, o servidor cancela (13.5) e devolve as mensagens para avisar os convidados.
       try {

@@ -78,6 +78,10 @@ service cloud.firestore {
         && d.oculta is bool;
     }
 
+    function tarefaMudancaValida(d) {
+      return textoPreenchido(d.titulo) && d.concluida is bool && d.ordem is int;
+    }
+
     function fornecedorValido(d) {
       return textoPreenchido(d.nome)
         && d.categoria is string
@@ -153,6 +157,7 @@ service cloud.firestore {
       return (sub == 'itens' && itemValido(d))
         || (sub == 'comodos' && comodoValido(d))
         || (sub == 'tarefas' && tarefaValida(d))
+        || (sub == 'tarefas_mudanca' && tarefaMudancaValida(d))
         || (sub == 'fornecedores' && fornecedorValido(d))
         || (sub == 'parcelas' && parcelaValida(d))
         || (sub == 'categorias_orcamento' && categoriaValida(d))
@@ -168,7 +173,7 @@ service cloud.firestore {
     // Subcoleções que o app grava diretamente (funcionam offline).
     function gravavelPeloApp(sub) {
       return sub in [
-        'imovel', 'comodos', 'itens', 'tarefas', 'fornecedores', 'parcelas', 'categorias_orcamento',
+        'imovel', 'comodos', 'itens', 'tarefas', 'tarefas_mudanca', 'fornecedores', 'parcelas', 'categorias_orcamento',
         'gastos', 'listas_presentes', 'lista_itens', 'agradecimentos', 'grupos', 'convidados'
       ];
     }

@@ -28,6 +28,7 @@ import { espacos, useTema } from '../../tema';
 import { ModuloOculto } from '../inicio/ModuloOculto';
 import { BotaoEstado, useEstadoItem } from './comum';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import * as C from '../../feedback/confirmacoes';
 
 // T19 · Cômodo (Comodo.dc.html). Filtros por estado, botão de estado com as regras do T19 (em
 // useEstadoItem), "Medidas" (T21), "+" (T20 neste cômodo) e o menu: renomear e excluir o cômodo
@@ -111,16 +112,7 @@ function TelaComodo() {
     if (!casalId) return;
     setMover(false);
     if (destino === null) {
-      const ok = await confirmar({
-        icone: 'excluir',
-        tom: 'destrutivo',
-        titulo: `Excluir ${comodo.nome}?`,
-        texto: doComodo.length
-          ? `Os ${doComodo.length} itens do cômodo também saem. Não dá para desfazer.`
-          : 'Não dá para desfazer.',
-        cancelar: 'Cancelar',
-        confirmar: 'Excluir',
-      });
+      const ok = await confirmar(C.excluirComodo(comodo.nome, doComodo.length));
       if (!ok) return;
     }
     emLote(

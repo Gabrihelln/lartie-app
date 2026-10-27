@@ -55,6 +55,7 @@ import {
   useLinkDaLista,
 } from './comum';
 import { FolhaNovaLista, usePublicarLista } from './Presentes';
+import * as C from '../../feedback/confirmacoes';
 
 // T24 · Lista: itens e reservas (ListaPresentes.dc.html). "Recebido" passa a reserva para recebida,
 // o item do enxoval para "Já tenho" (ganhado, com quem deu) e cria o agradecimento, com "Desfazer".
@@ -177,17 +178,7 @@ export function Lista() {
   };
 
   const cancelar = async (r: ReservaComId, li: LiComId) => {
-    const ok = await confirmar({
-      tom: 'destrutivo',
-      titulo: 'Cancelar a reserva?',
-      texto: `${nomeItem(
-        li,
-      )} volta a ficar disponível na lista. Vamos ajudar vocês a avisar ${
-        r.nome_convidado
-      }.`,
-      cancelar: 'Manter',
-      confirmar: 'Cancelar reserva',
-    });
+    const ok = await confirmar(C.cancelarReserva(nomeItem(li), r.nome_convidado));
     if (!ok) return;
     if (!online) return semConexao();
     try {
@@ -210,15 +201,7 @@ export function Lista() {
     );
     const item = itens.find(i => i.id === li.item_id);
     if (ativas.length) {
-      const ok = await confirmar({
-        icone: 'aviso',
-        titulo: 'Tirar da lista?',
-        texto: `Este item tem reserva de ${
-          ativas[0]!.nome_convidado
-        }. Tirar da lista mesmo assim?`,
-        cancelar: 'Manter',
-        confirmar: 'Tirar da lista',
-      });
+      const ok = await confirmar(C.tirarDaListaComReserva(ativas[0]!.nome_convidado));
       if (!ok) return;
       if (!online) return semConexao();
       try {
@@ -247,13 +230,7 @@ export function Lista() {
   const despublicar = async () => {
     setMenu(false);
     if (!casalId) return;
-    const ok = await confirmar({
-      titulo: 'Despublicar a lista?',
-      texto:
-        'O link passa a mostrar "Este link não está mais ativo". As reservas feitas continuam valendo.',
-      cancelar: 'Cancelar',
-      confirmar: 'Despublicar',
-    });
+    const ok = await confirmar(C.despublicarLista());
     if (!ok) return;
     atualizar(
       casalId,
@@ -268,16 +245,7 @@ export function Lista() {
   const excluir = async () => {
     setMenu(false);
     const ativas = reservas.filter(r => r.status === 'ativa').length;
-    const ok = await confirmar({
-      icone: 'excluir',
-      tom: 'destrutivo',
-      titulo: `Excluir a lista ${daOcasiao(lista.ocasiao)}?`,
-      texto: ativas
-        ? `As ${ativas} reservas ativas serão canceladas e vamos ajudar vocês a avisar os convidados. Não dá para desfazer.`
-        : 'Não dá para desfazer.',
-      cancelar: 'Cancelar',
-      confirmar: 'Excluir lista',
-    });
+    const ok = await confirmar(C.excluirLista(daOcasiao(lista.ocasiao), ativas));
     if (!ok) return;
     if (!online) return semConexao();
     try {

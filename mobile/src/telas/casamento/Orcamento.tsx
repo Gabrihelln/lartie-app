@@ -37,6 +37,7 @@ import { useDialogo } from '../../feedback/Dialogo';
 import { EsqueletoLista } from '../../feedback/Esqueleto';
 import { registrarEvento } from '../../servicos/analytics';
 import { espacos, useTema } from '../../tema';
+import * as C from '../../feedback/confirmacoes';
 
 // T15 · Orçamento (Orcamento.dc.html). Escopo Casamento · Casa nova conforme o modo (13.9 regra 5).
 // Gasto = fornecedores fechados + itens comprados com preço + gastos avulsos (13.4), calculado.
@@ -76,7 +77,7 @@ export function Orcamento({ novoGasto, onFecharNovoGasto, escopoFixo }: Props) {
   const pct = resumo.percentualUsado;
 
   const marcarPaga = async (p: (typeof parcelas)[number]) => {
-    const ok = await confirmar({ titulo: 'Marcar como paga?', texto: `${p.descricao} de ${formatarReais(p.valor)}.`, cancelar: 'Cancelar', confirmar: 'Marcar como paga' });
+    const ok = await confirmar(C.marcarParcelaPaga(p.descricao, formatarReais(p.valor)));
     if (!ok || !casalId) return;
     atualizar(casalId, 'parcelas', p.id, { paga: true, paga_em: hojeLocal() }, aoFalhar);
     registrarEvento({ nome: 'parcela_paga', params: {} });
@@ -319,7 +320,7 @@ function FolhaCategoria({ linha, onFechar, entrada }: { linha: LinhaOrcamento | 
   }, [idAberta]);
   const lancamentos = linha ? lancamentosDaCategoria(linha, entrada) : [];
   const excluirGasto = async (id: string, descricao: string) => {
-    const ok = await confirmar({ tom: 'destrutivo', titulo: `Excluir “${descricao}”?`, texto: 'O valor sai do orçamento.', cancelar: 'Cancelar', confirmar: 'Excluir' });
+    const ok = await confirmar(C.excluirGasto(descricao));
     if (!ok || !casalId) return;
     excluir(casalId, 'gastos', id, aoFalhar);
     avisos.mostrar({ texto: 'Gasto excluído' });

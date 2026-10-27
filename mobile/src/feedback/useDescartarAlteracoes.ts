@@ -1,5 +1,6 @@
 import { useEffect, type RefObject } from 'react';
 import { useNavigation } from '@react-navigation/native';
+import { descartarAlteracoes } from './confirmacoes';
 import { useDialogo } from './Dialogo';
 
 // Guarda de "Descartar alterações" (T36) para qualquer formulário: ao voltar (seta, gesto ou
@@ -17,14 +18,8 @@ interface Opcoes {
   liberado?: RefObject<boolean>;
 }
 
-export function textoDescartar(oQue = 'este item') {
-  return {
-    titulo: 'Descartar as alterações?',
-    texto: `Vocês mudaram ${oQue} e ainda não salvaram.`,
-    cancelar: 'Continuar editando',
-    confirmar: 'Descartar',
-  };
-}
+/** T36. O texto fica no catálogo de confirmações (Seção 15). */
+export const textoDescartar = descartarAlteracoes;
 
 export function useDescartarAlteracoes({ temAlteracoes, oQue, liberado }: Opcoes) {
   const navigation = useNavigation();
@@ -35,7 +30,7 @@ export function useDescartarAlteracoes({ temAlteracoes, oQue, liberado }: Opcoes
     return navigation.addListener('beforeRemove', (evento) => {
       if (liberado?.current) return;
       evento.preventDefault();
-      confirmar({ ...textoDescartar(oQue), tom: 'destrutivo' }).then((descartar) => {
+      confirmar(descartarAlteracoes(oQue)).then((descartar) => {
         if (descartar) navigation.dispatch(evento.data.action);
       });
     });

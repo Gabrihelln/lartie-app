@@ -5,6 +5,7 @@ import {
   gerarCategorias,
   gerarChecklist,
   gerarEnxoval,
+  gerarTarefasMudanca,
   modulosDoModo,
   slugComSufixo,
   slugDoCasal,
@@ -158,6 +159,13 @@ export async function gerarPlano(uid: string, casalId: string, modoAlvo?: ModoAp
           },
         ]);
       }
+      // P04: tarefas da mudança (seção "Mudança" da tela Casa).
+      for (const t of gerarTarefasMudanca(catalogos.tarefas, imovel)) {
+        escritas.push([
+          db.doc(caminhos.documento(casalId, 'tarefas_mudanca', t.id)),
+          { titulo: t.titulo, dias_antes: t.dias_antes, concluida: false, ordem: t.ordem, catalogo_id: t.id, ...auditoria(uid) },
+        ]);
+      }
       for (const c of gerarCategorias('casa', catalogos.categorias, null)) {
         escritas.push([
           db.doc(caminhos.documento(casalId, 'categorias_orcamento', c.id)),
@@ -183,6 +191,7 @@ export async function gerarPlano(uid: string, casalId: string, modoAlvo?: ModoAp
       casamento: jaGerados.casamento || ativos.casamento,
       casa: jaGerados.casa || ativos.casa,
     },
+    ...(ativos.casa && !jaGerados.casa ? { mudanca_gerada: true } : {}),
     atualizado_por: uid,
     atualizado_em: FieldValue.serverTimestamp(),
   });

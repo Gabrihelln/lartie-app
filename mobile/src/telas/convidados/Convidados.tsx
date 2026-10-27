@@ -40,6 +40,7 @@ import { useConexao } from '../../servicos/conexao';
 import { espacos, useTema } from '../../tema';
 import { abrirWhatsApp, useMensagensRsvp, type GrupoComId } from './comum';
 import { useImportarContatos } from './ImportarContatos';
+import * as C from '../../feedback/confirmacoes';
 
 // T28 · Convidados e RSVP (Convidados.dc.html): painel, estimativa do buffet, importar contatos (T59),
 // lembrar pendentes (T38, 13.6), filtros e grupos. Menu: prazo, horário e local do convite; exportar
@@ -103,14 +104,7 @@ export function Convidados() {
       avisos.mostrar({ texto: 'Ninguém para lembrar agora. O lembrete vale 1 vez a cada 3 dias por grupo.' });
       return;
     }
-    const ok = await confirmar({
-      tom: 'whatsapp',
-      icone: 'assistente',
-      titulo: `Lembrar ${pendentes} ${pendentes === 1 ? 'pessoa' : 'pessoas'}?`,
-      texto: `Cada um dos ${elegiveis.length} grupos recebe pelo WhatsApp o link para confirmar presença${casal?.rsvp_prazo ? ` até ${formatarData(casal.rsvp_prazo)}` : ''}.${semWhatsApp.length ? ` ${semWhatsApp.length} sem WhatsApp ficam para enviar à mão.` : ''}`,
-      cancelar: 'Cancelar',
-      confirmar: 'Enviar',
-    });
+    const ok = await confirmar(C.lembrarPendentes(pendentes, elegiveis.length, casal?.rsvp_prazo ? formatarData(casal.rsvp_prazo) : null, semWhatsApp.length));
     if (!ok) return;
     if (!online) return avisos.mostrar({ texto: 'Enviar lembretes precisa de internet.', tipo: 'erro' });
     try {

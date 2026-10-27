@@ -39,6 +39,7 @@ import { ErroApi, ErroSemConexao, publicarLista } from '../../servicos/api';
 import { espacos, useTema } from '../../tema';
 import { CHAVE_VISITA_PRESENTES } from '../inicio/Inicio';
 import { FolhaCompartilhar, useLinkDaLista } from './comum';
+import * as C from '../../feedback/confirmacoes';
 
 // T23 · Presentes (Presentes.dc.html). Resumo de todas as listas, um cartão por lista, "+ Nova lista"
 // (ocasiões conforme o modo, 13.9 regra 4) e Agradecimentos. Vazio: T60. Publicar: T39.
@@ -50,14 +51,7 @@ export function usePublicarLista() {
   const { confirmar } = useDialogo();
   const avisos = useAvisos();
   return async (lista: ListaComId, depois: () => void) => {
-    const ok = await confirmar({
-      icone: 'presentes',
-      titulo: `Publicar a lista ${daOcasiao(lista.ocasiao)}?`,
-      texto:
-        'Quem tiver o link vê os presentes e pode reservar. Dá para despublicar quando quiserem.',
-      cancelar: 'Cancelar',
-      confirmar: 'Publicar',
-    });
+    const ok = await confirmar(C.publicarLista(daOcasiao(lista.ocasiao)));
     if (!ok) return;
     try {
       await publicarLista(lista.id);

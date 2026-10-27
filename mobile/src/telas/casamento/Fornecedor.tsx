@@ -45,6 +45,7 @@ import { armazenamento } from '../../servicos/armazenamento';
 import { useConexao } from '../../servicos/conexao';
 import { espacos, useTema } from '../../tema';
 import { ModuloOculto } from '../inicio/ModuloOculto';
+import * as C from '../../feedback/confirmacoes';
 
 // T17 · Fornecedor (Fornecedor.dc.html), criar e editar.
 // - Novo: formulário completo e "Salvar".
@@ -202,8 +203,7 @@ function TelaFornecedor() {
     if (parcelas.length) partes.push(`as ${parcelas.length} parcelas vão para o calendário`);
     if (abertas.length === 1) partes.push(`a tarefa “${abertas[0]!.titulo}” será concluída`);
     else if (abertas.length > 1) partes.push(`${abertas.length} tarefas ligadas serão concluídas`);
-    const texto = partes.length > 1 ? `${partes.slice(0, -1).join(', ')} e ${partes[partes.length - 1]}.` : `${partes[0]}.`;
-    return confirmar({ titulo: `Marcar ${c.nome.trim() || 'este fornecedor'} como fechado?`, texto, cancelar: 'Cancelar', confirmar: 'Confirmar' });
+    return confirmar(C.fecharFornecedor(c.nome.trim(), partes));
   };
 
   const fechar = async () => {
@@ -253,14 +253,7 @@ function TelaFornecedor() {
 
   const excluirFornecedor = async () => {
     if (!casalId) return;
-    const ok = await confirmar({
-      icone: 'excluir',
-      tom: 'destrutivo',
-      titulo: `Excluir ${c.nome.trim()}?`,
-      texto: 'As parcelas também saem e as tarefas ligadas ficam sem fornecedor. Não dá para desfazer.',
-      cancelar: 'Cancelar',
-      confirmar: 'Excluir',
-    });
+    const ok = await confirmar(C.excluirFornecedor(c.nome.trim()));
     if (!ok) return;
     liberado.current = true;
     emLote(
@@ -348,7 +341,7 @@ function TelaFornecedor() {
 
   const tirarContrato = async () => {
     if (!online) return semConexao();
-    const ok = await confirmar({ tom: 'destrutivo', titulo: 'Remover o contrato?', texto: 'O arquivo sai do Lartiê.', cancelar: 'Cancelar', confirmar: 'Remover' });
+    const ok = await confirmar(C.removerContrato());
     if (!ok) return;
     try {
       await removerContrato(id);
@@ -620,6 +613,7 @@ function FolhaParcela({
   fornecedorId: string;
   onFechar: () => void;
 }) {
+  const avisos = useAvisos();
   const { casalId } = useSessao();
   const { confirmar, erroAoSalvar } = useDialogo();
   const [descricao, setDescricao] = useState('');
@@ -646,9 +640,10 @@ function FolhaParcela({
   };
   const excluirParcela = async () => {
     if (!casalId || !parcela?.id) return;
-    const ok = await confirmar({ tom: 'destrutivo', titulo: `Excluir “${descricao}”?`, cancelar: 'Cancelar', confirmar: 'Excluir' });
+    const ok = await confirmar(C.excluirParcela(descricao));
     if (!ok) return;
     emLote(casalId, [{ tipo: 'excluir', sub: 'parcelas', id: parcela.id }], 'excluir parcela', aoFalhar);
+    avisos.mostrar({ texto: 'Parcela excluída' });
     onFechar();
   };
   return (

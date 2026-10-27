@@ -4,8 +4,9 @@ jest.mock('@react-navigation/native', () => ({ useNavigation: jest.fn() }));
 jest.mock('../src/feedback/Dialogo', () => ({ useDialogo: jest.fn() }));
 
 describe('Descartar alterações (T36)', () => {
-  it('usa os textos do protótipo', () => {
+  it('usa os textos do protótipo, em tom destrutivo', () => {
     expect(textoDescartar()).toEqual({
+      tom: 'destrutivo',
       titulo: 'Descartar as alterações?',
       texto: 'Vocês mudaram este item e ainda não salvaram.',
       cancelar: 'Continuar editando',

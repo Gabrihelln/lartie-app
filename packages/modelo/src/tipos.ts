@@ -73,6 +73,8 @@ export interface Casal extends Auditoria {
   parceiro: { uid: string; nome: string } | null;
   /** T56 aparece uma vez por fase do checklist (13.3). */
   fases_celebradas: FaseTarefa[];
+  /** P04: as tarefas da mudança do catálogo já foram criadas (não recria se o casal excluir todas). */
+  mudanca_gerada: boolean;
   /** T27: modelo da mensagem de agradecimento, com [nome] e [presente]. Null = modelo padrão. */
   modelo_agradecimento: string | null;
 }
@@ -209,6 +211,17 @@ export interface Item extends Auditoria {
    * comprado com preço (13.4). Escolhida no item; null = "Enxoval".
    */
   categoria_orcamento: string | null;
+}
+
+// P04 · Tarefa da mudança (seção "Mudança" da tela Casa, decidido em 27/10/2026) --------------
+
+export interface TarefaMudanca extends Auditoria {
+  titulo: string;
+  /** Prazo relativo à data da mudança (imóvel.data_mudanca); null para tarefas criadas sem prazo. */
+  dias_antes: number | null;
+  concluida: boolean;
+  ordem: number;
+  catalogo_id: string | null;
 }
 
 // 3.7 Tarefa --------------------------------------------------------------------

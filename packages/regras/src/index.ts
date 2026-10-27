@@ -11,3 +11,4 @@ export * from './fornecedores';
 export * from './casa';
 export * from './presentes';
 export * from './rsvp';
+export * from './mudanca';

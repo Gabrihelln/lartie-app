@@ -25,6 +25,7 @@ import { registrarErro, registrarEvento } from '../../servicos/analytics';
 import { useConexao } from '../../servicos/conexao';
 import { espacos, useTema } from '../../tema';
 import { resumoImovel } from '../inicio/InicioCasa';
+import * as C from '../../feedback/confirmacoes';
 
 // T33 · Perfil (Perfil.dc.html). "Dados do casamento" só com o módulo casamento ativo; "Dados da
 // casa nova" só com o módulo casa. Sair (T41), excluir conta (T42) e remover parceiro (T43); quem
@@ -138,27 +139,13 @@ export function Perfil() {
 
   // T41
   const sairDaConta = async () => {
-    const ok = await confirmar({
-      titulo: 'Sair da conta?',
-      texto: 'O plano de vocês continua salvo. Para voltar, é só entrar com o mesmo e-mail.',
-      cancelar: 'Cancelar',
-      confirmar: 'Sair',
-    });
+    const ok = await confirmar(C.sairDaConta());
     if (ok) await sair();
   };
 
   // T42
   const excluirTudo = async () => {
-    const ok = await confirmar({
-      icone: 'excluir',
-      tom: 'destrutivo',
-      titulo: 'Excluir a conta e todos os dados?',
-      texto: `Vamos apagar o checklist, o enxoval, as listas de presentes, os convidados e as fotos.${conectado ? ` ${outro} também perde o acesso.` : ''} Isso não pode ser desfeito.`,
-      textoExigido: 'EXCLUIR',
-      rotuloCampo: 'Digite EXCLUIR para confirmar',
-      cancelar: 'Cancelar',
-      confirmar: 'Excluir tudo',
-    });
+    const ok = await confirmar(C.excluirConta(conectado ? outro : null));
     if (!ok) return;
     if (!online) return semConexao();
     try {
@@ -174,14 +161,7 @@ export function Perfil() {
 
   // Pedido do dono do produto (Etapa 4): quem entrou pelo convite pode sair do plano.
   const sairDoPlanoAtual = async () => {
-    const ok = await confirmar({
-      icone: 'perfil',
-      tom: 'destrutivo',
-      titulo: `Sair do plano de ${nome1}?`,
-      texto: `Você deixa de ver e editar o casamento e a casa nova. Os dados continuam com ${nome1}, que pode enviar um novo convite depois.`,
-      cancelar: 'Cancelar',
-      confirmar: 'Sair do plano',
-    });
+    const ok = await confirmar(C.sairDoPlano(nome1));
     if (!ok) return;
     if (!online) return semConexao();
     try {
@@ -200,14 +180,7 @@ export function Perfil() {
   const parceiro = async () => {
     if (!conectado) return navigation.navigate('Convidar');
     if (papel !== 'noivo_1') return sairDoPlanoAtual();
-    const ok = await confirmar({
-      icone: 'perfil',
-      tom: 'destrutivo',
-      titulo: `Remover ${nome2} do plano?`,
-      texto: `${nome2} deixa de ver e editar o casamento e a casa nova. Vocês podem enviar um novo convite depois.`,
-      cancelar: 'Cancelar',
-      confirmar: 'Remover',
-    });
+    const ok = await confirmar(C.removerParceiro(nome2));
     if (!ok) return;
     if (!online) return semConexao();
     try {
