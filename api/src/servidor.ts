@@ -3,7 +3,8 @@ import multipart from '@fastify/multipart';
 import { CLAIM_CASAL } from '@lartie/modelo';
 import { ErroValidacao, inicializarConta, type DadosToken } from './conta';
 import { aceitarConvite, cancelarConvites, consultarConvite, criarConvite, ErroConvite, recusarConvite } from './convites';
-import { excluirConta, removerParceiro, trocarModo } from './casal';
+import { excluirConta, removerParceiro, sairDoPlano, trocarModo } from './casal';
+import { buscarSeguro, ErroLink, lerAte, MAXIMO_IMAGEM, previaDoLink } from './link';
 import {
   abrirArquivo,
   assinaturaValida,
@@ -11,8 +12,10 @@ import {
   linkAssinado,
   removerContrato,
   removerFotoCasal,
+  removerFotoItem,
   salvarContrato,
   salvarFotoCasal,
+  salvarFotoItem,
   TAMANHO_MAXIMO_CONTRATO,
 } from './fotos';
 import { auth, PROJETO } from './firebase';
@@ -65,6 +68,7 @@ export function criarServidor() {
   app.setErrorHandler((erro, _req, resposta) => {
     if (erro instanceof ErroValidacao) return resposta.code(400).send({ erro: 'validacao', mensagem: erro.message });
     if (erro instanceof ErroConvite) return resposta.code(STATUS_CONVITE[erro.codigo]).send({ erro: erro.codigo });
+    if (erro instanceof ErroLink) return resposta.code(erro.codigo === 'link_falhou' ? 422 : 400).send({ erro: erro.codigo });
     if (erro instanceof ErroArquivo) {
       return resposta.code(erro.codigo === 'nao_encontrado' ? 404 : 400).send({ erro: erro.codigo });
     }
@@ -148,6 +152,39 @@ export function criarServidor() {
 
   // T43: remover o parceiro do plano.
   app.delete('/v1/casal/parceiro', { preHandler: exigirCasal }, async (req) => removerParceiro(req.token!, req.casalId!));
+
+  // Etapa 4 (pedido do dono do produto): quem entrou pelo convite sai do plano.
+  app.post('/v1/casal/sair', { preHandler: exigirCasal }, async (req) => sairDoPlano(req.token!, req.casalId!));
+
+  // T20: foto do item.
+  app.post<{ Params: { id: string } }>('/v1/itens/:id/foto', { preHandler: exigirCasal }, async (req, resposta) => {
+    const arquivo = await req.file();
+    if (!arquivo) return resposta.code(400).send({ erro: 'sem_arquivo' });
+    return salvarFotoItem(req.token!.uid, req.casalId!, req.params.id, await arquivo.toBuffer(), arquivo.mimetype);
+  });
+
+  app.delete<{ Params: { id: string } }>('/v1/itens/:id/foto', { preHandler: exigirCasal }, async (req) => {
+    await removerFotoItem(req.token!.uid, req.casalId!, req.params.id);
+    return { ok: true };
+  });
+
+  // T20 "Link da loja": nome, foto e preço da página (pode falhar; o app segue sem eles).
+  app.post<{ Body: { url: string } }>(
+    '/v1/link/previa',
+    { preHandler: exigirCasal, schema: { body: { type: 'object', required: ['url'], properties: { url: { type: 'string', maxLength: 2000 } } } } },
+    async (req) => previaDoLink(req.body.url),
+  );
+
+  // T20: usa a foto da página da loja como foto do item (baixada pelo servidor, com as mesmas proteções).
+  app.post<{ Params: { id: string }; Body: { url: string } }>(
+    '/v1/itens/:id/foto-do-link',
+    { preHandler: exigirCasal, schema: { body: { type: 'object', required: ['url'], properties: { url: { type: 'string', maxLength: 2000 } } } } },
+    async (req) => {
+      const r = await buscarSeguro(req.body.url, 'image/*');
+      const conteudo = await lerAte(r, MAXIMO_IMAGEM);
+      return salvarFotoItem(req.token!.uid, req.casalId!, req.params.id, conteudo, r.headers.get('content-type') ?? '');
+    },
+  );
 
   // T42: excluir a conta e todos os dados do casal.
   app.delete('/v1/conta', { preHandler: exigirCasal }, async (req) => excluirConta(req.token!, req.casalId!));

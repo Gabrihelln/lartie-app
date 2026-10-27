@@ -153,3 +153,31 @@ export async function linkDoArquivo(caminho: string) {
   const { link } = await chamar<{ link: string }>('/v1/arquivos/link', { corpo: { caminho } });
   return `${urlApi()}${link}`;
 }
+
+// Etapa 4 ---------------------------------------------------------------------------------------
+
+/** Pedido do dono do produto: quem entrou pelo convite sai do plano (os dados ficam). */
+export function sairDoPlano() {
+  return chamar<{ ok: boolean }>('/v1/casal/sair');
+}
+
+/** T20: foto do item. */
+export function enviarFotoItem(itemId: string, arquivo: { uri: string; tipo: string; nome: string }) {
+  const formulario = new FormData();
+  formulario.append('foto', { uri: arquivo.uri, type: arquivo.tipo, name: arquivo.nome } as unknown as Blob);
+  return chamar<{ foto: string }>(`/v1/itens/${encodeURIComponent(itemId)}/foto`, { formulario, tempoMs: 60000 });
+}
+
+export function removerFotoItem(itemId: string) {
+  return chamar<{ ok: boolean }>(`/v1/itens/${encodeURIComponent(itemId)}/foto`, { metodo: 'DELETE' });
+}
+
+/** T20 "Link da loja": nome, foto e preço da página (pode falhar). */
+export function previaDoLink(url: string) {
+  return chamar<{ titulo: string | null; preco: number | null; imagem: string | null }>('/v1/link/previa', { corpo: { url }, tempoMs: 12000 });
+}
+
+/** T20: usa a foto da página da loja como foto do item. */
+export function fotoDoLink(itemId: string, url: string) {
+  return chamar<{ foto: string }>(`/v1/itens/${encodeURIComponent(itemId)}/foto-do-link`, { corpo: { url }, tempoMs: 20000 });
+}

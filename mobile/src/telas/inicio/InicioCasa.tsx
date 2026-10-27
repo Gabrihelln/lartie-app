@@ -24,15 +24,10 @@ import { useConfiguracaoRemota } from '../../servicos/configuracaoRemota';
 import { espacos, useTema } from '../../tema';
 import { CartaoConvite, type NavegacaoInicio } from './Inicio';
 
-// T12c · Início: só casa nova (InicioCasa.dc.html). As telas da Casa (T18 a T22) são da Etapa 4;
-// até lá, os toques abrem telas provisórias.
+// T12c · Início: só casa nova (InicioCasa.dc.html). Os toques abrem T18, T19, T20 e T21.
 
-const PROVISORIAS = {
-  comodo: { titulo: 'Cômodo', id: 'T19', etapa: 4 },
-  item: { titulo: 'Item', id: 'T20', etapa: 4 },
-  medidas: { titulo: 'Medidas do cômodo', id: 'T21', etapa: 4 },
-  foto: { titulo: 'Cadastrar por foto', id: 'T22', etapa: 4 },
-} as const;
+/** O cadastro por foto (T22) usa IA: fica escondido enquanto a IA estiver fora do escopo (P14). */
+const PROVISORIA_FOTO = { titulo: 'Cadastrar por foto', id: 'T22', etapa: 9 } as const;
 
 /** "Apê de 2 quartos" / "Casa de 1 quarto". */
 export function resumoImovel(tipo: 'apartamento' | 'casa', quartos: number) {
@@ -95,7 +90,7 @@ export function InicioCasa() {
     com_calma: 'Faltam para depois, com calma',
   };
 
-  const semComodoComMedidas = comodos.sort((a, b) => a.ordem - b.ordem).find((c) => c.largura_m === null);
+  const semComodoComMedidas = [...comodos].sort((a, b) => a.ordem - b.ordem).find((c) => c.largura_m === null);
 
   return (
     <>
@@ -171,17 +166,17 @@ export function InicioCasa() {
 
       <View style={estilos.linha}>
         {/* O cadastro por foto usa IA: escondido enquanto a IA estiver fora do escopo (P14). */}
-        {iaAtiva ? <Atalho icone="camera" texto="Cadastrar por foto" fundo="home" onPress={() => navigation.navigate('Provisoria', PROVISORIAS.foto)} /> : null}
+        {iaAtiva ? <Atalho icone="camera" texto="Cadastrar por foto" fundo="home" onPress={() => navigation.navigate('Provisoria', PROVISORIA_FOTO)} /> : null}
         <Atalho
           icone="medidas"
           texto="Medidas dos cômodos"
           fundo="homeContainer"
-          onPress={() =>
-            navigation.navigate('Provisoria', {
-              ...PROVISORIAS.medidas,
-              titulo: semComodoComMedidas ? `Medidas · ${semComodoComMedidas.nome}` : PROVISORIAS.medidas.titulo,
-            })
-          }
+          onPress={() => {
+            // T21 do primeiro cômodo sem medidas; todos com medidas: a Casa, para escolher o cômodo.
+            const alvo = semComodoComMedidas ?? null;
+            if (alvo) navigation.navigate('Medidas', { comodoId: alvo.id });
+            else navigation.navigate('casa');
+          }}
         />
       </View>
 
@@ -190,7 +185,7 @@ export function InicioCasa() {
         {porComodo.map((c) => (
           <Cartao
             key={c.comodo.id}
-            onPress={() => navigation.navigate('Provisoria', { ...PROVISORIAS.comodo, titulo: c.comodo.nome })}
+            onPress={() => navigation.navigate('Comodo', { id: c.comodo.id })}
             rotuloAcessivel={`${c.comodo.nome}: ${c.feitos} de ${c.total} itens`}
             style={estilos.celula}
           >
@@ -213,7 +208,7 @@ export function InicioCasa() {
               <View key={i.id}>
                 {n > 0 ? <Divisoria /> : null}
                 <Pressable
-                  onPress={() => navigation.navigate('Provisoria', { ...PROVISORIAS.item, titulo: i.nome })}
+                  onPress={() => navigation.navigate('Item', { id: i.id })}
                   accessibilityRole="button"
                   accessibilityLabel={`${i.nome}, falta`}
                   style={estilos.item}

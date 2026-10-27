@@ -21,7 +21,16 @@ export type EventoAnalytics =
   | { nome: 'parcela_paga'; params: Record<string, never> }
   | { nome: 'orcamento_definido'; params: { distribuido: number } }
   | { nome: 'parceiro_removido'; params: Record<string, never> }
-  | { nome: 'conta_excluida'; params: Record<string, never> };
+  | { nome: 'conta_excluida'; params: Record<string, never> }
+  // Etapa 4
+  | { nome: 'item_estado_alterado'; params: { estado: string; origem: string } }
+  | { nome: 'item_criado'; params: { fase: string } }
+  | { nome: 'item_excluido'; params: Record<string, never> }
+  | { nome: 'comodo_criado'; params: Record<string, never> }
+  | { nome: 'comodo_completo'; params: Record<string, never> }
+  | { nome: 'medidas_salvas'; params: Record<string, never> }
+  | { nome: 'parceiro_saiu'; params: Record<string, never> }
+  | { nome: 'comodos_sugeridos'; params: { comodos: number; itens: number } };
 
 /** De onde veio a troca de modo (13.9 regra 9). */
 export type OrigemModo = 'perfil' | 'cartao' | 'assistente' | 'inicio_depois' | 'folha_ativar';

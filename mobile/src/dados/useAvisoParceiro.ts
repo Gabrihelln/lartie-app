@@ -17,14 +17,14 @@ export function useAvisoParceiro() {
     const consulta = query(
       collection(db(), caminhos.subcolecao(casalId, 'notificacoes')),
       where('usuario_id', '==', usuario.uid),
-      where('tipo', 'in', ['parceiro_entrou', 'convite_recusado']),
+      where('tipo', 'in', ['parceiro_entrou', 'convite_recusado', 'parceiro_saiu']),
       where('lida', '==', false),
     );
     return onSnapshot(
       consulta,
       (snap) => {
         snap.docs.forEach((d) => {
-          const recusado = d.get('tipo') === 'convite_recusado';
+          const recusado = d.get('tipo') !== 'parceiro_entrou';
           avisos.mostrar({ texto: String(d.get('texto') ?? ''), tipo: recusado ? 'neutro' : 'sucesso' });
           updateDoc(doc(db(), caminhos.documento(casalId, 'notificacoes', d.id)), { lida: true }).catch(() => {});
         });

@@ -64,12 +64,11 @@ export interface ItemCompradoBase {
   origem: OrigemItem | null;
   preco_estimado: number | null;
   quantidade: number;
+  /** Categoria da casa escolhida no item (decisão de 26/10/2026). Sem escolha: "Enxoval". */
+  categoria_orcamento?: string | null;
 }
 
-/**
- * Categoria da casa que recebe o gasto de um item comprado. O item ainda não tem categoria no
- * modelo (Seção 3.6); até a Etapa 4 decidir, todo item comprado entra em "Enxoval".
- */
+/** Categoria da casa de um item comprado sem categoria escolhida. */
 export const CATEGORIA_CASA_DOS_ITENS = 'casa_enxoval';
 
 export type Lancamento =
@@ -92,8 +91,9 @@ export function lancamentosDaCategoria(categoria: CategoriaBase, e: EntradaOrcam
       if (f.status === 'fechado' && f.categoria === categoria.id && f.valor) r.push({ tipo: 'fornecedor', id: f.id, descricao: f.nome, valor: f.valor });
     }
   }
-  if (categoria.id === CATEGORIA_CASA_DOS_ITENS) {
+  if (categoria.escopo === 'casa') {
     for (const i of e.itens) {
+      if ((i.categoria_orcamento ?? CATEGORIA_CASA_DOS_ITENS) !== categoria.id) continue;
       if (i.estado === 'ja_tenho' && i.origem === 'comprado' && i.preco_estimado) {
         r.push({ tipo: 'item', id: i.id, descricao: i.nome, valor: i.preco_estimado * Math.max(1, i.quantidade) });
       }

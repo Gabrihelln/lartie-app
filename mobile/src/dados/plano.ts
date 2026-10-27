@@ -9,6 +9,7 @@ import {
   type Gasto,
   type Imovel,
   type Item,
+  type ListaItem,
   type Notificacao,
   type Parcela,
   type Tarefa,
@@ -34,6 +35,7 @@ export const useGastos = () => useSub<Gasto>('gastos');
 export const useItens = () => useSub<Item>('itens');
 export const useComodos = () => useSub<Comodo>('comodos');
 export const useConvidados = () => useSub<Convidado>('convidados');
+export const useListaItens = () => useSub<ListaItem>('lista_itens');
 
 export function useImovel() {
   const { casalId } = useSessao();

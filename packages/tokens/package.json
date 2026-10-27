@@ -9,6 +9,10 @@
   "scripts": {
     "gerar": "node scripts/gerar.mjs",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "icones": "node scripts/icones.mjs"
+  },
+  "devDependencies": {
+    "@resvg/resvg-js": "2.6.2"
   }
 }

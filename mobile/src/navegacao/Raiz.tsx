@@ -6,6 +6,9 @@ import { moduloVisivel, type Modulo } from '@lartie/regras';
 import { useSessao } from '../dados/Sessao';
 import { useAvisos } from '../feedback/Avisos';
 import { useDialogo } from '../feedback/Dialogo';
+import { Comodo } from '../telas/casa/Comodo';
+import { Item } from '../telas/casa/Item';
+import { Medidas } from '../telas/casa/Medidas';
 import { Fornecedor } from '../telas/casamento/Fornecedor';
 import { Tarefa } from '../telas/casamento/Tarefa';
 import { ConfigModo } from '../telas/perfil/ConfigModo';
@@ -40,6 +43,8 @@ const linking: LinkingOptions<ParamsRaiz> = {
       Entrar: 'entrar',
       Tarefa: 'tarefa/:id',
       Fornecedor: 'fornecedor/:id',
+      Comodo: 'comodo/:id',
+      Item: 'item/:id',
       ConfigModo: 'modo',
       Abas: {
         screens: {
@@ -62,6 +67,9 @@ const MODULO_DA_ROTA: Partial<Record<keyof ParamsRaiz, Modulo>> = {
   DadosCasamento: 'checklist',
   OrcamentoCasa: 'casa',
   DadosCasa: 'casa',
+  Comodo: 'casa',
+  Item: 'casa',
+  Medidas: 'casa',
 };
 
 /** T01 na primeira abertura sem sessão: "Começar" → T02, "Já tenho conta" → T04. */
@@ -178,6 +186,9 @@ export function Raiz() {
             <Pilha.Screen name="Abas" component={Abas} options={{ animation: 'fade' }} />
             <Pilha.Screen name="Tarefa" component={Tarefa} />
             <Pilha.Screen name="Fornecedor" component={Fornecedor} />
+            <Pilha.Screen name="Comodo" component={Comodo} />
+            <Pilha.Screen name="Item" component={Item} />
+            <Pilha.Screen name="Medidas" component={Medidas} />
             <Pilha.Screen name="OrcamentoCasa" component={OrcamentoCasa} />
             <Pilha.Screen name="ConfigModo" component={ConfigModo} />
             <Pilha.Screen name="AtivarModulo" component={AtivarModulo} options={{ gestureEnabled: false }} />
