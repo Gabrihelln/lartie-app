@@ -75,6 +75,7 @@ import { espacos, useTema } from '../../tema';
 import { ModuloOculto } from '../inicio/ModuloOculto';
 import { FolhaAvisarConvidados } from '../presentes/comum';
 import { useConferirComodo, useEstadoItem, type ItemComId } from './comum';
+import * as C from '../../feedback/confirmacoes';
 
 // T20 · Item (Item.dc.html), criar e editar. Nome obrigatório; quantidade ≥ 1; link com formato
 // válido. "Como chegou" só com "Já tenho"; "Quem deu?" só com "Ganhado" (cria o registro em
@@ -489,16 +490,7 @@ function TelaItem() {
   // T35
   const excluirItem = async () => {
     if (!casalId || novo) return;
-    const ok = await confirmar({
-      icone: 'excluir',
-      tom: 'destrutivo',
-      titulo: `Excluir “${c.nome.trim()}”?`,
-      texto: `O item sai do enxoval${
-        comodo ? ` ${doComodo(comodo.nome)}` : ''
-      } e da lista de presentes. Se alguém já reservou, o convidado será avisado.`,
-      cancelar: 'Cancelar',
-      confirmar: 'Excluir',
-    });
+    const ok = await confirmar(C.excluirItem(c.nome.trim(), comodo ? doComodo(comodo.nome) : null));
     if (!ok) return;
     // Com reserva ativa, o servidor cancela as reservas (13.5) e devolve os avisos aos convidados.
     const naLista = listaItens.filter(l => l.item_id === id);

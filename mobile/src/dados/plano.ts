@@ -17,6 +17,7 @@ import {
   type Notificacao,
   type Parcela,
   type Tarefa,
+  type TarefaMudanca,
 } from '@lartie/modelo';
 import { useColecao, useDocumento, type Leitura } from './leitura';
 import { useSessao } from './Sessao';
@@ -32,6 +33,7 @@ function useSub<T>(sub: Parameters<typeof caminhos.subcolecao>[1]): Leitura<ComI
 }
 
 export const useTarefas = () => useSub<Tarefa>('tarefas');
+export const useTarefasMudanca = () => useSub<TarefaMudanca>('tarefas_mudanca');
 export const useFornecedores = () => useSub<Fornecedor>('fornecedores');
 export const useParcelas = () => useSub<Parcela>('parcelas');
 export const useCategorias = () => useSub<CategoriaOrcamento>('categorias_orcamento');

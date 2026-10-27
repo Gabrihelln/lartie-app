@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { Dialogo } from '../../../componentes/Dialogo';
 
 /** T40 · "Desfazer a reserva?" na página de gerenciar a reserva. */
 export function BotaoDesfazer({ token, item, quantidade }: { token: string; item: string; quantidade: number }) {
@@ -24,9 +25,7 @@ export function BotaoDesfazer({ token, item, quantidade }: { token: string; item
       </button>
       {erro ? <span className="campo"><span className="erro">{erro}</span></span> : null}
       {aberto ? (
-        <div className="veu" role="alertdialog" aria-modal aria-labelledby="t40">
-          <div className="dialogo">
-            <h2 id="t40">Desfazer a reserva?</h2>
+        <Dialogo id="t40" titulo="Desfazer a reserva?" onCancelar={() => setAberto(false)}>
             <p className="suave">
               {quantidade === 1 ? `${item} volta` : `Os ${quantidade} ${item.toLocaleLowerCase('pt-BR')} voltam`} a aparecer na lista para outros convidados.
             </p>
@@ -38,8 +37,7 @@ export function BotaoDesfazer({ token, item, quantidade }: { token: string; item
                 Desfazer
               </button>
             </div>
-          </div>
-        </div>
+          </Dialogo>
       ) : null}
     </>
   );

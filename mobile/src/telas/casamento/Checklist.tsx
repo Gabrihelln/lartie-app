@@ -27,6 +27,7 @@ import { EsqueletoLista } from '../../feedback/Esqueleto';
 import { registrarEvento } from '../../servicos/analytics';
 import { espacos, useTema } from '../../tema';
 import { LinhaTarefa, useMarcarTarefa, type TarefaComId } from './comum';
+import * as C from '../../feedback/confirmacoes';
 
 // T13 · Checklist (Checklist.dc.html). Fases recolhíveis, filtros, marcar com "Desfazer", segurar e
 // arrastar para reordenar dentro da fase, arrastar para a esquerda para "Ocultar" e "Excluir" (T34).
@@ -45,14 +46,7 @@ export function useExcluirTarefa() {
   const { confirmar, erroAoSalvar } = useDialogo();
   const avisos = useAvisos();
   return async (t: { id: string; titulo: string }) => {
-    const ok = await confirmar({
-      icone: 'excluir',
-      tom: 'destrutivo',
-      titulo: 'Excluir esta tarefa?',
-      texto: `“${t.titulo}” sai do checklist de vocês dois. Não dá para desfazer.`,
-      cancelar: 'Cancelar',
-      confirmar: 'Excluir',
-    });
+    const ok = await confirmar(C.excluirTarefa(t.titulo));
     if (!ok || !casalId) return false;
     excluir(casalId, 'tarefas', t.id, () => erroAoSalvar());
     registrarEvento({ nome: 'tarefa_excluida', params: {} });

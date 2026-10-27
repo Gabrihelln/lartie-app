@@ -163,3 +163,12 @@ describe('13.5 expiração', () => {
     expect(tipos).toEqual(expect.arrayContaining(['reserva_expirando', 'reserva_expirada']));
   });
 });
+
+describe('P04 tarefas da mudança', () => {
+  it('gerar a casa cria as tarefas da mudança (alugado inclui a vistoria) e marca mudanca_gerada', async () => {
+    const { ana } = await listaPublicada(1);
+    const ids = (await db.collection(`casais/${ana.casalId}/tarefas_mudanca`).get()).docs.map((d) => d.id);
+    expect(ids).toEqual(expect.arrayContaining(['M001', 'M003', 'M006']));
+    expect((await db.doc(`casais/${ana.casalId}`).get()).get('mudanca_gerada')).toBe(true);
+  });
+});

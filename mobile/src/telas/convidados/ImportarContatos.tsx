@@ -6,6 +6,7 @@ import { raios, tamanhos } from '@lartie/tokens';
 import { agruparPorSobrenome } from '@lartie/regras';
 import { Botao } from '../../componentes/Botao';
 import { Cartao, Divisoria, TelaPilha } from '../../componentes/Estrutura';
+import { FolhaInferior } from '../../componentes/FolhaInferior';
 import { Icone } from '../../componentes/Icone';
 import { Texto } from '../../componentes/Texto';
 import { emLote, novoId, type OperacaoLote } from '../../dados/gravacao';
@@ -85,7 +86,7 @@ export function ImportarContatos() {
   const { cores, alvoToque } = useTema();
   const navigation = useNavigation();
   const { casalId } = useSessao();
-  const { confirmar, erroAoSalvar } = useDialogo();
+  const { erroAoSalvar } = useDialogo();
   const avisos = useAvisos();
   const [contatos, setContatos] = useState<ContatoSimples[] | null>(null);
   const [busca, setBusca] = useState('');
@@ -113,16 +114,13 @@ export function ImportarContatos() {
     return (contatos ?? []).filter((c) => !t || c.nome.toLocaleLowerCase('pt-BR').includes(t)).slice(0, 300);
   }, [contatos, busca]);
 
-  const importar = async () => {
+  const [escolher, setEscolher] = useState(false);
+
+  /** "Como criar os grupos?" em folha: tocar fora cancela, as duas opções são botões. */
+  const importar = async (porSobrenome: boolean) => {
+    setEscolher(false);
     if (!casalId || !contatos) return;
     const escolhidos = contatos.filter((c) => marcados.has(c.id));
-    const porSobrenome = await confirmar({
-      icone: 'convidados',
-      titulo: 'Como criar os grupos?',
-      texto: 'Agrupar junta quem tem o mesmo sobrenome num grupo "Família {sobrenome}". Ou cada contato vira um grupo.',
-      cancelar: 'Um grupo por contato',
-      confirmar: 'Agrupar por sobrenome',
-    });
     const grupos = porSobrenome ? agruparPorSobrenome(escolhidos) : escolhidos.map((c) => ({ nome: c.nome, pessoas: [c] }));
     const ops: OperacaoLote[] = [];
     for (const g of grupos) {
@@ -145,7 +143,14 @@ export function ImportarContatos() {
   };
 
   return (
-    <TelaPilha titulo="Importar contatos" rodape={<Botao rotulo={`Importar ${marcados.size}`} larguraTotal desativado={marcados.size === 0} onPress={importar} />}>
+    <TelaPilha titulo="Importar contatos" rodape={<Botao rotulo={`Importar ${marcados.size}`} larguraTotal desativado={marcados.size === 0} onPress={() => setEscolher(true)} />}>
+      <FolhaInferior visivel={escolher} titulo="Como criar os grupos?" onFechar={() => setEscolher(false)}>
+        <Texto papel="corpo" cor="onSurfaceVariant">
+          Agrupar junta quem tem o mesmo sobrenome num grupo “Família {'{sobrenome}'}”. Ou cada contato vira um grupo.
+        </Texto>
+        <Botao rotulo="Agrupar por sobrenome" larguraTotal onPress={() => importar(true)} />
+        <Botao rotulo="Um grupo por contato" variante="tonal" larguraTotal onPress={() => importar(false)} />
+      </FolhaInferior>
       <View style={[estilos.busca, { backgroundColor: cores.surface, borderColor: cores.outlineSoft, minHeight: tamanhos.fieldHeight }]}>
         <Icone nome="busca" cor={cores.onSurfaceVariant} />
         <TextInput

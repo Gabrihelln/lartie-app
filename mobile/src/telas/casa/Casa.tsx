@@ -36,6 +36,7 @@ import { registrarEvento } from '../../servicos/analytics';
 import { useConfiguracaoRemota } from '../../servicos/configuracaoRemota';
 import { espacos, useTema } from '../../tema';
 import { resumoImovel } from '../inicio/InicioCasa';
+import { SecaoMudanca } from './Mudanca';
 
 // T18 · Casa nova (Casa.dc.html). Resumo, filtro por fase (com a descrição), cômodos com progresso
 // e selo "Completo" (na fase filtrada) e "+ Novo cômodo". O cadastro por foto (câmera) usa IA e fica
@@ -278,6 +279,8 @@ export function Casa() {
               </Texto>
             </Cartao>
           </View>
+
+          <SecaoMudanca />
 
           {modo === 'casa' ? (
             <Botao

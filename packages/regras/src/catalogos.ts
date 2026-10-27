@@ -13,9 +13,19 @@ export interface TarefaCatalogo {
   categoria_orcamento: string | null;
 }
 
+export interface TarefaMudancaCatalogo {
+  id: string;
+  titulo: string;
+  dias_antes_da_mudanca: number;
+  /** Ex.: { posse: 'alugado' }: só entra para imóvel alugado. */
+  condicao: { posse?: 'alugado' | 'proprio' };
+}
+
 export interface CatalogoTarefas {
   versao: number;
   tarefas: TarefaCatalogo[];
+  /** P04 (decidido em 27/10/2026): seção "Mudança" na tela Casa. */
+  tarefas_mudanca?: { itens: TarefaMudancaCatalogo[] };
 }
 
 export type Clima = 'frio' | 'temperado' | 'quente';

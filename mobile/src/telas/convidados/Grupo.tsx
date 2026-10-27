@@ -25,6 +25,7 @@ import { useConexao } from '../../servicos/conexao';
 import { espacos, estiloTexto, useTema } from '../../tema';
 import { ModuloOculto } from '../inicio/ModuloOculto';
 import { abrirWhatsApp, useMensagensRsvp, type GrupoComId } from './comum';
+import * as C from '../../feedback/confirmacoes';
 
 // T29 · Grupo de convidados (NovoGrupo.dc.html), criar e editar. Pelo menos 1 pessoa com nome.
 // "Salvar e enviar convite" salva, gera o link do grupo e abre o WhatsApp com a mensagem pronta.
@@ -178,14 +179,7 @@ function TelaGrupo() {
 
   const excluirGrupo = async () => {
     if (!casalId) return;
-    const ok = await confirmar({
-      icone: 'excluir',
-      tom: 'destrutivo',
-      titulo: `Excluir ${nome.trim() || 'este grupo'} e ${daqui.length} ${daqui.length === 1 ? 'pessoa' : 'pessoas'}?`,
-      texto: 'O link de confirmação deste grupo deixa de funcionar. Não dá para desfazer.',
-      cancelar: 'Cancelar',
-      confirmar: 'Excluir',
-    });
+    const ok = await confirmar(C.excluirGrupo(nome.trim(), daqui.length));
     if (!ok) return;
     liberado.current = true;
     emLote(casalId, [...daqui.map((p) => ({ tipo: 'excluir' as const, sub: 'convidados' as const, id: p.id })), { tipo: 'excluir', sub: 'grupos', id }], 'excluir grupo', aoFalhar);

@@ -22,6 +22,7 @@ export const SUBCOLECOES_CASAL = {
   comodos: 'comodos',
   itens: 'itens',
   tarefas: 'tarefas',
+  tarefasMudanca: 'tarefas_mudanca',
   fornecedores: 'fornecedores',
   parcelas: 'parcelas',
   categoriasOrcamento: 'categorias_orcamento',

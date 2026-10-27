@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { Dialogo } from '../../../../componentes/Dialogo';
 import type { Presente } from '../../../../../lib/api';
 
 // T26 estado 1 (formulário) e estado 2 (confirmado), T40 (desfazer) e T51 (esgotou ao salvar).
@@ -135,9 +136,7 @@ export function FormularioReserva({ slug, lista, presente, casal, voltar }: { sl
         </a>
         {erro ? <p className="campo"><span className="erro">{erro}</span></p> : null}
         {desfazer ? (
-          <div className="veu" role="alertdialog" aria-modal aria-labelledby="t40">
-            <div className="dialogo">
-              <h2 id="t40">Desfazer a reserva?</h2>
+          <Dialogo id="t40" titulo="Desfazer a reserva?" onCancelar={() => setDesfazer(false)}>
               <p className="suave">
                 {n === 1 ? `${confirmada.item} volta` : `Os ${n} ${confirmada.item.toLocaleLowerCase('pt-BR')} voltam`} a aparecer na lista para outros convidados.
               </p>
@@ -149,8 +148,7 @@ export function FormularioReserva({ slug, lista, presente, casal, voltar }: { sl
                   Desfazer
                 </button>
               </div>
-            </div>
-          </div>
+            </Dialogo>
         ) : null}
       </section>
     );
@@ -191,17 +189,14 @@ export function FormularioReserva({ slug, lista, presente, casal, voltar }: { sl
         </button>
       </div>
       {esgotou ? (
-        <div className="veu" role="alertdialog" aria-modal aria-labelledby="t51">
-          <div className="dialogo">
-            <h2 id="t51">Alguém reservou antes</h2>
+        <Dialogo id="t51" titulo="Alguém reservou antes">
             <p className="suave">
               {presente.nome} acabou de ser reservado por outro convidado. Que tal escolher outro presente?
             </p>
             <a className="botao" href={voltar}>
               Ver outros presentes
             </a>
-          </div>
-        </div>
+          </Dialogo>
       ) : null}
     </>
   );

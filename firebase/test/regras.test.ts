@@ -223,6 +223,14 @@ describe('dados que só o servidor grava', () => {
     await assertFails(updateDoc(doc(ana(), `casais/${CASAL}/lista_itens/x2`), { quantidade_reservada: 5, ...atualizacao('ana') }));
   });
 
+  it('tarefas da mudança (P04): o casal cria e marca; título obrigatório', async () => {
+    const base = { titulo: 'Contratar internet', dias_antes: 20, concluida: false, ordem: 1, catalogo_id: 'M005', ...criacao('ana') };
+    await assertSucceeds(setDoc(doc(ana(), `casais/${CASAL}/tarefas_mudanca/M005`), base));
+    await assertSucceeds(updateDoc(doc(pedro(), `casais/${CASAL}/tarefas_mudanca/M005`), { concluida: true, ...atualizacao('pedro') }));
+    await assertFails(setDoc(doc(ana(), `casais/${CASAL}/tarefas_mudanca/x`), { ...base, titulo: ' ' }));
+    await assertFails(setDoc(doc(semCasal(), `casais/${CASAL}/tarefas_mudanca/y`), base));
+  });
+
   it('agradecimento de presente fora da lista, sem reserva nem item (T27)', async () => {
     await assertSucceeds(
       setDoc(doc(ana(), `casais/${CASAL}/agradecimentos/a1`), {

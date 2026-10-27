@@ -39,6 +39,7 @@ import { registrarEvento } from '../../servicos/analytics';
 import { useConfiguracaoRemota } from '../../servicos/configuracaoRemota';
 import { espacos, useTema } from '../../tema';
 import { ModuloOculto } from '../inicio/ModuloOculto';
+import * as C from '../../feedback/confirmacoes';
 
 // T21 · Medidas do cômodo (Medidas.dc.html). Cada campo salva ao sair (sem botão), com vírgula
 // decimal e entre 0,5 e 30 m. A vista de cima mostra, em escala, os móveis com medidas; o que não
@@ -163,13 +164,7 @@ function TelaMedidas() {
 
   const excluirParede = async (p: ParedeLivre) => {
     if (!casalId) return;
-    const ok = await confirmar({
-      tom: 'destrutivo',
-      titulo: `Excluir “${p.nome}”?`,
-      texto: 'Os itens que iam para esta parede ficam sem destino.',
-      cancelar: 'Cancelar',
-      confirmar: 'Excluir',
-    });
+    const ok = await confirmar(C.excluirParede(p.nome));
     if (!ok) return;
     atualizar(
       casalId,
@@ -178,6 +173,7 @@ function TelaMedidas() {
       { paredes_livres: paredes.filter(x => x.id !== p.id) },
       aoFalhar,
     );
+    avisos.mostrar({ texto: `${p.nome} excluída` });
   };
 
   // Vista de cima ----------------------------------------------------------------------------
