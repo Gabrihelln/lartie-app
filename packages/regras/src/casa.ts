@@ -25,13 +25,23 @@ export function comodoCompleto(itensDoComodo: readonly ItemBase[], fase?: FaseIt
   return c.total > 0 && c.feitos === c.total;
 }
 
-/** "da cozinha", "do quarto", "dos pets". */
-function doComodo(nome: string): string {
+/** "da cozinha", "do quarto", "dos pets" (T35, T55). */
+export function doComodo(nome: string): string {
   const n = nome.trim().toLocaleLowerCase('pt-BR');
   if (/^(quarto|banheiro|escritório|lavabo|closet|quintal|jardim)/.test(n)) return `do ${n}`;
   if (/^pets/.test(n)) return `dos ${n}`;
   if (/^(cozinha|sala|lavanderia|limpeza|varanda|área|copa|garagem|despensa)/.test(n)) return `da ${n}`;
   return `de ${nome.trim()}`;
+}
+
+/** "Item salvo na Cozinha" / "no Quarto" / "em Pets" (T20). */
+export function emComodo(nome: string): string {
+  const d = doComodo(nome);
+  const n = nome.trim();
+  if (d.startsWith('do ')) return `no ${n}`;
+  if (d.startsWith('dos ')) return `nos ${n}`;
+  if (d.startsWith('da ')) return `na ${n}`;
+  return `em ${n}`;
 }
 
 /** T55: "{Cômodo} completo!" (CelebracaoComodo.dc.html). */

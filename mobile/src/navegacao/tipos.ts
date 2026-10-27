@@ -31,6 +31,12 @@ export type ParamsRaiz = {
   Convite: { codigo: string };
   /** Etapa 3. T14: sem id = nova tarefa. */
   Tarefa: { id?: string; fase?: FaseTarefa } | undefined;
+  /** Etapa 4. T19 · Cômodo. */
+  Comodo: { id: string };
+  /** T20: sem id = novo item (no cômodo indicado ou perguntando o cômodo). */
+  Item: { id?: string; comodoId?: string } | undefined;
+  /** T21 · Medidas do cômodo. */
+  Medidas: { comodoId: string };
   /** T17: sem id = novo fornecedor; `tarefaId` vincula o novo fornecedor à tarefa (T14). */
   Fornecedor: { id?: string; categoria?: string; tarefaId?: string } | undefined;
   /** T15 no modo "casa": acessado pela Casa (T18 › "Orçamento da casa"). */

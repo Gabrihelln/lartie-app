@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest';
 import {
   checarEncaixe,
   comodoCompleto,
+  emComodo,
   formatarMetros,
   lerMetros,
   percentualOcupado,
@@ -46,6 +47,15 @@ describe('13.3 cômodo completo e T55', () => {
     });
     expect(textoCelebracaoComodo('Cozinha', 52, 1).texto).toBe('Todos os 52 itens da cozinha estão prontos. Falta 1 cômodo para a casa ficar completa.');
     expect(textoCelebracaoComodo('Pets', 1, 0).texto).toBe('O único item dos pets está pronto. A casa nova está completa.');
+  });
+});
+
+describe('T20: "Item salvo na {cômodo}"', () => {
+  it('artigo do cômodo', () => {
+    expect(emComodo('Cozinha')).toBe('na Cozinha');
+    expect(emComodo('Quarto 2')).toBe('no Quarto 2');
+    expect(emComodo('Pets')).toBe('nos Pets');
+    expect(emComodo('Ateliê')).toBe('em Ateliê');
   });
 });
 

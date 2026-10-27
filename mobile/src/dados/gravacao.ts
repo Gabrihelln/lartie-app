@@ -101,7 +101,7 @@ export function excluir(casalId: string, sub: Subcolecao, id: string, aoFalhar?:
 }
 
 export type OperacaoLote =
-  | { tipo: 'criar'; sub: Subcolecao; dados: Dados }
+  | { tipo: 'criar'; sub: Subcolecao; dados: Dados; id?: string }
   | { tipo: 'atualizar'; sub: Subcolecao; id: string; dados: Dados }
   | { tipo: 'atualizarCasal'; dados: Dados }
   | { tipo: 'excluir'; sub: Subcolecao; id: string };
@@ -116,7 +116,8 @@ export function emLote(casalId: string, operacoes: OperacaoLote[], contexto: str
   const criados: string[] = [];
   for (const op of operacoes) {
     if (op.tipo === 'criar') {
-      const ref = doc(collection(db(), caminhos.subcolecao(casalId, op.sub)));
+      // Com id: documentos de id estável (cômodos e itens do plano, 13.2).
+      const ref = op.id ? doc(db(), caminhos.documento(casalId, op.sub, op.id)) : doc(collection(db(), caminhos.subcolecao(casalId, op.sub)));
       criados.push(ref.id);
       lote.set(ref, {
         ...op.dados,

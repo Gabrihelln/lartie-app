@@ -3,6 +3,7 @@ import { Platform, Pressable, StyleSheet, Switch, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import DateTimePicker, { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import DeviceInfo from 'react-native-device-info';
+import { getIdToken } from '@react-native-firebase/auth';
 import { raios } from '@lartie/tokens';
 import { caminhos, PREFERENCIAS_PADRAO, type PreferenciasNotificacao, type Usuario } from '@lartie/modelo';
 import { formatarData, moduloVisivel, ROTULO_MODO } from '@lartie/regras';
@@ -18,7 +19,7 @@ import { useImovel, useNomes } from '../../dados/plano';
 import { useSessao } from '../../dados/Sessao';
 import { useAvisos } from '../../feedback/Avisos';
 import { useDialogo } from '../../feedback/Dialogo';
-import { excluirConta, ErroSemConexao, removerParceiro } from '../../servicos/api';
+import { excluirConta, ErroSemConexao, removerParceiro, sairDoPlano } from '../../servicos/api';
 import { sair } from '../../servicos/acesso';
 import { registrarErro, registrarEvento } from '../../servicos/analytics';
 import { useConexao } from '../../servicos/conexao';
@@ -26,7 +27,8 @@ import { espacos, useTema } from '../../tema';
 import { resumoImovel } from '../inicio/InicioCasa';
 
 // T33 · Perfil (Perfil.dc.html). "Dados do casamento" só com o módulo casamento ativo; "Dados da
-// casa nova" só com o módulo casa. Sair (T41), excluir conta (T42) e remover parceiro (T43).
+// casa nova" só com o módulo casa. Sair (T41), excluir conta (T42) e remover parceiro (T43); quem
+// entrou pelo convite tem "Sair do plano" (pedido do dono do produto, Etapa 4).
 // Lembretes e horário de silêncio são por usuário (3.2).
 
 const TEXTO_A_DEFINIR = '[a definir] Esta página entra quando o domínio lartie.app existir (P13).';
@@ -170,10 +172,34 @@ export function Perfil() {
     }
   };
 
+  // Pedido do dono do produto (Etapa 4): quem entrou pelo convite pode sair do plano.
+  const sairDoPlanoAtual = async () => {
+    const ok = await confirmar({
+      icone: 'perfil',
+      tom: 'destrutivo',
+      titulo: `Sair do plano de ${nome1}?`,
+      texto: `Você deixa de ver e editar o casamento e a casa nova. Os dados continuam com ${nome1}, que pode enviar um novo convite depois.`,
+      cancelar: 'Cancelar',
+      confirmar: 'Sair do plano',
+    });
+    if (!ok) return;
+    if (!online) return semConexao();
+    try {
+      await sairDoPlano();
+      registrarEvento({ nome: 'parceiro_saiu', params: {} });
+      // O token novo já vem sem o casal: o app leva para um plano novo, só seu.
+      if (usuario) await getIdToken(usuario, true);
+    } catch (erro) {
+      if (erro instanceof ErroSemConexao) return semConexao();
+      registrarErro(erro, 'sair do plano');
+      avisos.mostrar({ texto: 'Não foi possível sair do plano. Tente de novo.', tipo: 'erro' });
+    }
+  };
+
   // T43 (só quem criou o plano remove o parceiro)
   const parceiro = async () => {
     if (!conectado) return navigation.navigate('Convidar');
-    if (papel !== 'noivo_1') return;
+    if (papel !== 'noivo_1') return sairDoPlanoAtual();
     const ok = await confirmar({
       icone: 'perfil',
       tom: 'destrutivo',
@@ -241,7 +267,6 @@ export function Perfil() {
           titulo="Parceiro(a)"
           valor={conectado ? outro : 'Convidar'}
           onPress={parceiro}
-          semSeta={conectado && papel !== 'noivo_1'}
         />
       </Cartao>
 
