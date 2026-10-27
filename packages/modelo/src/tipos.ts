@@ -70,6 +70,8 @@ export interface Casal extends Auditoria {
   parceiro: { uid: string; nome: string } | null;
   /** T56 aparece uma vez por fase do checklist (13.3). */
   fases_celebradas: FaseTarefa[];
+  /** T27: modelo da mensagem de agradecimento, com [nome] e [presente]. Null = modelo padrão. */
+  modelo_agradecimento: string | null;
 }
 
 // 3.2 Usuário -----------------------------------------------------------------
@@ -317,12 +319,22 @@ export interface ListaPresentes extends Auditoria {
   status: StatusLista;
   modo_surpresa: boolean;
   endereco_entrega: string | null;
+  /** Texto do cabeçalho da página do convidado (T25), editável em "Editar lista". */
+  mensagem: string | null;
 }
 
 export interface ListaItem extends Auditoria {
   lista_id: string;
+  /** Item do enxoval; vazio para item avulso (T24 "Item avulso"). */
   item_id: string;
   quantidade_na_lista: number;
+  /** Item avulso: só existe na lista, fora do enxoval. */
+  avulso: { nome: string; preco_estimado: number | null; link_loja: string | null } | null;
+  /**
+   * Unidades em reservas ativas ou recebidas. Mantido só pelo servidor, dentro da transação da
+   * reserva: é o que garante que dois convidados não reservem a última unidade (13.5).
+   */
+  quantidade_reservada?: number;
 }
 
 // 3.13 Reserva -------------------------------------------------------------------
@@ -342,6 +354,8 @@ export interface Reserva {
   criada_em: Instante;
   expira_em: Instante;
   atualizado_em: Instante;
+  /** O aviso "expira em 2 dias" já foi para o casal. */
+  aviso_expiracao: boolean;
 }
 
 // 3.14 Agradecimento ---------------------------------------------------------------
@@ -351,6 +365,10 @@ export interface Agradecimento extends Auditoria {
   item_id: string | null;
   nome: string;
   presente_descricao: string;
+  /** WhatsApp do convidado (da reserva), para o "Agradecer" (T27). */
+  whatsapp: string | null;
+  /** Ocasião da lista, para "{presente} · {ocasião}". Null para presentes fora da lista. */
+  ocasiao: Ocasiao | null;
   agradecido: boolean;
   agradecido_em: Instante | null;
 }
@@ -398,6 +416,8 @@ export const TIPOS_NOTIFICACAO = [
   'parcela_a_vencer',
   'nova_reserva',
   'reserva_expirando',
+  /** 13.5: a reserva expirou e o item voltou a ficar disponível. */
+  'reserva_expirada',
   'rsvp_respondido',
   'alteracao_parceiro',
   'comodo_completo',

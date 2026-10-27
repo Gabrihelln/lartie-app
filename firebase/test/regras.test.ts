@@ -210,7 +210,33 @@ describe('dados que só o servidor grava', () => {
     await assertSucceeds(
       updateDoc(doc(ana(), `casais/${CASAL}/reservas/r1`), { status: 'recebida', atualizado_em: serverTimestamp() }),
     );
+    // "Desfazer" do Recebido volta para ativa; cancelar continua só pelo servidor.
+    await assertSucceeds(updateDoc(doc(ana(), `casais/${CASAL}/reservas/r1`), { status: 'ativa', atualizado_em: serverTimestamp() }));
     await assertFails(deleteDoc(doc(ana(), `casais/${CASAL}/reservas/r1`)));
+  });
+
+  it('itens da lista: o app não mexe na quantidade reservada (só o servidor, 13.5)', async () => {
+    const base = { lista_id: 'l1', item_id: 'i1', quantidade_na_lista: 2, avulso: null, ...criacao('ana') };
+    await assertFails(setDoc(doc(ana(), `casais/${CASAL}/lista_itens/x1`), { ...base, quantidade_reservada: 0 }));
+    await assertSucceeds(setDoc(doc(ana(), `casais/${CASAL}/lista_itens/x2`), base));
+    await assertSucceeds(updateDoc(doc(ana(), `casais/${CASAL}/lista_itens/x2`), { quantidade_na_lista: 3, ...atualizacao('ana') }));
+    await assertFails(updateDoc(doc(ana(), `casais/${CASAL}/lista_itens/x2`), { quantidade_reservada: 5, ...atualizacao('ana') }));
+  });
+
+  it('agradecimento de presente fora da lista, sem reserva nem item (T27)', async () => {
+    await assertSucceeds(
+      setDoc(doc(ana(), `casais/${CASAL}/agradecimentos/a1`), {
+        reserva_id: null,
+        item_id: null,
+        nome: 'Vó Lúcia',
+        presente_descricao: 'Liquidificador',
+        whatsapp: null,
+        ocasiao: null,
+        agradecido: false,
+        agradecido_em: null,
+        ...criacao('ana'),
+      }),
+    );
   });
 
   it('lista de presentes: o app cria em rascunho, mas não publica', async () => {

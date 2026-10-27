@@ -9,7 +9,10 @@ import {
   type Gasto,
   type Imovel,
   type Item,
+  type Agradecimento,
   type ListaItem,
+  type ListaPresentes,
+  type Reserva,
   type Notificacao,
   type Parcela,
   type Tarefa,
@@ -36,6 +39,9 @@ export const useItens = () => useSub<Item>('itens');
 export const useComodos = () => useSub<Comodo>('comodos');
 export const useConvidados = () => useSub<Convidado>('convidados');
 export const useListaItens = () => useSub<ListaItem>('lista_itens');
+export const useListas = () => useSub<ListaPresentes>('listas_presentes');
+export const useReservas = () => useSub<Reserva>('reservas');
+export const useAgradecimentos = () => useSub<Agradecimento>('agradecimentos');
 
 export function useImovel() {
   const { casalId } = useSessao();

@@ -6,6 +6,19 @@ import { aceitarConvite, cancelarConvites, consultarConvite, criarConvite, ErroC
 import { excluirConta, removerParceiro, sairDoPlano, trocarModo } from './casal';
 import { buscarSeguro, ErroLink, lerAte, MAXIMO_IMAGEM, previaDoLink } from './link';
 import {
+  cancelarReservaPeloCasal,
+  consultarReserva,
+  desfazerReserva,
+  ErroPresentes,
+  excluirLista,
+  fotoDoPresente,
+  paginaDaLista,
+  publicarLista,
+  removerDaLista,
+  reservar,
+  type PedidoReserva,
+} from './presentes';
+import {
   abrirArquivo,
   assinaturaValida,
   ErroArquivo,
@@ -52,6 +65,16 @@ async function exigirCasal(req: FastifyRequest, resposta: FastifyReply) {
   if (!req.casalId) return resposta.code(403).send({ erro: 'sem_casal' });
 }
 
+/** Limite simples por IP nas rotas públicas que gravam (reservas): 20 a cada 10 minutos. */
+const tentativas = new Map<string, number[]>();
+function limitar(ip: string, maximo = 20, janelaMs = 10 * 60 * 1000) {
+  const agora = Date.now();
+  const lista = (tentativas.get(ip) ?? []).filter((t) => agora - t < janelaMs);
+  lista.push(agora);
+  tentativas.set(ip, lista);
+  return lista.length > maximo;
+}
+
 const STATUS_CONVITE: Record<ErroConvite['codigo'], number> = {
   nao_encontrado: 404,
   expirado: 410,
@@ -68,6 +91,10 @@ export function criarServidor() {
   app.setErrorHandler((erro, _req, resposta) => {
     if (erro instanceof ErroValidacao) return resposta.code(400).send({ erro: 'validacao', mensagem: erro.message });
     if (erro instanceof ErroConvite) return resposta.code(STATUS_CONVITE[erro.codigo]).send({ erro: erro.codigo });
+    if (erro instanceof ErroPresentes) {
+      const status = { nao_encontrado: 404, link_inativo: 404, indisponivel: 409, quantidade_invalida: 400, reserva_encerrada: 409, slug_em_uso: 409 }[erro.codigo];
+      return resposta.code(status).send({ erro: erro.codigo });
+    }
     if (erro instanceof ErroLink) return resposta.code(erro.codigo === 'link_falhou' ? 422 : 400).send({ erro: erro.codigo });
     if (erro instanceof ErroArquivo) {
       return resposta.code(erro.codigo === 'nao_encontrado' ? 404 : 400).send({ erro: erro.codigo });
@@ -201,6 +228,49 @@ export function criarServidor() {
     await removerContrato(req.token!.uid, req.casalId!, req.params.id);
     return { ok: true };
   });
+
+  // Etapa 5 · Presentes (casal) ---------------------------------------------------------------
+  app.post<{ Params: { id: string } }>('/v1/listas/:id/publicar', { preHandler: exigirCasal }, async (req) => publicarLista(req.token!, req.casalId!, req.params.id));
+  app.post<{ Params: { id: string } }>('/v1/listas/:id/excluir', { preHandler: exigirCasal }, async (req) => excluirLista(req.token!, req.casalId!, req.params.id));
+  app.post<{ Body: { ids: string[] } }>(
+    '/v1/lista-itens/remover',
+    { preHandler: exigirCasal, schema: { body: { type: 'object', required: ['ids'], properties: { ids: { type: 'array', maxItems: 100, items: { type: 'string', maxLength: 60 } } } } } },
+    async (req) => removerDaLista(req.casalId!, req.body.ids),
+  );
+  app.post<{ Params: { id: string } }>('/v1/reservas/:id/cancelar', { preHandler: exigirCasal }, async (req) => cancelarReservaPeloCasal(req.casalId!, req.params.id));
+
+  // Etapa 5 · Convidado, sem login (T25, T26, T40) -----------------------------------------
+  app.get<{ Params: { slug: string; lista: string } }>('/v1/publico/:slug/:lista', async (req) => paginaDaLista(req.params.slug, req.params.lista));
+  app.get<{ Params: { slug: string; lista: string; presente: string } }>('/v1/publico/:slug/:lista/fotos/:presente', async (req, resposta) => {
+    const { casalId, arquivo } = await fotoDoPresente(req.params.slug, req.params.lista, req.params.presente);
+    const { fluxo, tipo } = abrirArquivo(casalId, arquivo);
+    return resposta.header('cache-control', 'public, max-age=3600').type(tipo).send(fluxo);
+  });
+  app.post<{ Params: { slug: string; lista: string }; Body: PedidoReserva }>(
+    '/v1/publico/:slug/:lista/reservar',
+    {
+      schema: {
+        body: {
+          type: 'object',
+          required: ['presente', 'quantidade', 'nome'],
+          properties: {
+            presente: { type: 'string', maxLength: 60 },
+            quantidade: { type: 'integer', minimum: 1, maximum: 99 },
+            nome: { type: 'string', maxLength: 60 },
+            whatsapp: { type: ['string', 'null'], maxLength: 20 },
+            mensagem: { type: ['string', 'null'], maxLength: 300 },
+          },
+          additionalProperties: false,
+        },
+      },
+    },
+    async (req, resposta) => {
+      if (limitar(req.headers['x-forwarded-for']?.toString().split(',')[0] ?? req.ip)) return resposta.code(429).send({ erro: 'muitas_tentativas' });
+      return reservar(req.params.slug, req.params.lista, req.body);
+    },
+  );
+  app.get<{ Params: { token: string } }>('/v1/publico/reservas/:token', async (req) => consultarReserva(req.params.token));
+  app.post<{ Params: { token: string } }>('/v1/publico/reservas/:token/desfazer', async (req) => desfazerReserva(req.params.token));
 
   // Link de 10 minutos para abrir um arquivo do casal no navegador do sistema (contrato do T17).
   app.post<{ Body: { caminho: string } }>(

@@ -15,6 +15,9 @@ import { ConfigModo } from '../telas/perfil/ConfigModo';
 import { AtivarModulo, Convidar, DadosCasa, DadosCasamento, EditarCasal } from '../telas/perfil/Formularios';
 import { MeusDados } from '../telas/perfil/MeusDados';
 import { OrcamentoCasa, ProvisoriaPilha } from '../telas/Provisorias';
+import { AdicionarItens } from '../telas/presentes/AdicionarItens';
+import { Agradecimentos } from '../telas/presentes/Agradecimentos';
+import { Lista } from '../telas/presentes/Lista';
 import { Catalogo, CatalogoEstado, CatalogoFormulario } from '../dev/Catalogo';
 import { Abertura } from '../telas/acesso/Abertura';
 import { BoasVindas } from '../telas/acesso/BoasVindas';
@@ -45,6 +48,8 @@ const linking: LinkingOptions<ParamsRaiz> = {
       Fornecedor: 'fornecedor/:id',
       Comodo: 'comodo/:id',
       Item: 'item/:id',
+      Lista: 'lista/:id',
+      Agradecimentos: 'agradecimentos',
       ConfigModo: 'modo',
       Abas: {
         screens: {
@@ -189,6 +194,9 @@ export function Raiz() {
             <Pilha.Screen name="Comodo" component={Comodo} />
             <Pilha.Screen name="Item" component={Item} />
             <Pilha.Screen name="Medidas" component={Medidas} />
+            <Pilha.Screen name="Lista" component={Lista} />
+            <Pilha.Screen name="AdicionarItens" component={AdicionarItens} />
+            <Pilha.Screen name="Agradecimentos" component={Agradecimentos} />
             <Pilha.Screen name="OrcamentoCasa" component={OrcamentoCasa} />
             <Pilha.Screen name="ConfigModo" component={ConfigModo} />
             <Pilha.Screen name="AtivarModulo" component={AtivarModulo} options={{ gestureEnabled: false }} />

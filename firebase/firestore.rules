@@ -114,8 +114,15 @@ service cloud.firestore {
       return d.lista_id is string && d.item_id is string && inteiroMinimo(d.quantidade_na_lista, 1);
     }
 
+    // A quantidade reservada (13.5) é mantida só pelo servidor, na transação da reserva.
+    function naoMexeNaReserva(sub) {
+      return sub != 'lista_itens'
+        || (resource == null ? !('quantidade_reservada' in dados()) : !mudou().hasAny(['quantidade_reservada']));
+    }
+
+    // Presentes recebidos fora da lista (T27 "Registrar presente") podem não ter reserva nem item.
     function agradecimentoValido(d) {
-      return textoPreenchido(d.nome) && d.agradecido is bool && (d.reserva_id != null || d.item_id != null);
+      return textoPreenchido(d.nome) && textoPreenchido(d.presente_descricao) && d.agradecido is bool;
     }
 
     function grupoValido(d) {
@@ -207,25 +214,28 @@ service cloud.firestore {
           && gravavelPeloApp(sub)
           && auditoriaNaCriacao()
           && naoPublicaPeloApp(sub)
+          && naoMexeNaReserva(sub)
           && entidadeValida(sub, docId, dados());
 
         allow update: if doCasal(casalId)
           && gravavelPeloApp(sub)
           && auditoriaNaAtualizacao()
           && naoPublicaPeloApp(sub)
+          && naoMexeNaReserva(sub)
           && entidadeValida(sub, docId, dados());
 
         // Exclusão definitiva no MVP (13.8), sempre com confirmação no app. O imóvel não é excluído.
         allow delete: if doCasal(casalId) && gravavelPeloApp(sub) && sub != 'imovel';
       }
 
-      // Reservas são criadas e canceladas pelo servidor (13.5). O casal só marca como recebida.
+      // Reservas são criadas e canceladas pelo servidor (13.5). O casal só marca como recebida
+      // (e desfaz o "Recebido"): as duas ocupam a unidade, então a quantidade reservada não muda.
       match /reservas/{reservaId} {
         allow read: if doCasal(casalId);
         allow update: if doCasal(casalId)
           && mudou().hasOnly(['status', 'atualizado_em'])
-          && resource.data.status == 'ativa'
-          && dados().status == 'recebida'
+          && ((resource.data.status == 'ativa' && dados().status == 'recebida')
+            || (resource.data.status == 'recebida' && dados().status == 'ativa'))
           && dados().atualizado_em == request.time;
         allow create, delete: if false;
       }

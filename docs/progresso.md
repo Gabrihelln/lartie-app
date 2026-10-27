@@ -7,14 +7,14 @@
 | 2 | Onboarding (com modo do app) | Aprovada | 26/10/2026 | [relatório](relatorios/etapa-2.md) |
 | 3 | Início por modo e Casamento | Aprovada | 26/10/2026 | [relatório](relatorios/etapa-3.md) |
 | 4 | Casa nova | Aprovada | 27/10/2026 | [relatório](relatorios/etapa-4.md) |
-| 5 | Lista de presentes e reservas | Não iniciada | | |
+| 5 | Lista de presentes e reservas | Aprovada | 27/10/2026 | [relatório](relatorios/etapa-5.md) |
 | 6 | Convidados e RSVP | Não iniciada | | |
 | 7 | Modais de confirmação (auditoria) | Não iniciada | | |
 | 8 | Erros, avisos e estados (auditoria) | Não iniciada | | |
 | 9 | Notificações (Assistente Lu fora do escopo atual, P14) | Não iniciada | | |
 | 10 | Preparação para as lojas | Não iniciada | | |
 
-**Etapa atual:** 5 · Lista de presentes e reservas · não iniciada (Etapa 4 aprovada e unida à `main`).
+**Etapa atual:** 6 · Convidados e RSVP · não iniciada (Etapa 5 aprovada e unida à `main`).
 
 ## Registro
 
@@ -33,3 +33,6 @@
 - **26/10/2026:** Etapa 4 entregue: Casa, Cômodo, Item, Medidas, T55, sair do plano e sugestão de cômodos no Perfil.
 - **27/10/2026:** ícone do app corrigido (PNGs do design system estavam em branco; gerados de novo dos SVGs com `npm run icones -w @lartie/tokens`).
 - **27/10/2026:** Etapa 4 aprovada (`APROVADO ETAPA 4`). Branch `etapa-4-casa-nova` unida à `main`. Em aberto: vista de cima com móveis arrastáveis ou em fileiras.
+- **27/10/2026:** domínio (P13) fica para o fim do projeto; testes da web do convidado no Mac.
+- **27/10/2026:** Etapa 5 entregue: listas, reservas atômicas, web do convidado (Next.js 16.4.3), agradecimentos. Regras e índice publicados no `lartie-dev`.
+- **27/10/2026:** Etapa 5 aprovada (`APROVADO ETAPA 5`), testada pelo dono do produto. Branch `etapa-5-presentes` unida à `main`. Em aberto: stories do Instagram com imagem gerada (por ora, compartilhamento do sistema). Ideia registrada: fotos dos convidados (P15, fora do MVP).
