@@ -6,7 +6,7 @@
 | 1 | Acesso e login | Aprovada | 25/10/2026 | [relatório](relatorios/etapa-1.md) |
 | 2 | Onboarding (com modo do app) | Aprovada | 26/10/2026 | [relatório](relatorios/etapa-2.md) |
 | 3 | Início por modo e Casamento | Aprovada | 26/10/2026 | [relatório](relatorios/etapa-3.md) |
-| 4 | Casa nova | Entregue, aguardando aprovação | | [relatório](relatorios/etapa-4.md) |
+| 4 | Casa nova | Aprovada | 27/10/2026 | [relatório](relatorios/etapa-4.md) |
 | 5 | Lista de presentes e reservas | Não iniciada | | |
 | 6 | Convidados e RSVP | Não iniciada | | |
 | 7 | Modais de confirmação (auditoria) | Não iniciada | | |
@@ -14,7 +14,7 @@
 | 9 | Notificações (Assistente Lu fora do escopo atual, P14) | Não iniciada | | |
 | 10 | Preparação para as lojas | Não iniciada | | |
 
-**Etapa atual:** 4 · Casa nova · branch `etapa-4-casa-nova` · aguardando `APROVADO ETAPA 4`.
+**Etapa atual:** 5 · Lista de presentes e reservas · não iniciada (Etapa 4 aprovada e unida à `main`).
 
 ## Registro
 
@@ -31,3 +31,5 @@
 - **26/10/2026:** Etapa 3 aprovada (`APROVADO ETAPA 3`). Branch `etapa-3-inicio-casamento` unida à `main`. As três perguntas do relatório (textos neutros, só o `noivo_1` remove o parceiro, categoria dos itens comprados) seguem em aberto para a Etapa 4.
 - **26/10/2026:** decisões para a Etapa 4: categoria escolhida em cada item comprado; textos neutros do Perfil ficam; só quem criou o plano remove o parceiro, e quem foi convidado pode sair do plano (ajuste pedido).
 - **26/10/2026:** Etapa 4 entregue: Casa, Cômodo, Item, Medidas, T55, sair do plano e sugestão de cômodos no Perfil.
+- **27/10/2026:** ícone do app corrigido (PNGs do design system estavam em branco; gerados de novo dos SVGs com `npm run icones -w @lartie/tokens`).
+- **27/10/2026:** Etapa 4 aprovada (`APROVADO ETAPA 4`). Branch `etapa-4-casa-nova` unida à `main`. Em aberto: vista de cima com móveis arrastáveis ou em fileiras.
