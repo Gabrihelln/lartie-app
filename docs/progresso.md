@@ -5,7 +5,7 @@
 | 0 | Fundação | Aprovada | 20/10/2026 (stack e etapa) | [proposta de stack](relatorios/etapa-0-proposta-stack.md) · [relatório](relatorios/etapa-0.md) |
 | 1 | Acesso e login | Aprovada | 25/10/2026 | [relatório](relatorios/etapa-1.md) |
 | 2 | Onboarding (com modo do app) | Aprovada | 26/10/2026 | [relatório](relatorios/etapa-2.md) |
-| 3 | Início por modo e Casamento | Não iniciada | | |
+| 3 | Início por modo e Casamento | Entregue, aguardando aprovação | | [relatório](relatorios/etapa-3.md) |
 | 4 | Casa nova | Não iniciada | | |
 | 5 | Lista de presentes e reservas | Não iniciada | | |
 | 6 | Convidados e RSVP | Não iniciada | | |
@@ -14,7 +14,7 @@
 | 9 | Notificações (Assistente Lu fora do escopo atual, P14) | Não iniciada | | |
 | 10 | Preparação para as lojas | Não iniciada | | |
 
-**Etapa atual:** 3 · Início por modo e Casamento · não iniciada (Etapa 2 aprovada e unida à `main`).
+**Etapa atual:** 3 · Início por modo e Casamento · branch `etapa-3-inicio-casamento` · aguardando `APROVADO ETAPA 3`.
 
 ## Registro
 
@@ -26,3 +26,4 @@
 - **25/10/2026:** Etapa 2 entregue. Decisões: P05 (perguntar cerimônia religiosa no T07), P03 (usar catálogos de rascunho e revisar depois), convite por e-mail depois do domínio, foto do casal em arquivo na API. Onboarding, convite e conexão iOS ↔ Android testados pelo dono do produto.
 - **26/10/2026:** ajustes da Etapa 2: recusar e cancelar convite, link com o app aberto no iOS, aviso e validade de 30 min para o convite guardado, "Quem?" no T09 (`era_de`), confirmação "Trocar de plano?". Moradores ficam 2 no MVP; catálogos ficam como estão.
 - **26/10/2026:** Etapa 2 aprovada (`APROVADO ETAPA 2`). Branch `etapa-2-onboarding` unida à `main`.
+- **26/10/2026:** Etapa 3 entregue: telas iniciais por modo, checklist, tarefa, orçamento, fornecedores, perfil e modo do app. Regras do Firestore publicadas no `lartie-dev` (campo `parceiro` só pelo servidor).
