@@ -9,12 +9,12 @@
 | 4 | Casa nova | Aprovada | 27/10/2026 | [relatório](relatorios/etapa-4.md) |
 | 5 | Lista de presentes e reservas | Aprovada | 27/10/2026 | [relatório](relatorios/etapa-5.md) |
 | 6 | Convidados e RSVP | Aprovada | 27/10/2026 | [relatório](relatorios/etapa-6.md) |
-| 7 | Modais de confirmação (auditoria) | Entregue, aguardando aprovação | | [relatório](relatorios/etapa-7.md) |
+| 7 | Modais de confirmação (auditoria) | Aprovada | 27/10/2026 | [relatório](relatorios/etapa-7.md) |
 | 8 | Erros, avisos e estados (auditoria) | Não iniciada | | |
 | 9 | Notificações (Assistente Lu fora do escopo atual, P14) | Não iniciada | | |
 | 10 | Preparação para as lojas | Não iniciada | | |
 
-**Etapa atual:** 7 · Modais de confirmação (auditoria) · branch `etapa-7-confirmacoes` · aguardando `APROVADO ETAPA 7`.
+**Etapa atual:** 8 · Erros, avisos e estados (auditoria) · não iniciada (Etapa 7 aprovada e unida à `main`).
 
 ## Registro
 
@@ -41,3 +41,4 @@
 - **27/10/2026:** Etapa 6 aprovada (`APROVADO ETAPA 6`). Branch `etapa-6-convidados` unida à `main`. Pendências P16 (stories do Instagram) e P17 (vista de cima arrastável) registradas; P04 (tarefas da mudança) segue em aberto.
 - **27/10/2026:** P04 decidido: seção "Mudança" na tela Casa, entregue junto com a Etapa 7.
 - **27/10/2026:** Etapa 7 entregue: auditoria das confirmações (catálogo único e tabela de rastreio), 4 correções e a P04.
+- **27/10/2026:** Etapa 7 aprovada (`APROVADO ETAPA 7`). Branch `etapa-7-confirmacoes` unida à `main`.
