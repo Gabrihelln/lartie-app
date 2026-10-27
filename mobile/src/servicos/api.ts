@@ -13,6 +13,17 @@ const URL_API = {
 
 export const urlApi = () => URL_API[ambienteAtual()];
 
+// Página do convidado (web, Next.js). Em demo e dev roda no Mac (npm run dev -w @lartie/web);
+// em prod, lartie.app, que depende do domínio (P13).
+const URL_WEB = {
+  demo: `http://${HOST_EMULADOR}:3000`,
+  dev: `http://${HOST_EMULADOR}:3000`,
+  prod: 'https://lartie.app',
+} as const;
+
+/** Endereço que abre de verdade neste ambiente ("Ver como convidado"). */
+export const urlWeb = (caminho: string) => `${URL_WEB[ambienteAtual()]}/${caminho.replace(/^\//, '')}`;
+
 export class ErroSemConexao extends Error {}
 export class ErroApi extends Error {
   constructor(
@@ -180,4 +191,34 @@ export function previaDoLink(url: string) {
 /** T20: usa a foto da página da loja como foto do item. */
 export function fotoDoLink(itemId: string, url: string) {
   return chamar<{ foto: string }>(`/v1/itens/${encodeURIComponent(itemId)}/foto-do-link`, { corpo: { url }, tempoMs: 20000 });
+}
+
+// Etapa 5 ---------------------------------------------------------------------------------------
+
+/** Mensagem para avisar um convidado cuja reserva foi cancelada pelo casal. */
+export interface AvisoConvidado {
+  nome: string;
+  whatsapp: string | null;
+  item: string;
+  mensagem: string;
+}
+
+/** T39: publica a lista (o servidor confere o endereço). */
+export function publicarLista(listaId: string) {
+  return chamar<{ link: string }>(`/v1/listas/${encodeURIComponent(listaId)}/publicar`);
+}
+
+/** T24 "Excluir lista": cancela as reservas ativas e devolve os avisos aos convidados. */
+export function excluirLista(listaId: string) {
+  return chamar<{ avisos: AvisoConvidado[] }>(`/v1/listas/${encodeURIComponent(listaId)}/excluir`);
+}
+
+/** Tirar da lista item com reserva (T19, T24, T35): cancela as reservas e remove. */
+export function removerDaLista(ids: string[]) {
+  return chamar<{ avisos: AvisoConvidado[] }>('/v1/lista-itens/remover', { corpo: { ids } });
+}
+
+/** Cancelar uma reserva pelo casal (13.5). */
+export function cancelarReserva(reservaId: string) {
+  return chamar<{ aviso: AvisoConvidado }>(`/v1/reservas/${encodeURIComponent(reservaId)}/cancelar`);
 }

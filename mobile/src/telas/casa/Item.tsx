@@ -64,6 +64,8 @@ import {
   fotoDoLink,
   previaDoLink,
   removerFotoItem,
+  removerDaLista,
+  type AvisoConvidado,
 } from '../../servicos/api';
 import { registrarErro, registrarEvento } from '../../servicos/analytics';
 import { armazenamento } from '../../servicos/armazenamento';
@@ -71,6 +73,7 @@ import { useConexao } from '../../servicos/conexao';
 import { db } from '../../servicos/firebase';
 import { espacos, useTema } from '../../tema';
 import { ModuloOculto } from '../inicio/ModuloOculto';
+import { FolhaAvisarConvidados } from '../presentes/comum';
 import { useConferirComodo, useEstadoItem, type ItemComId } from './comum';
 
 // T20 · Item (Item.dc.html), criar e editar. Nome obrigatório; quantidade ≥ 1; link com formato
@@ -190,6 +193,9 @@ function TelaItem() {
   const [folhaFoto, setFolhaFoto] = useState(false);
   const [explicarCamera, setExplicarCamera] = useState(false);
   const preenchido = useRef(false);
+  const [avisarConvidados, setAvisarConvidados] = useState<AvisoConvidado[]>(
+    [],
+  );
 
   useEffect(() => {
     if (!item || preenchido.current) return;
@@ -494,12 +500,34 @@ function TelaItem() {
       confirmar: 'Excluir',
     });
     if (!ok) return;
+    // Com reserva ativa, o servidor cancela as reservas (13.5) e devolve os avisos aos convidados.
+    const naLista = listaItens.filter(l => l.item_id === id);
+    const comReserva = naLista.filter(l => (l.quantidade_reservada ?? 0) > 0);
+    let paraAvisar: AvisoConvidado[] = [];
+    if (comReserva.length) {
+      if (!online) {
+        avisos.mostrar({
+          texto: 'Excluir um item com reserva precisa de internet.',
+          tipo: 'erro',
+        });
+        return;
+      }
+      try {
+        paraAvisar = (await removerDaLista(comReserva.map(l => l.id))).avisos;
+      } catch {
+        avisos.mostrar({
+          texto: 'Não foi possível excluir. Tentem de novo.',
+          tipo: 'erro',
+        });
+        return;
+      }
+    }
     liberado.current = true;
     emLote(
       casalId,
       [
-        ...listaItens
-          .filter(l => l.item_id === id)
+        ...naLista
+          .filter(l => !comReserva.includes(l))
           .map(l => ({
             tipo: 'excluir' as const,
             sub: 'lista_itens' as const,
@@ -512,8 +540,9 @@ function TelaItem() {
     );
     if (item?.foto && online) removerFotoItem(id).catch(() => {});
     registrarEvento({ nome: 'item_excluido', params: {} });
-    navigation.goBack();
     avisos.mostrar({ texto: 'Item excluído' });
+    if (paraAvisar.length) setAvisarConvidados(paraAvisar);
+    else navigation.goBack();
   };
 
   const fonteFoto = fotoLocal
@@ -758,6 +787,13 @@ function TelaItem() {
       />
 
       {estadoItem.folhas}
+      <FolhaAvisarConvidados
+        avisos={avisarConvidados}
+        onFechar={() => {
+          setAvisarConvidados([]);
+          navigation.goBack();
+        }}
+      />
 
       <FolhaInferior
         visivel={folhaFoto}

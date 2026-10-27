@@ -30,7 +30,15 @@ export type EventoAnalytics =
   | { nome: 'comodo_completo'; params: Record<string, never> }
   | { nome: 'medidas_salvas'; params: Record<string, never> }
   | { nome: 'parceiro_saiu'; params: Record<string, never> }
-  | { nome: 'comodos_sugeridos'; params: { comodos: number; itens: number } };
+  | { nome: 'comodos_sugeridos'; params: { comodos: number; itens: number } }
+  // Etapa 5
+  | { nome: 'lista_criada'; params: { ocasiao: string } }
+  | { nome: 'lista_publicada'; params: { ocasiao: string } }
+  | { nome: 'lista_compartilhada'; params: { canal: string } }
+  | { nome: 'itens_adicionados_lista'; params: { itens: number } }
+  | { nome: 'presente_recebido'; params: Record<string, never> }
+  | { nome: 'reserva_cancelada_casal'; params: Record<string, never> }
+  | { nome: 'agradecimento_enviado'; params: { canal: string } };
 
 /** De onde veio a troca de modo (13.9 regra 9). */
 export type OrigemModo = 'perfil' | 'cartao' | 'assistente' | 'inicio_depois' | 'folha_ativar';

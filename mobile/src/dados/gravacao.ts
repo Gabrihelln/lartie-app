@@ -104,6 +104,8 @@ export type OperacaoLote =
   | { tipo: 'criar'; sub: Subcolecao; dados: Dados; id?: string }
   | { tipo: 'atualizar'; sub: Subcolecao; id: string; dados: Dados }
   | { tipo: 'atualizarCasal'; dados: Dados }
+  /** Reservas: as regras só deixam o casal mudar status e atualizado_em (sem atualizado_por). */
+  | { tipo: 'atualizarReserva'; id: string; status: 'ativa' | 'recebida' }
   | { tipo: 'excluir'; sub: Subcolecao; id: string };
 
 /**
@@ -128,6 +130,8 @@ export function emLote(casalId: string, operacoes: OperacaoLote[], contexto: str
       });
     } else if (op.tipo === 'atualizar') {
       lote.update(doc(db(), caminhos.documento(casalId, op.sub, op.id)), { ...op.dados, atualizado_por: quem, atualizado_em: serverTimestamp() });
+    } else if (op.tipo === 'atualizarReserva') {
+      lote.update(doc(db(), caminhos.documento(casalId, 'reservas', op.id)), { status: op.status, atualizado_em: serverTimestamp() });
     } else if (op.tipo === 'atualizarCasal') {
       lote.update(doc(db(), caminhos.casal(casalId)), { ...op.dados, atualizado_por: quem, atualizado_em: serverTimestamp() });
     } else {

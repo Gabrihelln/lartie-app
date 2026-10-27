@@ -37,6 +37,12 @@ export type ParamsRaiz = {
   Item: { id?: string; comodoId?: string } | undefined;
   /** T21 · Medidas do cômodo. */
   Medidas: { comodoId: string };
+  /** Etapa 5. T24 · Lista: itens e reservas. `compartilhar`: abre o T65 (depois de publicar). */
+  Lista: { id: string; compartilhar?: boolean };
+  /** T24 "+ Adicionar itens do enxoval". */
+  AdicionarItens: { listaId: string };
+  /** T27 · Agradecimentos. */
+  Agradecimentos: undefined;
   /** T17: sem id = novo fornecedor; `tarefaId` vincula o novo fornecedor à tarefa (T14). */
   Fornecedor: { id?: string; categoria?: string; tarefaId?: string } | undefined;
   /** T15 no modo "casa": acessado pela Casa (T18 › "Orçamento da casa"). */

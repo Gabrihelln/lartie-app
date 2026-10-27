@@ -28,6 +28,7 @@ import {
   comodoCompleto,
   ROTULO_ESTADO,
   textoCelebracaoComodo,
+  NOME_OCASIAO,
 } from '@lartie/regras';
 import { Botao } from '../../componentes/Botao';
 import { CampoTexto } from '../../componentes/CampoTexto';
@@ -41,6 +42,8 @@ import { useSessao } from '../../dados/Sessao';
 import { useAvisos } from '../../feedback/Avisos';
 import { useDialogo } from '../../feedback/Dialogo';
 import { registrarEvento } from '../../servicos/analytics';
+import { removerDaLista, type AvisoConvidado } from '../../servicos/api';
+import { FolhaAvisarConvidados } from '../presentes/comum';
 import { db } from '../../servicos/firebase';
 import { espacos, useTema } from '../../tema';
 
@@ -259,6 +262,9 @@ export function useEstadoItem() {
   const avisos = useAvisos();
   const conferir = useConferirComodo();
   const [pedido, setPedido] = useState<Pedido | null>(null);
+  const [avisarConvidados, setAvisarConvidados] = useState<AvisoConvidado[]>(
+    [],
+  );
   const aoFalhar = () => erroAoSalvar();
 
   const aplicar = useCallback(
@@ -367,6 +373,7 @@ export function useEstadoItem() {
             lista_id: listaId,
             item_id: item.id,
             quantidade_na_lista: item.quantidade,
+            avulso: null,
           },
         },
       ],
@@ -416,6 +423,20 @@ export function useEstadoItem() {
         confirmar: 'Tirar da lista',
       });
       if (!ok) return;
+      // Com reserva, o servidor cancela (13.5) e devolve as mensagens para avisar os convidados.
+      try {
+        const { avisos: paraAvisar } = await removerDaLista(
+          naLista.map(l => l.id),
+        );
+        aplicar(item, novo, {}, [], []);
+        setAvisarConvidados(paraAvisar);
+      } catch {
+        avisos.mostrar({
+          texto: 'Tirar da lista com reserva precisa de internet.',
+          tipo: 'erro',
+        });
+      }
+      return;
     }
     aplicar(
       item,
@@ -433,6 +454,7 @@ export function useEstadoItem() {
           lista_id: l.lista_id,
           item_id: l.item_id,
           quantidade_na_lista: l.quantidade_na_lista,
+          avulso: null,
         },
       })),
     );
@@ -447,6 +469,10 @@ export function useEstadoItem() {
 
   const folhas = (
     <>
+      <FolhaAvisarConvidados
+        avisos={avisarConvidados}
+        onFechar={() => setAvisarConvidados([])}
+      />
       <FolhaComoChegou
         item={pedido?.tipo === 'comoChegou' ? pedido.item : null}
         onFechar={() => setPedido(null)}
@@ -476,14 +502,8 @@ export function useEstadoItem() {
   return { alternar, folhas, opsChegada, sairDaLista, irParaLista };
 }
 
-const NOMES_OCASIAO: Record<ListaPresentes['ocasiao'], string> = {
-  cha_panela: 'Chá de panela',
-  cha_cozinha: 'Chá de cozinha',
-  cha_bar: 'Chá bar',
-  casamento: 'Casamento',
-};
 export const nomeDaLista = (l: Pick<ListaPresentes, 'ocasiao'>) =>
-  NOMES_OCASIAO[l.ocasiao];
+  NOME_OCASIAO[l.ocasiao];
 
 /** Folha rápida "Como chegou?" do T19, com "Pular". */
 function FolhaComoChegou({
