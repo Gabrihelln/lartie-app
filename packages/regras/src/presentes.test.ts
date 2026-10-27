@@ -34,6 +34,7 @@ describe('endereço da lista (T23)', () => {
     expect(validarSlugLista('Chá', [])).toBe('Use de 3 a 40 letras minúsculas, números e hífens.');
     expect(validarSlugLista('a--b', [])).not.toBeNull();
     expect(validarSlugLista('casamento', ['casamento'])).toBe('Vocês já têm uma lista com este endereço.');
+    expect(validarSlugLista('reserva', [])).toBe('Este endereço é usado pelo Lartiê. Escolham outro.');
   });
 });
 

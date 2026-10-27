@@ -38,11 +38,15 @@ export function sugerirSlugLista(o: Ocasiao, existentes: readonly string[]): str
   for (let n = 2; ; n++) if (!existentes.includes(`${base}-${n}`)) return `${base}-${n}`;
 }
 
+const ENDERECOS_RESERVADOS = ['reserva', 'rsvp', 'convite', 'api'];
+
 /** Endereço do link: letras minúsculas, números e hífens, 3 a 40 caracteres, único no casal. */
 export function validarSlugLista(slug: string, existentes: readonly string[]): string | null {
   if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(slug) || slug.length < 3 || slug.length > 40) {
     return 'Use de 3 a 40 letras minúsculas, números e hífens.';
   }
+  // Caminhos da página do convidado: lartie.app/{slug}/reserva/{token} e /{slug}/rsvp/{token}.
+  if (ENDERECOS_RESERVADOS.includes(slug)) return 'Este endereço é usado pelo Lartiê. Escolham outro.';
   if (existentes.includes(slug)) return 'Vocês já têm uma lista com este endereço.';
   return null;
 }

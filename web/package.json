@@ -1,0 +1,26 @@
+{
+  "name": "@lartie/web",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Página do convidado (sem login): lista de presentes, reserva e, na Etapa 6, RSVP",
+  "scripts": {
+    "tokens": "node scripts/copiar-tokens.mjs",
+    "predev": "npm run tokens",
+    "prebuild": "npm run tokens",
+    "dev": "NEXT_TELEMETRY_DISABLED=1 next dev -p 3000 -H 0.0.0.0",
+    "build": "next build",
+    "start": "next start -p 3000",
+    "typecheck": "npm run tokens && tsc --noEmit"
+  },
+  "dependencies": {
+    "@lartie/modelo": "*",
+    "@lartie/regras": "*",
+    "next": "16.4.3",
+    "react": "19.2.3",
+    "react-dom": "19.2.3"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.7"
+  }
+}

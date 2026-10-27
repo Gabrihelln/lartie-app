@@ -1,0 +1,339 @@
+@import './tokens.css';
+
+/* Página do convidado: fonte do sistema (como no app), cores e espaços dos tokens do design system.
+   Fraunces só no nome "Lartiê". */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+body {
+  background: var(--background);
+  color: var(--on-surface);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+}
+a {
+  color: var(--primary);
+}
+button,
+input,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+.pagina {
+  max-width: 640px;
+  margin: 0 auto;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+.conteudo {
+  padding: var(--space-5) var(--space-4) var(--space-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  flex: 1;
+}
+.cabecalho-casal {
+  background: var(--primary);
+  color: var(--on-primary);
+  text-align: center;
+  padding: var(--space-8) var(--space-5) var(--space-6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+.avatares {
+  display: flex;
+  margin-bottom: var(--space-2);
+}
+.avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 22px;
+  border: 2px solid var(--primary);
+}
+.avatar.um {
+  background: var(--surface);
+  color: var(--primary);
+}
+.avatar.dois {
+  background: var(--home-container);
+  color: var(--on-home-container);
+  margin-left: -12px;
+}
+.sobretitulo {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+h1 {
+  font-size: 30px;
+  line-height: 1.15;
+  margin: 0;
+}
+h2 {
+  font-size: 22px;
+  line-height: 1.2;
+  margin: 0;
+}
+.suave {
+  color: var(--on-surface-variant);
+}
+.cabecalho-casal .suave {
+  color: var(--on-primary);
+  opacity: 0.9;
+}
+.chips {
+  display: flex;
+  gap: var(--space-2);
+  overflow-x: auto;
+  padding-bottom: var(--space-1);
+  scrollbar-width: none;
+}
+.chip {
+  flex: none;
+  min-height: 44px;
+  padding: 0 var(--space-4);
+  border-radius: var(--radius-full);
+  border: 1px solid var(--outline-soft);
+  background: var(--surface);
+  cursor: pointer;
+  font-weight: 600;
+}
+.chip[aria-pressed='true'] {
+  background: var(--inverse-surface);
+  color: var(--on-inverse-surface);
+  border-color: var(--inverse-surface);
+}
+.grade {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+@media (min-width: 560px) {
+  .grade {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.cartao {
+  background: var(--surface);
+  border: 1px solid var(--outline-variant);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.cartao .corpo {
+  padding: var(--space-3) var(--space-4) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  flex: 1;
+}
+.foto {
+  aspect-ratio: 4 / 3;
+  background: var(--primary-container);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--on-primary-container);
+  font-size: 13px;
+}
+.foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.nome-item {
+  font-weight: 700;
+  font-size: 17px;
+}
+.botao {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 var(--space-5);
+  border-radius: var(--radius-full);
+  border: none;
+  background: var(--primary);
+  color: var(--on-primary);
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  width: 100%;
+}
+.botao.pequeno {
+  min-height: 44px;
+  border-radius: var(--radius-md);
+  margin-top: var(--space-2);
+}
+.botao.contornado {
+  background: transparent;
+  color: var(--on-surface);
+  border: 1px solid var(--outline);
+}
+.botao.texto {
+  background: transparent;
+  color: var(--primary);
+}
+.botao.whatsapp {
+  background: var(--whatsapp);
+  color: #fff;
+}
+.botao:disabled {
+  opacity: 0.38;
+  cursor: default;
+}
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.campo label {
+  font-weight: 600;
+  font-size: 15px;
+}
+.campo input,
+.campo textarea {
+  min-height: 52px;
+  border: 1.5px solid var(--outline-soft);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  padding: var(--space-3) var(--space-4);
+}
+.campo textarea {
+  min-height: 96px;
+  resize: vertical;
+}
+.campo .ajuda {
+  font-size: 14px;
+  color: var(--on-surface-variant);
+}
+.campo .erro {
+  font-size: 14px;
+  color: var(--error);
+}
+.contador {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1.5px solid var(--outline-soft);
+  border-radius: var(--radius-md);
+  padding: var(--space-1);
+  background: var(--surface);
+}
+.contador button {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-full);
+  border: none;
+  background: var(--primary-container);
+  color: var(--primary);
+  font-size: 22px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.contador button:disabled {
+  opacity: 0.38;
+}
+.contador output {
+  font-size: 20px;
+  font-weight: 700;
+}
+.rodape-fixo {
+  position: sticky;
+  bottom: 0;
+  background: var(--background);
+  border-top: 1px solid var(--divider);
+  padding: var(--space-3) var(--space-4) calc(var(--space-4) + env(safe-area-inset-bottom));
+}
+.bloco {
+  background: var(--surface-variant);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+}
+.rodape {
+  text-align: center;
+  padding: var(--space-5) var(--space-4) var(--space-8);
+  color: var(--on-surface-variant);
+  font-size: 14px;
+}
+.marca {
+  font-family: var(--fonte-marca), Georgia, serif;
+  font-weight: 600;
+  color: var(--primary);
+  text-decoration: none;
+}
+.estado {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: var(--space-3);
+  padding: var(--space-8) var(--space-5);
+}
+.icone-estado {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  background: var(--primary-container);
+  color: var(--primary);
+}
+.veu {
+  position: fixed;
+  inset: 0;
+  background: var(--scrim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-6);
+  z-index: 10;
+}
+.dialogo {
+  background: var(--surface);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+  max-width: 420px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.dialogo .botoes {
+  display: flex;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+.voltar {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  text-decoration: none;
+  color: var(--on-surface);
+  font-size: 28px;
+}
