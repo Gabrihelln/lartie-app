@@ -173,7 +173,7 @@ describe('Perfil: mudar a data recalcula prazos', () => {
     const geradas = gerarChecklist({ ...base, data_casamento: '2027-10-26' }, catalogoTarefas);
     const tarefas = geradas.map((t, i) => ({
       id: t.catalogo_id,
-      catalogo_id: t.catalogo_id,
+      catalogo_id: t.catalogo_id as string | null,
       prazo: t.prazo,
       prazo_manual: i === 1,
       status: i === 2 ? 'concluida' : 'a_fazer',

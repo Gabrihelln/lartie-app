@@ -129,7 +129,7 @@ export async function gerarPlano(uid: string, casalId: string, modoAlvo?: ModoAp
       for (const c of comodos) {
         escritas.push([
           db.doc(caminhos.documento(casalId, 'comodos', c.id)),
-          { nome: c.nome, ordem: c.ordem, largura_m: null, comprimento_m: null, pe_direito_m: null, paredes_livres: [], ...auditoria(uid) },
+          { nome: c.nome, ordem: c.ordem, largura_m: null, comprimento_m: null, pe_direito_m: null, paredes_livres: [], celebrado: false, ...auditoria(uid) },
         ]);
       }
       for (const i of itens) {
@@ -153,6 +153,7 @@ export async function gerarPlano(uid: string, casalId: string, modoAlvo?: ModoAp
             gerado_pelo_plano: true,
             catalogo_id: i.catalogo_id,
             bom_para_presente: i.bom_para_presente,
+            categoria_orcamento: null,
             ...auditoria(uid),
           },
         ]);

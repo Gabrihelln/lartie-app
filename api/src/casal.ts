@@ -92,6 +92,35 @@ export async function removerParceiro(token: DadosToken, casalId: string) {
 }
 
 /**
+ * Pedido do dono do produto (Etapa 4): quem entrou pelo convite (noivo_2) pode sair do plano.
+ * Igual a ser removido (13.7: sai o acesso, ficam os dados), com aviso para quem criou o plano.
+ */
+export async function sairDoPlano(token: DadosToken, casalId: string) {
+  const ref = db.doc(caminhos.usuario(token.uid));
+  const eu = (await ref.get()).data();
+  if (eu?.casal_id !== casalId || eu?.papel !== 'noivo_2') throw new ErroConvite('sem_permissao');
+  const refCasal = db.doc(caminhos.casal(casalId));
+  const agora = FieldValue.serverTimestamp();
+  const lote = db.batch();
+  lote.update(ref, { casal_id: null, papel: null, removido_do_plano: null, atualizado_em: agora });
+  lote.update(refCasal, { parceiro: null, atualizado_por: token.uid, atualizado_em: agora });
+  const criador = (await membros(casalId)).find((m) => m.get('papel') === 'noivo_1');
+  if (criador) {
+    lote.set(db.collection(caminhos.subcolecao(casalId, 'notificacoes')).doc(), {
+      usuario_id: criador.id,
+      tipo: 'parceiro_saiu',
+      texto: `${(eu.nome as string) || 'Seu par'} saiu do plano de vocês.`,
+      destino: 'perfil',
+      lida: false,
+      criada_em: agora,
+    });
+  }
+  await lote.commit();
+  await removerClaimCasal(token.uid);
+  return { ok: true };
+}
+
+/**
  * T42 "Excluir a conta e todos os dados?": apaga o casal (com todas as subcoleções), o endereço
  * público, os convites e os arquivos; apaga a conta de quem pediu e encerra a sessão do parceiro,
  * que continua com a conta, sem casal.

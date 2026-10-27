@@ -17,9 +17,15 @@ export const PASTA_ARQUIVOS = process.env.ARQUIVOS_DIR ?? resolve(aqui, '../dado
 export const TAMANHO_MAXIMO = 5 * 1024 * 1024;
 /** Contratos (T17) podem ser PDFs maiores que uma foto. */
 export const TAMANHO_MAXIMO_CONTRATO = 10 * 1024 * 1024;
-const TIPOS: Record<string, string> = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/heic': 'heic', 'application/pdf': 'pdf' };
-const TIPOS_FOTO = ['image/jpeg', 'image/png', 'image/heic'];
-const NOME_ARQUIVO = /^[0-9a-f-]{36}\.(jpg|png|heic|pdf)$/;
+const TIPOS: Record<string, string> = {
+  'image/jpeg': 'jpg',
+  'image/png': 'png',
+  'image/heic': 'heic',
+  'image/webp': 'webp',
+  'application/pdf': 'pdf',
+};
+const TIPOS_FOTO = ['image/jpeg', 'image/png', 'image/heic', 'image/webp'];
+const NOME_ARQUIVO = /^[0-9a-f-]{36}\.(jpg|png|heic|webp|pdf)$/;
 
 export class ErroArquivo extends Error {
   constructor(readonly codigo: 'tipo_invalido' | 'grande_demais' | 'nao_encontrado') {
@@ -123,4 +129,27 @@ export function assinaturaValida(casalId: string, arquivo: string, expira: strin
   const esperada = Buffer.from(assinar(casalId, arquivo, e));
   const recebida = Buffer.from(assinatura);
   return esperada.length === recebida.length && timingSafeEqual(esperada, recebida);
+}
+
+/** T20: foto do item (câmera, galeria ou a foto da página da loja). */
+export async function salvarFotoItem(uid: string, casalId: string, itemId: string, conteudo: Buffer, tipo: string) {
+  const base = tipo.split(';')[0]!.trim();
+  if (!TIPOS_FOTO.includes(base)) throw new ErroArquivo('tipo_invalido');
+  if (conteudo.length > TAMANHO_MAXIMO) throw new ErroArquivo('grande_demais');
+  const ref = db.doc(caminhos.documento(casalId, 'itens', itemId));
+  const atual = await ref.get();
+  if (!atual.exists) throw new ErroArquivo('nao_encontrado');
+  const nome = await gravarNoDisco(casalId, conteudo, base);
+  await removerAnterior(casalId, atual.get('foto'));
+  const foto = caminhoPublico(casalId, nome);
+  await ref.update({ foto, atualizado_por: uid, atualizado_em: FieldValue.serverTimestamp() });
+  return { foto };
+}
+
+export async function removerFotoItem(uid: string, casalId: string, itemId: string) {
+  const ref = db.doc(caminhos.documento(casalId, 'itens', itemId));
+  const atual = await ref.get();
+  if (!atual.exists) throw new ErroArquivo('nao_encontrado');
+  await removerAnterior(casalId, atual.get('foto'));
+  await ref.update({ foto: null, atualizado_por: uid, atualizado_em: FieldValue.serverTimestamp() });
 }

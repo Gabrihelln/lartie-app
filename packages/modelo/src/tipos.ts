@@ -160,6 +160,8 @@ export interface Comodo extends Auditoria {
   comprimento_m: number | null;
   pe_direito_m: number | null;
   paredes_livres: ParedeLivre[];
+  /** T55 já apareceu para este cômodo; volta a false quando ele deixa de estar completo (13.3). */
+  celebrado: boolean;
 }
 
 // 3.6 Item do enxoval -------------------------------------------------------------
@@ -197,6 +199,11 @@ export interface Item extends Auditoria {
   catalogo_id: string | null;
   /** Sugestão do catálogo para a lista de presentes. */
   bom_para_presente: boolean;
+  /**
+   * Categoria do orçamento da casa (categorias_orcamento/{id}) para o gasto quando o item é
+   * comprado com preço (13.4). Escolhida no item; null = "Enxoval".
+   */
+  categoria_orcamento: string | null;
 }
 
 // 3.7 Tarefa --------------------------------------------------------------------
@@ -398,6 +405,8 @@ export const TIPOS_NOTIFICACAO = [
   'parceiro_entrou',
   /** Ajuste da Etapa 2: o convite foi recusado por quem recebeu o link. */
   'convite_recusado',
+  /** Etapa 4 (pedido do dono do produto): quem entrou pelo convite saiu do plano. */
+  'parceiro_saiu',
   'modo_alterado',
   'escolher_por_onde_comecar',
 ] as const;
