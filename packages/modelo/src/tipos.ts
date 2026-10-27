@@ -65,6 +65,9 @@ export interface Casal extends Auditoria {
   cerimonia_religiosa: boolean | null;
   /** 3.16: configuração do RSVP. */
   rsvp_prazo: DataCalendario | null;
+  /** Etapa 6: horário ("17:00") e local da cerimônia, no cabeçalho da confirmação de presença (T30). */
+  horario_casamento: string | null;
+  local_casamento: string | null;
   buffet_valor_por_pessoa: Dinheiro | null;
   /** Gravado só pelo servidor: o noivo_2 que entrou pelo convite (null = parceiro ainda não entrou). */
   parceiro: { uid: string; nome: string } | null;
@@ -389,6 +392,9 @@ export interface Grupo extends Auditoria {
   whatsapp: string | null;
   convite_enviado_em: Instante | null;
   ultimo_lembrete_em: Instante | null;
+  /** T30: recado do grupo para os noivos e quando respondeu (gravados pelo servidor). */
+  recado: string | null;
+  respondido_em: Instante | null;
 }
 
 // 3.16 Convidado ------------------------------------------------------------------

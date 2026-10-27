@@ -5,6 +5,7 @@ import { ErroValidacao, inicializarConta, type DadosToken } from './conta';
 import { aceitarConvite, cancelarConvites, consultarConvite, criarConvite, ErroConvite, recusarConvite } from './convites';
 import { excluirConta, removerParceiro, sairDoPlano, trocarModo } from './casal';
 import { buscarSeguro, ErroLink, lerAte, MAXIMO_IMAGEM, previaDoLink } from './link';
+import { ErroRsvp, paginaRsvp, responderRsvp, tokensDosGrupos, type RespostaRsvp } from './rsvp';
 import {
   cancelarReservaPeloCasal,
   consultarReserva,
@@ -94,6 +95,9 @@ export function criarServidor() {
     if (erro instanceof ErroPresentes) {
       const status = { nao_encontrado: 404, link_inativo: 404, indisponivel: 409, quantidade_invalida: 400, reserva_encerrada: 409, slug_em_uso: 409 }[erro.codigo];
       return resposta.code(status).send({ erro: erro.codigo });
+    }
+    if (erro instanceof ErroRsvp) {
+      return resposta.code({ nao_encontrado: 404, prazo_encerrado: 409, respostas_incompletas: 400 }[erro.codigo]).send({ erro: erro.codigo });
     }
     if (erro instanceof ErroLink) return resposta.code(erro.codigo === 'link_falhou' ? 422 : 400).send({ erro: erro.codigo });
     if (erro instanceof ErroArquivo) {
@@ -271,6 +275,47 @@ export function criarServidor() {
   );
   app.get<{ Params: { token: string } }>('/v1/publico/reservas/:token', async (req) => consultarReserva(req.params.token));
   app.post<{ Params: { token: string } }>('/v1/publico/reservas/:token/desfazer', async (req) => desfazerReserva(req.params.token));
+
+  // Etapa 6 · Convidados e RSVP ------------------------------------------------------------
+  app.post<{ Body: { ids: string[] } }>(
+    '/v1/grupos/tokens',
+    { preHandler: exigirCasal, schema: { body: { type: 'object', required: ['ids'], properties: { ids: { type: 'array', maxItems: 200, items: { type: 'string', maxLength: 60 } } } } } },
+    async (req) => tokensDosGrupos(req.casalId!, req.body.ids),
+  );
+  app.get<{ Params: { token: string } }>('/v1/publico/rsvp/:token', async (req) => paginaRsvp(req.params.token));
+  app.post<{ Params: { token: string }; Body: RespostaRsvp }>(
+    '/v1/publico/rsvp/:token',
+    {
+      schema: {
+        body: {
+          type: 'object',
+          required: ['respostas'],
+          properties: {
+            respostas: {
+              type: 'array',
+              maxItems: 50,
+              items: {
+                type: 'object',
+                required: ['id', 'presenca'],
+                properties: {
+                  id: { type: 'string', maxLength: 60 },
+                  presenca: { type: 'string', maxLength: 20 },
+                  restricao: { type: 'string', maxLength: 20 },
+                  restricao_outra: { type: ['string', 'null'], maxLength: 80 },
+                },
+              },
+            },
+            recado: { type: ['string', 'null'], maxLength: 500 },
+          },
+          additionalProperties: false,
+        },
+      },
+    },
+    async (req, resposta) => {
+      if (limitar(`rsvp:${req.headers['x-forwarded-for']?.toString().split(',')[0] ?? req.ip}`)) return resposta.code(429).send({ erro: 'muitas_tentativas' });
+      return responderRsvp(req.params.token, req.body);
+    },
+  );
 
   // Link de 10 minutos para abrir um arquivo do casal no navegador do sistema (contrato do T17).
   app.post<{ Body: { caminho: string } }>(

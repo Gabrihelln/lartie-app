@@ -13,7 +13,7 @@ Decisões e itens que **não** estão definidos nos documentos. O Claude Code n�
 | P07 | Preço, plano e assinatura (item "Assinatura" do perfil) | Etapa 10 | No MVP fica como espaço reservado |
 | P08 | E-mail de contato, razão social e CNPJ | Etapa 10 | Aparecem nas lojas, nos termos e no rodapé da web |
 | P09 | Termos de uso e política de privacidade (LGPD, dados de convidados, fotos) | Etapa 10 | Recomendado revisar com advogado; exigidos pelas duas lojas |
-| P10 | Serviço de envio de WhatsApp em lote (T38) ou só abrir o WhatsApp grupo a grupo | Etapa 6 | A especificação aceita os dois caminhos |
+| P10 | Serviço de envio de WhatsApp em lote (T38) ou só abrir o WhatsApp grupo a grupo | Etapa 6 | A especificação aceita os dois caminhos. **27/10/2026:** no MVP, abrir o WhatsApp grupo a grupo com a mensagem pronta. O envio automático (serviço de mensagens) continua pendente e depende do domínio (P13) |
 | P11 | Limites de uso da IA (fotos por mês, mensagens da Lu) e custo por casal | Etapa 4 e 9 | |
 | P12 | Fonte Fraunces: licença OFL (Google Fonts), uso livre no app; confirmar inclusão no pacote do app | Etapa 0 | |
 | P13 | Comprar o domínio `lartie.app` | Antes da primeira publicação da web do convidado (Etapa 5) e dos universal links | Decidido em 20/10/2026: ainda será comprado. Até lá, endereço provisório. **27/10/2026:** o domínio fica para o fim do projeto; a página do convidado, a API e os envios por e-mail e WhatsApp automáticos são testados no Mac até lá |
