@@ -1,20 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView } from 'react-native';
 import { useNavigation, useRoute, type RouteProp } from '@react-navigation/native';
-import { raios } from '@lartie/tokens';
 import type { FaseTarefa } from '@lartie/modelo';
 import { ControleSegmentado } from '../../componentes/ControleSegmentado';
 import { TelaAba } from '../../componentes/Estrutura';
 import { FabAssistente } from '../../componentes/FabAssistente';
-import { Texto } from '../../componentes/Texto';
 import type { ParamsAbas, SecaoCasamento } from '../../navegacao/tipos';
-import { espacos, useTema } from '../../tema';
+import { Convidados } from '../convidados/Convidados';
 import { Checklist } from './Checklist';
 import { Fornecedores } from './Fornecedores';
 import { Orcamento } from './Orcamento';
 
 // Aba Casamento: título, "+" e o seletor interno Checklist · Orçamento · Fornecedores · Convidados
-// (especificação 1.3). A aba fica ativa nas quatro. Convidados (T28) é da Etapa 6.
+// (especificação 1.3). A aba fica ativa nas quatro.
 
 const SEGMENTOS = [
   { valor: 'checklist', rotulo: 'Checklist' },
@@ -24,7 +22,6 @@ const SEGMENTOS = [
 ] as const;
 
 export function CasamentoAba() {
-  const { cores } = useTema();
   const navigation = useNavigation();
   const { params } = useRoute<RouteProp<ParamsAbas, 'casamento'>>();
   const [secao, setSecao] = useState<SecaoCasamento>(params?.secao ?? 'checklist');
@@ -43,7 +40,7 @@ export function CasamentoAba() {
     checklist: { rotulo: 'Nova tarefa', onPress: () => navigation.navigate('Tarefa', {}) },
     orcamento: { rotulo: 'Novo gasto', onPress: () => setNovoGasto(true) },
     fornecedores: { rotulo: 'Novo fornecedor', onPress: () => navigation.navigate('Fornecedor', {}) },
-    convidados: null,
+    convidados: { rotulo: 'Novo grupo', onPress: () => navigation.navigate('Grupo', {}) },
   }[secao];
 
   return (
@@ -68,17 +65,8 @@ export function CasamentoAba() {
       {secao === 'checklist' ? <Checklist fase={fase} onTravarRolagem={setTravada} rolagem={rolagem} /> : null}
       {secao === 'orcamento' ? <Orcamento novoGasto={novoGasto} onFecharNovoGasto={() => setNovoGasto(false)} /> : null}
       {secao === 'fornecedores' ? <Fornecedores /> : null}
-      {secao === 'convidados' ? (
-        <View style={[estilos.aviso, { backgroundColor: cores.surfaceVariant }]}>
-          <Texto papel="metadado" cor="onSurfaceVariant">
-            T28 · tela provisória. Será construída na Etapa 6.
-          </Texto>
-        </View>
-      ) : null}
+      {secao === 'convidados' ? <Convidados /> : null}
     </TelaAba>
   );
 }
 
-const estilos = StyleSheet.create({
-  aviso: { padding: espacos.space4, borderRadius: raios.radiusMd },
-});

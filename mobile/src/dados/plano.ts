@@ -7,6 +7,7 @@ import {
   type Convidado,
   type Fornecedor,
   type Gasto,
+  type Grupo,
   type Imovel,
   type Item,
   type Agradecimento,
@@ -39,6 +40,7 @@ export const useItens = () => useSub<Item>('itens');
 export const useComodos = () => useSub<Comodo>('comodos');
 export const useConvidados = () => useSub<Convidado>('convidados');
 export const useListaItens = () => useSub<ListaItem>('lista_itens');
+export const useGrupos = () => useSub<Grupo>('grupos');
 export const useListas = () => useSub<ListaPresentes>('listas_presentes');
 export const useReservas = () => useSub<Reserva>('reservas');
 export const useAgradecimentos = () => useSub<Agradecimento>('agradecimentos');

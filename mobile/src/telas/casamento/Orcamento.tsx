@@ -5,6 +5,7 @@ import { raios } from '@lartie/tokens';
 import type { EscopoOrcamento } from '@lartie/modelo';
 import {
   dataCurta,
+  estimativaBuffet,
   distribuirOrcamento,
   escoposOrcamento,
   formatarData,
@@ -29,7 +30,7 @@ import { FolhaInferior } from '../../componentes/FolhaInferior';
 import { Icone } from '../../componentes/Icone';
 import { Texto } from '../../componentes/Texto';
 import { atualizar, criar, emLote, excluir } from '../../dados/gravacao';
-import { useEntradaOrcamento, useFornecedores, useParcelas } from '../../dados/plano';
+import { useConvidados, useEntradaOrcamento, useFornecedores, useParcelas } from '../../dados/plano';
 import { useSessao } from '../../dados/Sessao';
 import { useAvisos } from '../../feedback/Avisos';
 import { useDialogo } from '../../feedback/Dialogo';
@@ -59,6 +60,7 @@ export function Orcamento({ novoGasto, onFecharNovoGasto, escopoFixo }: Props) {
   const avisos = useAvisos();
   const { entrada, carregando } = useEntradaOrcamento();
   const parcelas = useParcelas().dados;
+  const confirmados = useConvidados().dados.filter((c) => c.presenca === 'vai').length;
   const fornecedores = useFornecedores().dados;
   const escopos = escopoFixo ? [escopoFixo] : escoposOrcamento(modo);
   const [escopo, setEscopo] = useState<EscopoOrcamento>(escopos[0] ?? 'casamento');
@@ -130,6 +132,19 @@ export function Orcamento({ novoGasto, onFecharNovoGasto, escopoFixo }: Props) {
           <Botao rotulo="Definir orçamento" variante="tonal" onPress={() => setEditarOrcamento(true)} />
         </Cartao>
       )}
+
+      {escopo === 'casamento' && casal?.buffet_valor_por_pessoa ? (
+        // 13.4: estimativa do buffet (só exibição), atualizada pelos confirmados do RSVP.
+        <View style={[estilos.alerta, { backgroundColor: cores.primaryContainer }]} accessible>
+          <Icone nome="convidados" cor={cores.onPrimaryContainer} />
+          <Texto papel="corpo" cor="onPrimaryContainer" style={estilos.flex}>
+            Buffet estimado: {formatarReais(casal.buffet_valor_por_pessoa)} × {confirmados} confirmados ={' '}
+            <Texto papel="corpo" peso="700" cor="onPrimaryContainer">
+              {formatarReais(estimativaBuffet(casal.buffet_valor_por_pessoa, confirmados))}
+            </Texto>
+          </Texto>
+        </View>
+      ) : null}
 
       {resumo.estouros.map((l) => (
         <View key={l.id} style={[estilos.alerta, { backgroundColor: cores.errorContainer }]} accessibilityRole="alert">

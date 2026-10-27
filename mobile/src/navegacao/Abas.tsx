@@ -11,21 +11,29 @@ import { CasamentoAba } from '../telas/casamento/CasamentoAba';
 import { Inicio } from '../telas/inicio/Inicio';
 import { Perfil } from '../telas/perfil/Perfil';
 import { Presentes } from '../telas/presentes/Presentes';
-import { TelaProvisoria } from '../telas/TelaProvisoria';
+import { useNavigation } from '@react-navigation/native';
+import { TelaAba } from '../componentes/Estrutura';
+import { Convidados } from '../telas/convidados/Convidados';
 import type { ParamsAbas } from './tipos';
 
 // Abas principais. A lista muda com o modo do app (especificação 1.3 e 13.9) e mantém a ordem fixa.
-// Etapas 3 a 5: Início, Casamento, Casa, Presentes e Perfil. Convidados (Etapa 6) continua provisória.
+// Todas as abas do MVP (Etapas 3 a 6).
 const Tab = createBottomTabNavigator<ParamsAbas>();
 
-function Convidados() {
-  return <TelaProvisoria titulo="Convidados" id="T28" etapa={6} />;
+/** Modo "casamento": T28 na aba própria (1.3). */
+function ConvidadosAba() {
+  const navigation = useNavigation();
+  return (
+    <TelaAba titulo="Convidados" acao={{ icone: 'adicionar', rotulo: 'Novo grupo', onPress: () => navigation.navigate('Grupo', {}) }}>
+      <Convidados />
+    </TelaAba>
+  );
 }
 
 const TELAS: Record<Aba, React.ComponentType> = {
   inicio: Inicio,
   casamento: CasamentoAba,
-  convidados: Convidados,
+  convidados: ConvidadosAba,
   casa: Casa,
   presentes: Presentes,
   perfil: Perfil,

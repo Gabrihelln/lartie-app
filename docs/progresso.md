@@ -8,13 +8,13 @@
 | 3 | Início por modo e Casamento | Aprovada | 26/10/2026 | [relatório](relatorios/etapa-3.md) |
 | 4 | Casa nova | Aprovada | 27/10/2026 | [relatório](relatorios/etapa-4.md) |
 | 5 | Lista de presentes e reservas | Aprovada | 27/10/2026 | [relatório](relatorios/etapa-5.md) |
-| 6 | Convidados e RSVP | Não iniciada | | |
+| 6 | Convidados e RSVP | Entregue, aguardando aprovação | | [relatório](relatorios/etapa-6.md) |
 | 7 | Modais de confirmação (auditoria) | Não iniciada | | |
 | 8 | Erros, avisos e estados (auditoria) | Não iniciada | | |
 | 9 | Notificações (Assistente Lu fora do escopo atual, P14) | Não iniciada | | |
 | 10 | Preparação para as lojas | Não iniciada | | |
 
-**Etapa atual:** 6 · Convidados e RSVP · não iniciada (Etapa 5 aprovada e unida à `main`).
+**Etapa atual:** 6 · Convidados e RSVP · branch `etapa-6-convidados` · aguardando `APROVADO ETAPA 6`.
 
 ## Registro
 
@@ -36,3 +36,5 @@
 - **27/10/2026:** domínio (P13) fica para o fim do projeto; testes da web do convidado no Mac.
 - **27/10/2026:** Etapa 5 entregue: listas, reservas atômicas, web do convidado (Next.js 16.4.3), agradecimentos. Regras e índice publicados no `lartie-dev`.
 - **27/10/2026:** Etapa 5 aprovada (`APROVADO ETAPA 5`), testada pelo dono do produto. Branch `etapa-5-presentes` unida à `main`. Em aberto: stories do Instagram com imagem gerada (por ora, compartilhamento do sistema). Ideia registrada: fotos dos convidados (P15, fora do MVP).
+- **27/10/2026:** P10 decidido: convites e lembretes abrem o WhatsApp grupo a grupo; envio automático fica pendente (depende do domínio).
+- **27/10/2026:** Etapa 6 entregue: Convidados, Grupo, importar contatos, lembretes, RSVP na web, estimativa do buffet.

@@ -38,7 +38,13 @@ export type EventoAnalytics =
   | { nome: 'itens_adicionados_lista'; params: { itens: number } }
   | { nome: 'presente_recebido'; params: Record<string, never> }
   | { nome: 'reserva_cancelada_casal'; params: Record<string, never> }
-  | { nome: 'agradecimento_enviado'; params: { canal: string } };
+  | { nome: 'agradecimento_enviado'; params: { canal: string } }
+  // Etapa 6
+  | { nome: 'grupo_criado'; params: { pessoas: number } }
+  | { nome: 'convite_rsvp_enviado'; params: Record<string, never> }
+  | { nome: 'lembrete_rsvp_enviado'; params: { grupos: number } }
+  | { nome: 'contatos_importados'; params: { contatos: number; agrupados: number } }
+  | { nome: 'lista_convidados_exportada'; params: { pessoas: number } };
 
 /** De onde veio a troca de modo (13.9 regra 9). */
 export type OrigemModo = 'perfil' | 'cartao' | 'assistente' | 'inicio_depois' | 'folha_ativar';

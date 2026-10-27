@@ -43,6 +43,10 @@ export type ParamsRaiz = {
   AdicionarItens: { listaId: string };
   /** T27 · Agradecimentos. */
   Agradecimentos: undefined;
+  /** Etapa 6. T29 · Grupo de convidados (sem id = novo grupo). */
+  Grupo: { id?: string } | undefined;
+  /** T28 "Importar contatos" (depois do T59). */
+  ImportarContatos: undefined;
   /** T17: sem id = novo fornecedor; `tarefaId` vincula o novo fornecedor à tarefa (T14). */
   Fornecedor: { id?: string; categoria?: string; tarefaId?: string } | undefined;
   /** T15 no modo "casa": acessado pela Casa (T18 › "Orçamento da casa"). */

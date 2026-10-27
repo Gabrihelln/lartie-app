@@ -18,6 +18,8 @@ import { OrcamentoCasa, ProvisoriaPilha } from '../telas/Provisorias';
 import { AdicionarItens } from '../telas/presentes/AdicionarItens';
 import { Agradecimentos } from '../telas/presentes/Agradecimentos';
 import { Lista } from '../telas/presentes/Lista';
+import { Grupo } from '../telas/convidados/Grupo';
+import { ImportarContatos } from '../telas/convidados/ImportarContatos';
 import { Catalogo, CatalogoEstado, CatalogoFormulario } from '../dev/Catalogo';
 import { Abertura } from '../telas/acesso/Abertura';
 import { BoasVindas } from '../telas/acesso/BoasVindas';
@@ -50,6 +52,7 @@ const linking: LinkingOptions<ParamsRaiz> = {
       Item: 'item/:id',
       Lista: 'lista/:id',
       Agradecimentos: 'agradecimentos',
+      Grupo: 'grupo/:id',
       ConfigModo: 'modo',
       Abas: {
         screens: {
@@ -75,6 +78,8 @@ const MODULO_DA_ROTA: Partial<Record<keyof ParamsRaiz, Modulo>> = {
   Comodo: 'casa',
   Item: 'casa',
   Medidas: 'casa',
+  Grupo: 'convidados',
+  ImportarContatos: 'convidados',
 };
 
 /** T01 na primeira abertura sem sessão: "Começar" → T02, "Já tenho conta" → T04. */
@@ -197,6 +202,8 @@ export function Raiz() {
             <Pilha.Screen name="Lista" component={Lista} />
             <Pilha.Screen name="AdicionarItens" component={AdicionarItens} />
             <Pilha.Screen name="Agradecimentos" component={Agradecimentos} />
+            <Pilha.Screen name="Grupo" component={Grupo} />
+            <Pilha.Screen name="ImportarContatos" component={ImportarContatos} />
             <Pilha.Screen name="OrcamentoCasa" component={OrcamentoCasa} />
             <Pilha.Screen name="ConfigModo" component={ConfigModo} />
             <Pilha.Screen name="AtivarModulo" component={AtivarModulo} options={{ gestureEnabled: false }} />
