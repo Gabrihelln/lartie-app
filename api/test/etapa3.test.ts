@@ -184,7 +184,7 @@ describe('contrato do fornecedor (T17)', () => {
     const aberto = await app.inject({ method: 'GET', url: link });
     expect(aberto.statusCode).toBe(200);
     expect(aberto.headers['content-type']).toContain('application/pdf');
-    expect((await app.inject({ method: 'GET', url: link.replace(/assinatura=./, 'assinatura=0') })).statusCode).toBe(401);
+    expect((await app.inject({ method: 'GET', url: link.replace(/assinatura=[0-9a-f]+/, `assinatura=${'0'.repeat(64)}`) })).statusCode).toBe(401);
 
     // Link para arquivo de outro casal: recusado.
     expect((await chamar('POST', '/v1/arquivos/link', ana.token, { caminho: '/v1/arquivos/outro/x.pdf' })).statusCode).toBe(404);

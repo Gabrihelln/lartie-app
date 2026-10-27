@@ -9,3 +9,4 @@ export * from './slug';
 export * from './progresso';
 export * from './fornecedores';
 export * from './casa';
+export * from './presentes';
