@@ -1,5 +1,5 @@
 import { FieldValue, type DocumentReference, type Firestore } from 'firebase-admin/firestore';
-import { caminhos, type Casal, type Imovel } from '@lartie/modelo';
+import { caminhos, type Casal, type Imovel, type ModoApp } from '@lartie/modelo';
 import {
   classificarClima,
   gerarCategorias,
@@ -57,11 +57,12 @@ async function reservarSlug(casalId: string, casal: Casal): Promise<string> {
   throw new Error('Não foi possível reservar um endereço para o casal');
 }
 
-export async function gerarPlano(uid: string, casalId: string): Promise<ResumoPlano> {
+/** `modoAlvo`: na troca de modo (T33b), gera os módulos do modo novo antes de gravar o modo. */
+export async function gerarPlano(uid: string, casalId: string, modoAlvo?: ModoApp): Promise<ResumoPlano> {
   const refCasal = db.doc(caminhos.casal(casalId));
   const casal = (await refCasal.get()).data() as Casal | undefined;
   if (!casal) throw new ErroValidacao('Casal não encontrado.');
-  const ativos = modulosDoModo(casal.modo_app);
+  const ativos = modulosDoModo(modoAlvo ?? casal.modo_app);
   const jaGerados = casal.modulos_gerados ?? { casamento: false, casa: false };
   const escritas: [DocumentReference, Dados][] = [];
   const resumo: ResumoPlano = { casamento: null, casa: null, slug: '' };
@@ -91,6 +92,7 @@ export async function gerarPlano(uid: string, casalId: string): Promise<ResumoPl
             ordem: t.ordem,
             gerada_pelo_plano: true,
             catalogo_id: t.catalogo_id,
+            prazo_manual: false,
             ...auditoria(uid),
           },
         ]);

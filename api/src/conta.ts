@@ -69,6 +69,8 @@ export async function inicializarConta(token: DadosToken, nomeDigitado?: string)
       cerimonia_religiosa: null,
       rsvp_prazo: null,
       buffet_valor_por_pessoa: null,
+      parceiro: null,
+      fases_celebradas: [],
       criado_por: token.uid,
       criado_em: agora,
       atualizado_por: token.uid,
@@ -82,6 +84,7 @@ export async function inicializarConta(token: DadosToken, nomeDigitado?: string)
       papel: 'noivo_1',
       preferencias_notificacao: PREFERENCIAS_PADRAO,
       tokens_push: [],
+      removido_do_plano: null,
       criado_em: agora,
       atualizado_em: agora,
     });

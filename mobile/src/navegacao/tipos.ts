@@ -1,7 +1,19 @@
 import type { NavigatorScreenParams } from '@react-navigation/native';
-import type { Aba } from '@lartie/regras';
+import type { FaseItem, FaseTarefa, ModoApp } from '@lartie/modelo';
+import type { ModuloAtivavel } from '@lartie/regras';
+import type { OrigemModo } from '../servicos/analytics';
 
-export type ParamsAbas = { [K in Aba]: undefined };
+export type SecaoCasamento = 'checklist' | 'orcamento' | 'fornecedores' | 'convidados';
+
+export type ParamsAbas = {
+  /** `ativar`: link para um módulo oculto abre o Início com a folha "Ativar {módulo}?" (13.9 regra 6). */
+  inicio: { ativar?: ModuloAtivavel } | undefined;
+  casamento: { secao?: SecaoCasamento; fase?: FaseTarefa } | undefined;
+  convidados: undefined;
+  casa: { fase?: FaseItem } | undefined;
+  presentes: undefined;
+  perfil: undefined;
+};
 
 export type ParamsRaiz = {
   Abas: NavigatorScreenParams<ParamsAbas> | undefined;
@@ -17,6 +29,25 @@ export type ParamsRaiz = {
   Onboarding: undefined;
   /** Deep link do convite do parceiro (T66 na Etapa 2). */
   Convite: { codigo: string };
+  /** Etapa 3. T14: sem id = nova tarefa. */
+  Tarefa: { id?: string; fase?: FaseTarefa } | undefined;
+  /** T17: sem id = novo fornecedor; `tarefaId` vincula o novo fornecedor à tarefa (T14). */
+  Fornecedor: { id?: string; categoria?: string; tarefaId?: string } | undefined;
+  /** T15 no modo "casa": acessado pela Casa (T18 › "Orçamento da casa"). */
+  OrcamentoCasa: undefined;
+  /** T33b. `preSelecionado`: cartões "Vão montar a casa nova também?" / "Vão casar também?". */
+  ConfigModo: { preSelecionado?: ModoApp; origem?: OrigemModo } | undefined;
+  /** Dados que faltam para ativar um módulo nunca gerado (T07 e/ou T08 + T09) e o T10 resumido. */
+  AtivarModulo: { modo: ModoApp; origem: OrigemModo };
+  /** T33 › itens. */
+  EditarCasal: undefined;
+  DadosCasamento: undefined;
+  DadosCasa: undefined;
+  MeusDados: undefined;
+  /** T11 fora do onboarding (T12d "Convidar {parceiro}", T33 Parceiro(a) não conectado). */
+  Convidar: undefined;
+  /** Telas de etapas futuras abertas por atalhos desta etapa (T18, T22, T23, T28, T31, T32…). */
+  Provisoria: { titulo: string; id: string; etapa: number };
   /** Catálogo interno de componentes (só em desenvolvimento). */
   Catalogo: undefined;
   CatalogoEstado: { estado: EstadoCatalogo };

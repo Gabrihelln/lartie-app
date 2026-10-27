@@ -105,7 +105,7 @@ export function CampoData({ rotulo, valor, onMudar, desativado, minimo, erro, pl
 }
 
 const estilos = StyleSheet.create({
-  grupo: { gap: espacos.space1 + 2, flex: 1 },
+  grupo: { gap: espacos.space1 + 2 },
   caixa: {
     minHeight: tamanhos.fieldHeight,
     borderRadius: raios.radiusMd,

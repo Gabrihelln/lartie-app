@@ -155,12 +155,15 @@ export async function aceitarConvite(token: DadosToken, codigo: string, nomeDigi
         papel: 'noivo_2',
         preferencias_notificacao: existente.get('preferencias_notificacao') ?? PREFERENCIAS_PADRAO,
         tokens_push: existente.get('tokens_push') ?? [],
+        removido_do_plano: null,
         ...(existente.exists ? {} : { criado_em: agora }),
         atualizado_em: agora,
       },
       { merge: true },
     );
     tx.update(ref, { status: 'aceito', aceito_por: token.uid });
+    // O app não lê o documento do parceiro: o casal guarda quem entrou (T12 "Ana & Pedro", T33 Parceiro(a)).
+    tx.update(db.doc(caminhos.casal(c.casal_id)), { parceiro: { uid: token.uid, nome } });
     // Aviso para quem convidou (Seção 12, "Parceiro entrou"; o push vem na Etapa 9).
     tx.set(db.collection(caminhos.subcolecao(c.casal_id, 'notificacoes')).doc(), {
       usuario_id: c.criado_por,

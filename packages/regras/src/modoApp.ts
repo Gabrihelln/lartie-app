@@ -87,3 +87,77 @@ const TELAS_COM_FAB = new Set(['T12', 'T12b', 'T12c', 'T13', 'T18']);
 export function mostrarFabAssistente(tela: string, iaAtiva: boolean): boolean {
   return iaAtiva && TELAS_COM_FAB.has(tela);
 }
+
+// Troca de modo (T33b, cartões do T12b/T12c, "Começar pelo…" do T12d e folha "Ativar {módulo}?") --
+
+/** Valor mostrado na linha "Modo do app" do T33. */
+export const ROTULO_MODO: Record<ModoApp, string> = {
+  os_dois: 'Casamento e casa',
+  casamento: 'Só casamento',
+  casa: 'Só casa nova',
+  indefinido: 'A definir',
+};
+
+/** Títulos das opções (iguais ao T06b). */
+export const NOME_MODO: Record<ModoApp, string> = {
+  casamento: 'Só o casamento',
+  casa: 'Só a casa nova',
+  os_dois: 'Casamento e casa nova',
+  indefinido: 'Decidir depois',
+};
+
+/** "Início, Casa, Presentes e Perfil" */
+export function listarAbas(modo: ModoApp): string {
+  const nomes = abasDoModo(modo).map((a) => ROTULOS_ABAS[a]);
+  return nomes.length > 1 ? `${nomes.slice(0, -1).join(', ')} e ${nomes[nomes.length - 1]}` : nomes.join('');
+}
+
+/** Folha de confirmação do T33b: título, abas e o que fica guardado. */
+export function textoConfirmacaoModo(de: ModoApp, para: ModoApp) {
+  const antes = { casamento: de === 'casamento' || de === 'os_dois', casa: de === 'casa' || de === 'os_dois' };
+  const depois = { casamento: para === 'casamento' || para === 'os_dois', casa: para === 'casa' || para === 'os_dois' };
+  const guardados: string[] = [];
+  if (antes.casamento && !depois.casamento) guardados.push('O checklist, o orçamento e os convidados ficam guardados.');
+  if (antes.casa && !depois.casa) guardados.push('O enxoval, os cômodos e as medidas ficam guardados.');
+  return {
+    titulo: `Mudar para “${NOME_MODO[para]}”?`,
+    abas: listarAbas(para),
+    guardado: guardados.join(' ') || null,
+  };
+}
+
+/**
+ * 13.9 regra 2: dados a pedir antes de ativar o modo. Só para módulos nunca gerados
+ * (casamento: T07; casa: T08 + T09). Lista vazia = só reexibe.
+ */
+export function passosParaAtivar(
+  alvo: ModoApp,
+  gerados: { casamento: boolean; casa: boolean },
+): ('T07' | 'T08' | 'T09')[] {
+  const passos: ('T07' | 'T08' | 'T09')[] = [];
+  if ((alvo === 'casamento' || alvo === 'os_dois') && !gerados.casamento) passos.push('T07');
+  if ((alvo === 'casa' || alvo === 'os_dois') && !gerados.casa) passos.push('T08', 'T09');
+  return passos;
+}
+
+export type ModuloAtivavel = 'casamento' | 'casa';
+
+/** Modo resultante de ativar um módulo a partir do modo atual (folha "Ativar {módulo}?"). */
+export function modoAoAtivar(atual: ModoApp, modulo: ModuloAtivavel): ModoApp {
+  if (atual === 'os_dois') return 'os_dois';
+  if (atual === 'indefinido') return modulo;
+  return atual === modulo ? atual : 'os_dois';
+}
+
+export const NOME_MODULO: Record<ModuloAtivavel, string> = { casamento: 'O casamento', casa: 'A casa nova' };
+
+/** Folha "Ativar {módulo}?" (13.9 regra 6). */
+export function textoAtivarModulo(modulo: ModuloAtivavel) {
+  const nome = modulo === 'casamento' ? 'Casamento' : 'Casa nova';
+  return { titulo: `Ativar ${nome}?`, texto: `${nome} está desativado no momento. Querem ativar?` };
+}
+
+/** Texto da notificação "Modo alterado" (Seção 12). */
+export function textoModoAlterado(nome: string, modo: ModoApp): string {
+  return `${nome} mudou o app para “${NOME_MODO[modo]}”.`;
+}

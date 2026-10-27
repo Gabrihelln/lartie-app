@@ -38,6 +38,17 @@ import SemConexao from '@material-symbols/svg-400/rounded/wifi_off.svg';
 import SetaDireita from '@material-symbols/svg-400/rounded/chevron_right.svg';
 import SetaEsquerda from '@material-symbols/svg-400/rounded/chevron_left.svg';
 import Voltar from '@material-symbols/svg-400/rounded/arrow_back.svg';
+import Medidas from '@material-symbols/svg-400/rounded/straighten.svg';
+import Mais from '@material-symbols/svg-400/rounded/more_horiz.svg';
+import Editar from '@material-symbols/svg-400/rounded/edit.svg';
+import Anexo from '@material-symbols/svg-400/rounded/attach_file.svg';
+import Documento from '@material-symbols/svg-400/rounded/description.svg';
+import Telefone from '@material-symbols/svg-400/rounded/call.svg';
+import Busca from '@material-symbols/svg-400/rounded/search.svg';
+import Arrastar from '@material-symbols/svg-400/rounded/drag_indicator.svg';
+import Relogio from '@material-symbols/svg-400/rounded/schedule.svg';
+import SetaBaixo from '@material-symbols/svg-400/rounded/keyboard_arrow_down.svg';
+import SetaCima from '@material-symbols/svg-400/rounded/keyboard_arrow_up.svg';
 
 // Ícones do app. O guia pede SF Symbols no iOS e Material Symbols Rounded no Android; nesta etapa
 // os dois sistemas usam Material Symbols Rounded (peso 400). A coluna `sf` guarda o equivalente
@@ -91,6 +102,17 @@ const ICONES = {
   setaDireita: { normal: SetaDireita, sf: 'chevron.right' },
   setaEsquerda: { normal: SetaEsquerda, sf: 'chevron.left' },
   voltar: { normal: Voltar, sf: 'arrow.left' },
+  medidas: { normal: Medidas, sf: 'ruler' },
+  mais: { normal: Mais, sf: 'ellipsis' },
+  editar: { normal: Editar, sf: 'pencil' },
+  anexo: { normal: Anexo, sf: 'paperclip' },
+  documento: { normal: Documento, sf: 'doc.text' },
+  telefone: { normal: Telefone, sf: 'phone' },
+  busca: { normal: Busca, sf: 'magnifyingglass' },
+  arrastar: { normal: Arrastar, sf: 'line.3.horizontal' },
+  relogio: { normal: Relogio, sf: 'clock' },
+  setaBaixo: { normal: SetaBaixo, sf: 'chevron.down' },
+  setaCima: { normal: SetaCima, sf: 'chevron.up' },
 } as const satisfies Record<string, { normal: FC<SvgProps>; cheio?: FC<SvgProps>; sf: string }>;
 
 export type NomeIcone = keyof typeof ICONES;

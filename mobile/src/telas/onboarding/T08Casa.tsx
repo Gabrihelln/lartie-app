@@ -11,7 +11,7 @@ import { Texto } from '../../componentes/Texto';
 import { atualizar, gravarImovel } from '../../dados/gravacao';
 import { useDocumento } from '../../dados/leitura';
 import { espacos } from '../../tema';
-import { TelaOnboarding, useOnboarding } from './comum';
+import { TelaOnboarding, useAlteracoes, useOnboarding } from './comum';
 
 // T08 · Casa nova (Ob3Casa.dc.html). A cidade só aparece no modo "casa" (no modo "os_dois" veio do T07).
 // Moradores: 2 (o T08 não pergunta; a especificação prevê "2 + pessoas informadas").
@@ -24,9 +24,11 @@ export const TEXTOS_T08 = {
 } as const;
 
 export function T08Casa() {
-  const { casal, casalId, modo, avancar, aoFalhar } = useOnboarding();
-  const imovel = useDocumento<Imovel>(casalId ? caminhos.imovel(casalId) : null).dados;
-  const pedeCidade = modo === 'casa';
+  const { casal, casalId, modo, avancar, aoFalhar, rotuloContinuar, fluxo } = useOnboarding();
+  const leituraImovel = useDocumento<Imovel>(casalId ? caminhos.imovel(casalId) : null);
+  const imovel = leituraImovel.dados;
+  // Ativando a casa a partir do T12d, a cidade ainda não existe (13.9: "T08 (com Cidade)").
+  const pedeCidade = modo === 'casa' || (fluxo.tipo === 'ativacao' && !casal?.cidade);
 
   const [tipo, setTipo] = useState<Imovel['tipo']>(imovel?.tipo ?? 'apartamento');
   const [quartos, setQuartos] = useState(imovel?.quartos ?? 2);
@@ -52,12 +54,14 @@ export function T08Casa() {
     setPets(imovel.tem_pets);
   }, [imovel]);
 
+  const { marcarSalvo } = useAlteracoes([tipo, quartos, banheiros, posse, mobiliado, mudanca, pets, cidade], 'os dados da casa nova', !leituraImovel.carregando && (!imovel || preenchido.current));
   const erroCidade = pedeCidade && !cidade ? TEXTOS_T08.cidade : null;
   const erroMudanca = mudanca && !lerMesAno(mudanca) ? TEXTOS_T08.mudanca : null;
 
   const continuar = () => {
     setTentou(true);
     if (erroCidade || erroMudanca || !casalId) return;
+    marcarSalvo();
     gravarImovel(
       casalId,
       {
@@ -82,7 +86,7 @@ export function T08Casa() {
       passo="T08"
       titulo="E a casa nova?"
       subtitulo="Assim criamos os cômodos e as quantidades certas."
-      rodape={<Botao rotulo="Continuar" larguraTotal onPress={continuar} />}
+      rodape={<Botao rotulo={rotuloContinuar} larguraTotal onPress={continuar} />}
     >
       <EscolhaUnica
         rotulo="Tipo de imóvel"

@@ -8,8 +8,9 @@ import { Icone, type NomeIcone } from '../../componentes/Icone';
 import { Texto } from '../../componentes/Texto';
 import { useDialogo } from '../../feedback/Dialogo';
 import { TelaSemConexao } from '../../feedback/TelaSemConexao';
-import { ErroSemConexao, gerarPlano, type ResumoPlano } from '../../servicos/api';
-import { registrarErro } from '../../servicos/analytics';
+import { useAvisos } from '../../feedback/Avisos';
+import { ErroSemConexao, gerarPlano, trocarModo, type ResumoPlano } from '../../servicos/api';
+import { registrarErro, registrarEvento } from '../../servicos/analytics';
 import { useConexao } from '../../servicos/conexao';
 import { db } from '../../servicos/firebase';
 import { espacos, useTema } from '../../tema';
@@ -19,6 +20,7 @@ import { useOnboarding } from './comum';
 // T10 · Plano pronto (ObGerando.dc.html). Primeiro "Montando o plano de vocês…" (2 a 6 s) enquanto a
 // API gera tarefas, cômodos, itens, categorias e o endereço; depois os cartões do modo escolhido.
 // Falha: T48 com "Tentar de novo". Sem internet: T47.
+// Na ativação de um módulo (Etapa 3, "T10 resumido"), a API gera o módulo e troca o modo do casal.
 
 const MINIMO_CARREGANDO_MS = 2000;
 
@@ -49,7 +51,8 @@ function Cartao({ icone, fundo, cor, titulo, texto }: { icone: NomeIcone; fundo:
 
 export function T10PlanoPronto() {
   const { cores } = useTema();
-  const { casal, avancar } = useOnboarding();
+  const { casal, avancar, fluxo } = useOnboarding();
+  const avisos = useAvisos();
   const { erroAoSalvar } = useDialogo();
   const [resumo, setResumo] = useState<ResumoPlano | null>(null);
   const [semConexao, setSemConexao] = useState(false);
@@ -64,7 +67,11 @@ export function T10PlanoPronto() {
     try {
       // O servidor gera a partir do que está gravado lá: espera os passos anteriores chegarem.
       await waitForPendingWrites(db());
-      const r = await gerarPlano();
+      const modoAntes = casal?.modo_app ?? 'indefinido';
+      const r = fluxo.tipo === 'ativacao' ? (await trocarModo(fluxo.modo, fluxo.origem)).resumo : await gerarPlano();
+      if (fluxo.tipo === 'ativacao') {
+        registrarEvento({ nome: 'modo_alterado', params: { de: modoAntes, para: fluxo.modo, origem: fluxo.origem } });
+      }
       await new Promise<void>((ok) => setTimeout(ok, Math.max(0, MINIMO_CARREGANDO_MS - (Date.now() - inicio))));
       setResumo(r);
     } catch (erro) {
@@ -72,6 +79,7 @@ export function T10PlanoPronto() {
       registrarErro(erro, 'gerar plano');
       if (await erroAoSalvar()) gerar();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [erroAoSalvar, online]);
 
   useEffect(() => {
@@ -100,7 +108,20 @@ export function T10PlanoPronto() {
     : `${casal.num_convidados_previsto} convidados, estilo ${NOMES_ESTILO[casal.estilo ?? ''] ?? ''}, em ${casal.cidade}`;
 
   return (
-    <FundoAcesso aneis rodape={<Botao rotulo="Continuar" larguraTotal onPress={() => avancar('T10')} />}>
+    <FundoAcesso
+      aneis
+      rodape={
+        <Botao
+          rotulo="Continuar"
+          larguraTotal
+          onPress={() => {
+            if (fluxo.tipo !== 'ativacao') return avancar('T10');
+            fluxo.sair();
+            avisos.mostrar({ texto: 'Modo atualizado. O menu já mudou para vocês dois.', tipo: 'sucesso' });
+          }}
+        />
+      }
+    >
       <View style={estilos.cabecalho}>
         <Texto papel="selo" peso="700" cor="primary" style={estilos.sobretitulo}>
           PLANO PRONTO

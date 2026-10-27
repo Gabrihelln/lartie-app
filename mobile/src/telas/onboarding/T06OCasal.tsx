@@ -13,7 +13,7 @@ import { armazenamento } from '../../servicos/armazenamento';
 import { useConexao } from '../../servicos/conexao';
 import { espacos } from '../../tema';
 import { validarNome } from '../acesso/validacao';
-import { TelaOnboarding, useOnboarding } from './comum';
+import { TelaOnboarding, useAlteracoes, useOnboarding } from './comum';
 
 // T06 · O casal (Ob1Casal.dc.html). Foto opcional; "Seu nome" pré-preenchido; "Nome do seu amor"
 // obrigatório (vira nome_2 provisório até o parceiro entrar).
@@ -22,7 +22,7 @@ const CHAVE_EXPLICOU_CAMERA = 'permissao.camera.explicada';
 const OPCOES_FOTO = { mediaType: 'photo', maxWidth: 1024, maxHeight: 1024, quality: 0.8, includeBase64: false } as const;
 
 export function T06OCasal() {
-  const { casal, avancar } = useOnboarding();
+  const { casal, avancar, rotuloContinuar } = useOnboarding();
   const { online } = useConexao();
   const avisos = useAvisos();
   const { confirmar } = useDialogo();
@@ -33,6 +33,7 @@ export function T06OCasal() {
   const [explicarCamera, setExplicarCamera] = useState(false);
   const [enviando, setEnviando] = useState(false);
 
+  const { marcarSalvo } = useAlteracoes([nome1, nome2], 'os nomes');
   const erro1 = validarNome(nome1);
   const erro2 = validarNome(nome2);
   const valido = !erro1 && !erro2;
@@ -104,10 +105,13 @@ export function T06OCasal() {
       semVoltar
       rodape={
         <Botao
-          rotulo="Continuar"
+          rotulo={rotuloContinuar}
           larguraTotal
           desativado={!valido}
-          onPress={() => avancar('T06', { nome_1: nome1.trim(), nome_2: nome2.trim() })}
+          onPress={() => {
+            marcarSalvo();
+            avancar('T06', { nome_1: nome1.trim(), nome_2: nome2.trim() });
+          }}
         />
       }
     >

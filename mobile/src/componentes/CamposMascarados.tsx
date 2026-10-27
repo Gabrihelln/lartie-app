@@ -18,14 +18,19 @@ interface PropsMoeda {
   rotulo: string;
   valor: number | null;
   onMudar: (centavos: number | null) => void;
+  erro?: string | null;
+  placeholder?: string;
+  onBlur?: () => void;
 }
 
 /** Valor inteiro em reais, como no protótipo do T07 ("R$ 60.000"). */
-export function CampoMoeda({ rotulo, valor, onMudar }: PropsMoeda) {
+export function CampoMoeda({ rotulo, valor, onMudar, erro, placeholder = 'R$ 0', onBlur }: PropsMoeda) {
   return (
     <CampoTexto
       rotulo={rotulo}
-      placeholder="R$ 0"
+      onBlur={onBlur}
+      erro={erro}
+      placeholder={placeholder}
       keyboardType="number-pad"
       value={formatarReais(valor)}
       onChangeText={(t) => onMudar(lerReais(t))}
@@ -76,3 +81,6 @@ export function CampoMesAno({ rotulo, texto, onMudarTexto, erro, onBlur }: Props
     />
   );
 }
+
+
+export { mascararTelefone } from './mascaras';

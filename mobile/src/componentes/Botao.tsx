@@ -6,7 +6,7 @@ import { Icone, type NomeIcone } from './Icone';
 import { Texto } from './Texto';
 
 // design-system/componentes/Botao: Principal, Tonal, Contornado, Texto, Destrutivo, WhatsApp.
-export type VarianteBotao = 'principal' | 'tonal' | 'contornado' | 'texto' | 'destrutivo' | 'whatsapp';
+export type VarianteBotao = 'principal' | 'tonal' | 'contornado' | 'texto' | 'destrutivo' | 'whatsapp' | 'casa';
 
 interface Props {
   rotulo: string;
@@ -33,6 +33,8 @@ const CORES: Record<VarianteBotao, { fundo: NomeCor | null; texto: NomeCor; bord
   texto: { fundo: null, texto: 'primary' },
   destrutivo: { fundo: null, texto: 'error' },
   whatsapp: { fundo: 'whatsapp', texto: 'onPrimary' },
+  /** Ações da Casa nova (T12d "Começar pela casa nova"). */
+  casa: { fundo: 'home', texto: 'onPrimary' },
 };
 
 export function Botao({

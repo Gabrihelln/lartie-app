@@ -187,9 +187,10 @@ service cloud.firestore {
 
     match /casais/{casalId} {
       allow read: if doCasal(casalId);
-      // Campos que só o servidor grava: slug (link público), modulos_gerados (plano gerado) e auditoria de criação.
+      // Campos que só o servidor grava: slug (link público), modulos_gerados (plano gerado), parceiro
+      // (quem entrou pelo convite) e auditoria de criação.
       allow update: if doCasal(casalId)
-        && !mudou().hasAny(['slug', 'modulos_gerados', 'criado_por', 'criado_em'])
+        && !mudou().hasAny(['slug', 'modulos_gerados', 'parceiro', 'criado_por', 'criado_em'])
         && dados().modo_app in ['casamento', 'casa', 'os_dois', 'indefinido']
         && textoPreenchido(dados().nome_1)
         && dados().atualizado_por == request.auth.uid

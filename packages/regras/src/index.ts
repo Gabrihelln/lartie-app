@@ -6,3 +6,5 @@ export * from './checklist';
 export * from './enxoval';
 export * from './orcamento';
 export * from './slug';
+export * from './progresso';
+export * from './fornecedores';

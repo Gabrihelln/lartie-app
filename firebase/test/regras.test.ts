@@ -183,8 +183,9 @@ describe('modo do app (13.9)', () => {
     await assertFails(updateDoc(doc(ana(), 'casais', CASAL), { modo_app: 'casa', ...atualizacao('ana') }));
   });
 
-  it('o app não altera slug nem modulos_gerados (só o servidor)', async () => {
+  it('o app não altera slug, modulos_gerados nem parceiro (só o servidor)', async () => {
     await assertFails(updateDoc(doc(ana(), 'casais', CASAL), { slug: 'outro', ...atualizacao('ana') }));
+    await assertFails(updateDoc(doc(ana(), 'casais', CASAL), { parceiro: { uid: 'x', nome: 'X' }, ...atualizacao('ana') }));
     await assertFails(
       updateDoc(doc(ana(), 'casais', CASAL), {
         modulos_gerados: { casamento: false, casa: false },
