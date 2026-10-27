@@ -23,6 +23,8 @@ interface ValorSessao {
   limparAvisoSessao: () => void;
   /** Lê o casal de novo (depois de a API confirmar o casal e o token ser renovado). */
   recarregarCasal: () => void;
+  /** T43: a pessoa foi removida do plano de {nome}. O app avisa uma vez. */
+  removidoDoPlano: string | null;
 }
 
 const ContextoSessao = createContext<ValorSessao | null>(null);
@@ -78,7 +80,20 @@ export function SessaoProvider({ children }: { children: ReactNode }) {
     return () => clearTimeout(t);
   }, [casal.erro, usuario, tentativa]);
 
-  const perfil = useDocumento<Usuario>(usuario && casalId ? caminhos.usuario(usuario.uid) : null, tentativa);
+  const perfil = useDocumento<Usuario>(usuario ? caminhos.usuario(usuario.uid) : null, tentativa);
+
+  // O casal do token não é mais o do usuário: o parceiro foi removido (T43), entrou em outro plano
+  // ou o casal foi excluído (T42). Renova o token uma vez para o claim novo valer na hora.
+  const casalSumiu = !!casalId && !casal.carregando && !casal.doCache && !casal.erro && !casal.dados;
+  const trocouDeCasal = !!casalId && !!perfil.dados && !perfil.doCache && perfil.dados.casal_id !== casalId;
+  const renovado = useRef<string | null>(null);
+  useEffect(() => {
+    if (!usuario || !(casalSumiu || trocouDeCasal)) return;
+    const chave = `${casalId}|${perfil.dados?.casal_id ?? ''}`;
+    if (renovado.current === chave) return;
+    renovado.current = chave;
+    getIdToken(usuario, true).catch(() => {});
+  }, [usuario, casalId, casalSumiu, trocouDeCasal, perfil.dados?.casal_id]);
 
   const valor: ValorSessao = {
     usuario,
@@ -87,10 +102,15 @@ export function SessaoProvider({ children }: { children: ReactNode }) {
     papel: perfil.dados?.papel ?? null,
     modo: casal.dados?.modo_app ?? 'indefinido',
     // Com casal mas sem o documento ainda (primeira leitura ou nova tentativa), ainda está carregando.
-    carregando: carregandoAuth || casal.carregando || perfil.carregando || (!!casalId && !casal.dados && !(casal.erro && tentativa >= 5)),
+    carregando:
+      carregandoAuth ||
+      casal.carregando ||
+      perfil.carregando ||
+      (!!casalId && !casal.dados && !(casal.erro && tentativa >= 5) && !casalSumiu),
     sessaoExpirada,
     limparAvisoSessao,
     recarregarCasal,
+    removidoDoPlano: perfil.dados?.removido_do_plano?.nome ?? null,
   };
 
   return <ContextoSessao.Provider value={valor}>{children}</ContextoSessao.Provider>;

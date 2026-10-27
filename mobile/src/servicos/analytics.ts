@@ -7,8 +7,24 @@ import { getCrashlytics, log, recordError } from '@react-native-firebase/crashly
 
 export type EventoAnalytics =
   | { nome: 'modo_escolhido'; params: { modo: string } }
-  | { nome: 'modo_alterado'; params: { de: string; para: string; origem: 'perfil' | 'cartao' | 'assistente' } }
-  | { nome: 'acao_desfeita'; params: { acao: string } };
+  | { nome: 'modo_alterado'; params: { de: string; para: string; origem: OrigemModo } }
+  | { nome: 'acao_desfeita'; params: { acao: string } }
+  // Etapa 3
+  | { nome: 'tarefa_concluida'; params: { origem: 'checklist' | 'inicio' | 'tarefa' } }
+  | { nome: 'tarefa_criada'; params: { fase: string } }
+  | { nome: 'tarefa_excluida'; params: Record<string, never> }
+  | { nome: 'fase_concluida'; params: { fase: string } }
+  | { nome: 'fornecedor_criado'; params: { categoria: string } }
+  | { nome: 'fornecedor_fechado'; params: { categoria: string; parcelas: number } }
+  | { nome: 'fornecedores_comparados'; params: { categoria: string } }
+  | { nome: 'gasto_criado'; params: { escopo: string } }
+  | { nome: 'parcela_paga'; params: Record<string, never> }
+  | { nome: 'orcamento_definido'; params: { distribuido: number } }
+  | { nome: 'parceiro_removido'; params: Record<string, never> }
+  | { nome: 'conta_excluida'; params: Record<string, never> };
+
+/** De onde veio a troca de modo (13.9 regra 9). */
+export type OrigemModo = 'perfil' | 'cartao' | 'assistente' | 'inicio_depois' | 'folha_ativar';
 
 export function registrarEvento(evento: EventoAnalytics) {
   try {

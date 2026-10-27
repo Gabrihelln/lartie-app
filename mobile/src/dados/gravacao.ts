@@ -5,6 +5,7 @@ import {
   serverTimestamp,
   setDoc,
   updateDoc,
+  writeBatch,
 } from '@react-native-firebase/firestore';
 import { caminhos, type Imovel, type ModoApp, type PreferenciasNotificacao, type Subcolecao } from '@lartie/modelo';
 import { registrarErro } from '../servicos/analytics';
@@ -97,4 +98,62 @@ export function atualizarPreferencias(preferencias: PreferenciasNotificacao, aoF
 /** Exclusão definitiva (13.8). Quem chama já pediu confirmação ao usuário. */
 export function excluir(casalId: string, sub: Subcolecao, id: string, aoFalhar?: (erro: unknown) => void) {
   acompanhar(deleteDoc(doc(db(), caminhos.documento(casalId, sub, id))), `excluir ${sub}`, aoFalhar);
+}
+
+export type OperacaoLote =
+  | { tipo: 'criar'; sub: Subcolecao; dados: Dados }
+  | { tipo: 'atualizar'; sub: Subcolecao; id: string; dados: Dados }
+  | { tipo: 'atualizarCasal'; dados: Dados }
+  | { tipo: 'excluir'; sub: Subcolecao; id: string };
+
+/**
+ * Várias gravações que precisam acontecer juntas (ex.: T37 fecha o fornecedor, conclui a tarefa e
+ * cria as parcelas; reordenar tarefas). Tudo ou nada, e funciona offline. Devolve os ids criados.
+ */
+export function emLote(casalId: string, operacoes: OperacaoLote[], contexto: string, aoFalhar?: (erro: unknown) => void): string[] {
+  const quem = uid();
+  const lote = writeBatch(db());
+  const criados: string[] = [];
+  for (const op of operacoes) {
+    if (op.tipo === 'criar') {
+      const ref = doc(collection(db(), caminhos.subcolecao(casalId, op.sub)));
+      criados.push(ref.id);
+      lote.set(ref, {
+        ...op.dados,
+        criado_por: quem,
+        criado_em: serverTimestamp(),
+        atualizado_por: quem,
+        atualizado_em: serverTimestamp(),
+      });
+    } else if (op.tipo === 'atualizar') {
+      lote.update(doc(db(), caminhos.documento(casalId, op.sub, op.id)), { ...op.dados, atualizado_por: quem, atualizado_em: serverTimestamp() });
+    } else if (op.tipo === 'atualizarCasal') {
+      lote.update(doc(db(), caminhos.casal(casalId)), { ...op.dados, atualizado_por: quem, atualizado_em: serverTimestamp() });
+    } else {
+      lote.delete(doc(db(), caminhos.documento(casalId, op.sub, op.id)));
+    }
+  }
+  acompanhar(lote.commit(), contexto, aoFalhar);
+  return criados;
+}
+
+/** Id novo para um documento (criado no aparelho, para já navegar até ele antes de o servidor confirmar). */
+export function novoId(casalId: string, sub: Subcolecao): string {
+  return doc(collection(db(), caminhos.subcolecao(casalId, sub))).id;
+}
+
+/** Cria um documento com id escolhido (ex.: id gerado antes por novoId). */
+export function criarComId(casalId: string, sub: Subcolecao, id: string, dados: Dados, aoFalhar?: (erro: unknown) => void) {
+  const quem = uid();
+  acompanhar(
+    setDoc(doc(db(), caminhos.documento(casalId, sub, id)), {
+      ...dados,
+      criado_por: quem,
+      criado_em: serverTimestamp(),
+      atualizado_por: quem,
+      atualizado_em: serverTimestamp(),
+    }),
+    `criar ${sub}`,
+    aoFalhar,
+  );
 }

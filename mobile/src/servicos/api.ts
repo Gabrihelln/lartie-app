@@ -1,4 +1,5 @@
 import { getIdToken } from '@react-native-firebase/auth';
+import type { ModoApp } from '@lartie/modelo';
 import { ambienteAtual, HOST_EMULADOR } from './ambiente';
 import { auth } from './firebase';
 
@@ -117,4 +118,38 @@ export function enviarFotoCasal(arquivo: { uri: string; tipo: string; nome: stri
 
 export function removerFotoCasal() {
   return chamar<{ ok: boolean }>('/v1/casal/foto', { metodo: 'DELETE' });
+}
+
+// Etapa 3 ---------------------------------------------------------------------------------------
+
+/** T33b "Mudar modo": gera os módulos nunca gerados, grava o modo e avisa o parceiro (13.9). */
+export function trocarModo(modo: ModoApp, origem: string) {
+  return chamar<{ modo: ModoApp; resumo: ResumoPlano }>('/v1/casal/modo', { corpo: { modo, origem }, tempoMs: 60000 });
+}
+
+/** T43: remove o parceiro do plano (só quem criou o plano). */
+export function removerParceiro() {
+  return chamar<{ removido: boolean }>('/v1/casal/parceiro', { metodo: 'DELETE' });
+}
+
+/** T42: exclui a conta e todos os dados do casal. */
+export function excluirConta() {
+  return chamar<{ ok: boolean }>('/v1/conta', { metodo: 'DELETE', tempoMs: 60000 });
+}
+
+/** T17: anexa o contrato (PDF ou foto) ao fornecedor. */
+export function enviarContrato(fornecedorId: string, arquivo: { uri: string; tipo: string; nome: string }) {
+  const formulario = new FormData();
+  formulario.append('contrato', { uri: arquivo.uri, type: arquivo.tipo, name: arquivo.nome } as unknown as Blob);
+  return chamar<{ contrato: string }>(`/v1/fornecedores/${encodeURIComponent(fornecedorId)}/contrato`, { formulario, tempoMs: 60000 });
+}
+
+export function removerContrato(fornecedorId: string) {
+  return chamar<{ ok: boolean }>(`/v1/fornecedores/${encodeURIComponent(fornecedorId)}/contrato`, { metodo: 'DELETE' });
+}
+
+/** Link de 10 minutos para abrir um arquivo do casal no navegador do sistema. */
+export async function linkDoArquivo(caminho: string) {
+  const { link } = await chamar<{ link: string }>('/v1/arquivos/link', { corpo: { caminho } });
+  return `${urlApi()}${link}`;
 }

@@ -1,5 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, Linking, Pressable, StyleSheet, Switch, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Linking,
+  Pressable,
+  StyleSheet,
+  Switch,
+  View,
+} from 'react-native';
 import Clipboard from '@react-native-clipboard/clipboard';
 import { raios, tamanhos } from '@lartie/tokens';
 import { PREFERENCIAS_PADRAO } from '@lartie/modelo';
@@ -34,7 +41,9 @@ export function mensagemConvite(nome1: string, codigo: string) {
 
 export function T11Convidar() {
   const { cores, alvoToque } = useTema();
-  const { casal, navigation, concluir, voltar } = useOnboarding();
+  const { casal, navigation, concluir, voltar, fluxo } = useOnboarding();
+  // Fora do onboarding (T12d "Convidar {parceiro}", Perfil › Parceiro(a)): só o convite.
+  const avulso = fluxo.tipo !== 'onboarding';
   const { online } = useConexao();
   const avisos = useAvisos();
   const { confirmar } = useDialogo();
@@ -62,7 +71,11 @@ export function T11Convidar() {
 
   const enviarWhatsApp = () => {
     if (!codigo || !casal) return;
-    Linking.openURL(`https://wa.me/?text=${encodeURIComponent(mensagemConvite(casal.nome_1, codigo))}`);
+    Linking.openURL(
+      `https://wa.me/?text=${encodeURIComponent(
+        mensagemConvite(casal.nome_1, codigo),
+      )}`,
+    );
   };
 
   const copiar = () => {
@@ -74,7 +87,8 @@ export function T11Convidar() {
     confirmar({
       icone: 'email',
       titulo: 'Convite por e-mail',
-      texto: '[a definir] O envio por e-mail chega quando o domínio lartie.app existir. Por enquanto, use o WhatsApp ou copie o link.',
+      texto:
+        '[a definir] O envio por e-mail chega quando o domínio lartie.app existir. Por enquanto, use o WhatsApp ou copie o link.',
       cancelar: null,
       confirmar: 'Entendi',
     });
@@ -83,7 +97,8 @@ export function T11Convidar() {
   const gerarOutro = async () => {
     const ok = await confirmar({
       titulo: 'Cancelar este convite?',
-      texto: 'O link enviado deixa de funcionar e criamos um novo para vocês enviarem.',
+      texto:
+        'O link enviado deixa de funcionar e criamos um novo para vocês enviarem.',
       cancelar: 'Manter',
       confirmar: 'Gerar outro',
     });
@@ -108,7 +123,8 @@ export function T11Convidar() {
       rsvp: ativas,
     });
     // T57 antes do pedido nativo, se os lembretes estão ligados e a permissão ainda não foi pedida.
-    if (ativas && !jaPediuNotificacoes()) navigation.navigate('PermNotificacoes');
+    if (ativas && !jaPediuNotificacoes())
+      navigation.navigate('PermNotificacoes');
     else concluir();
   };
 
@@ -116,15 +132,40 @@ export function T11Convidar() {
     <FundoAcesso
       aneis
       rodape={
-        <>
-          <Botao rotulo="Ir para o início" larguraTotal onPress={irParaInicio} />
-          <Botao rotulo="Convidar depois" variante="texto" larguraTotal onPress={irParaInicio} />
-        </>
+        avulso ? (
+          <Botao
+            rotulo="Ir para o início"
+            larguraTotal
+            onPress={() =>
+              navigation.getParent()?.goBack() ?? navigation.goBack()
+            }
+          />
+        ) : (
+          <>
+            <Botao
+              rotulo="Ir para o início"
+              larguraTotal
+              onPress={irParaInicio}
+            />
+            <Botao
+              rotulo="Convidar depois"
+              variante="texto"
+              larguraTotal
+              onPress={irParaInicio}
+            />
+          </>
+        )
       }
     >
-      <BotaoVoltar onPress={() => voltar('T11')} />
+      <BotaoVoltar
+        onPress={() => (avulso ? navigation.goBack() : voltar('T11'))}
+      />
       <View style={estilos.topo}>
-        <AvatarDuplo pessoa1={{ nome: casal?.nome_1 ?? '' }} pessoa2={{ nome: nome2 }} tamanho={72} />
+        <AvatarDuplo
+          pessoa1={{ nome: casal?.nome_1 ?? '' }}
+          pessoa2={{ nome: nome2 }}
+          tamanho={72}
+        />
         <Texto papel="tituloDestaque" accessibilityRole="header">
           Planejem juntos
         </Texto>
@@ -133,28 +174,60 @@ export function T11Convidar() {
         </Texto>
       </View>
 
-      <Botao rotulo="Enviar convite pelo WhatsApp" variante="whatsapp" larguraTotal onPress={enviarWhatsApp} desativado={!codigo} />
+      <Botao
+        rotulo="Enviar convite pelo WhatsApp"
+        variante="whatsapp"
+        larguraTotal
+        onPress={enviarWhatsApp}
+        desativado={!codigo}
+      />
 
-      <View style={[estilos.link, { backgroundColor: cores.surface, borderColor: cores.outlineSoft }]}>
+      <View
+        style={[
+          estilos.link,
+          { backgroundColor: cores.surface, borderColor: cores.outlineSoft },
+        ]}
+      >
         {codigo ? (
-          <Texto papel="metadado" cor="onSurfaceVariant" numberOfLines={1} style={estilos.textoLink} selectable>
+          <Texto
+            papel="metadado"
+            cor="onSurfaceVariant"
+            numberOfLines={1}
+            style={estilos.textoLink}
+            selectable
+          >
             {link}
           </Texto>
         ) : erroConvite ? (
-          <Pressable onPress={carregarConvite} accessibilityRole="button" style={estilos.textoLink}>
+          <Pressable
+            onPress={carregarConvite}
+            accessibilityRole="button"
+            style={estilos.textoLink}
+          >
             <Texto papel="metadado" cor="error">
               Não foi possível criar o convite. Toque para tentar de novo.
             </Texto>
           </Pressable>
         ) : (
-          <ActivityIndicator color={cores.primary} style={estilos.textoLink} accessibilityLabel="Criando o convite" />
+          <ActivityIndicator
+            color={cores.primary}
+            style={estilos.textoLink}
+            accessibilityLabel="Criando o convite"
+          />
         )}
         <Pressable
           onPress={copiar}
           disabled={!codigo}
           accessibilityRole="button"
           accessibilityLabel="Copiar o link do convite"
-          style={[estilos.copiar, { backgroundColor: cores.primaryContainer, minHeight: alvoToque, opacity: codigo ? 1 : 0.38 }]}
+          style={[
+            estilos.copiar,
+            {
+              backgroundColor: cores.primaryContainer,
+              minHeight: alvoToque,
+              opacity: codigo ? 1 : 0.38,
+            },
+          ]}
         >
           <Texto papel="metadado" peso="600" cor="onPrimaryContainer">
             Copiar
@@ -163,7 +236,11 @@ export function T11Convidar() {
       </View>
 
       {codigo ? (
-        <Botao rotulo="Cancelar este convite e gerar outro" variante="texto" onPress={gerarOutro} />
+        <Botao
+          rotulo="Cancelar este convite e gerar outro"
+          variante="texto"
+          onPress={gerarOutro}
+        />
       ) : null}
 
       <CampoTexto
@@ -177,22 +254,26 @@ export function T11Convidar() {
         onSubmitEditing={enviarEmail}
       />
 
-      <View style={[estilos.lembretes, { backgroundColor: cores.surfaceVariant }]}>
-        <View style={estilos.textosLembretes}>
-          <Texto papel="nomeItem">Ativar lembretes</Texto>
-          <Texto papel="metadado" cor="onSurfaceVariant">
-            Prazos, parcelas e convidados sem resposta
-          </Texto>
+      {avulso ? null : (
+        <View
+          style={[estilos.lembretes, { backgroundColor: cores.surfaceVariant }]}
+        >
+          <View style={estilos.textosLembretes}>
+            <Texto papel="nomeItem">Ativar lembretes</Texto>
+            <Texto papel="metadado" cor="onSurfaceVariant">
+              Prazos, parcelas e convidados sem resposta
+            </Texto>
+          </View>
+          <Switch
+            value={lembretes}
+            onValueChange={setLembretes}
+            accessibilityLabel="Ativar lembretes"
+            trackColor={{ true: cores.primary, false: cores.outlineSoft }}
+            thumbColor={cores.surface}
+            ios_backgroundColor={cores.outlineSoft}
+          />
         </View>
-        <Switch
-          value={lembretes}
-          onValueChange={setLembretes}
-          accessibilityLabel="Ativar lembretes"
-          trackColor={{ true: cores.primary, false: cores.outlineSoft }}
-          thumbColor={cores.surface}
-          ios_backgroundColor={cores.outlineSoft}
-        />
-      </View>
+      )}
     </FundoAcesso>
   );
 }
@@ -210,7 +291,11 @@ const estilos = StyleSheet.create({
     gap: espacos.space2,
   },
   textoLink: { flex: 1 },
-  copiar: { borderRadius: raios.radiusFull, paddingHorizontal: 14, justifyContent: 'center' },
+  copiar: {
+    borderRadius: raios.radiusFull,
+    paddingHorizontal: 14,
+    justifyContent: 'center',
+  },
   lembretes: {
     flexDirection: 'row',
     alignItems: 'center',

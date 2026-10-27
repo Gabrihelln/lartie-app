@@ -1,7 +1,17 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { createNavigationContainerRef, NavigationContainer, DefaultTheme, DarkTheme, type LinkingOptions } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import type { ModoApp } from '@lartie/modelo';
+import { moduloVisivel, type Modulo } from '@lartie/regras';
 import { useSessao } from '../dados/Sessao';
+import { useAvisos } from '../feedback/Avisos';
+import { useDialogo } from '../feedback/Dialogo';
+import { Fornecedor } from '../telas/casamento/Fornecedor';
+import { Tarefa } from '../telas/casamento/Tarefa';
+import { ConfigModo } from '../telas/perfil/ConfigModo';
+import { AtivarModulo, Convidar, DadosCasa, DadosCasamento, EditarCasal } from '../telas/perfil/Formularios';
+import { MeusDados } from '../telas/perfil/MeusDados';
+import { OrcamentoCasa, ProvisoriaPilha } from '../telas/Provisorias';
 import { Catalogo, CatalogoEstado, CatalogoFormulario } from '../dev/Catalogo';
 import { Abertura } from '../telas/acesso/Abertura';
 import { BoasVindas } from '../telas/acesso/BoasVindas';
@@ -28,6 +38,9 @@ const linking: LinkingOptions<ParamsRaiz> = {
     screens: {
       Convite: 'convite/:codigo',
       Entrar: 'entrar',
+      Tarefa: 'tarefa/:id',
+      Fornecedor: 'fornecedor/:id',
+      ConfigModo: 'modo',
       Abas: {
         screens: {
           inicio: 'inicio',
@@ -40,6 +53,15 @@ const linking: LinkingOptions<ParamsRaiz> = {
       },
     },
   },
+};
+
+/** Telas empilhadas de um módulo: se o módulo some (troca de modo), voltam para o Início. */
+const MODULO_DA_ROTA: Partial<Record<keyof ParamsRaiz, Modulo>> = {
+  Tarefa: 'checklist',
+  Fornecedor: 'fornecedores',
+  DadosCasamento: 'checklist',
+  OrcamentoCasa: 'casa',
+  DadosCasa: 'casa',
 };
 
 /** T01 na primeira abertura sem sessão: "Começar" → T02, "Já tenho conta" → T04. */
@@ -68,7 +90,9 @@ function AberturaComBotoes({ navigation }: { navigation: { replace: (r: 'BoasVin
  * A versão mínima (T67) é conferida antes, no App.
  */
 export function Raiz() {
-  const { usuario, casalId, casal, papel, carregando, sessaoExpirada } = useSessao();
+  const { usuario, casalId, casal, papel, carregando, sessaoExpirada, removidoDoPlano } = useSessao();
+  const avisos = useAvisos();
+  const { confirmar } = useDialogo();
   const { tema, cores } = useTema();
   const base = tema === 'escuro' ? DarkTheme : DefaultTheme;
   const temaNavegacao = {
@@ -87,6 +111,39 @@ export function Raiz() {
     const t = setTimeout(abrir, 300);
     return () => clearTimeout(t);
   }, [pronto]);
+
+  // Fluxo 16: o parceiro trocou o modo. Aviso "{nome} mudou o modo do app." e, se a tela aberta for
+  // de um módulo que ficou oculto, volta para a nova tela inicial.
+  const modoAnterior = useRef<ModoApp | null>(null);
+  useEffect(() => {
+    if (!casal) {
+      modoAnterior.current = null;
+      return;
+    }
+    const antes = modoAnterior.current;
+    modoAnterior.current = casal.modo_app;
+    if (!antes || antes === casal.modo_app || !casal.modo_alterado_por || casal.modo_alterado_por === usuario?.uid) return;
+    const nome = casal.parceiro?.uid === casal.modo_alterado_por ? casal.parceiro.nome : casal.nome_1;
+    avisos.mostrar({ texto: `${nome} mudou o modo do app.` });
+    const rota = navegacao.isReady() ? (navegacao.getCurrentRoute()?.name as keyof ParamsRaiz | undefined) : undefined;
+    const modulo = rota ? MODULO_DA_ROTA[rota] : undefined;
+    if (modulo && !moduloVisivel(casal.modo_app, modulo)) navegacao.reset({ index: 0, routes: [{ name: 'Abas' }] });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [casal?.modo_app]);
+
+  // T43: a pessoa foi removida do plano. Avisa uma vez (a conta segue, com um plano novo).
+  const avisouRemocao = useRef<string | null>(null);
+  useEffect(() => {
+    if (!removidoDoPlano || avisouRemocao.current === removidoDoPlano) return;
+    avisouRemocao.current = removidoDoPlano;
+    confirmar({
+      icone: 'info',
+      titulo: `${removidoDoPlano} removeu você do plano`,
+      texto: 'Você deixou de ver e editar o plano de vocês. Se foi engano, peça um novo convite.',
+      cancelar: null,
+      confirmar: 'Entendi',
+    });
+  }, [removidoDoPlano, confirmar]);
 
   if (carregando) return <Abertura carregando />;
 
@@ -117,7 +174,20 @@ export function Raiz() {
         ) : !casal.onboarding_concluido && papel !== 'noivo_2' ? (
           <Pilha.Screen name="Onboarding" component={Onboarding} options={{ animation: 'fade' }} />
         ) : (
-          <Pilha.Screen name="Abas" component={Abas} options={{ animation: 'fade' }} />
+          <Pilha.Group>
+            <Pilha.Screen name="Abas" component={Abas} options={{ animation: 'fade' }} />
+            <Pilha.Screen name="Tarefa" component={Tarefa} />
+            <Pilha.Screen name="Fornecedor" component={Fornecedor} />
+            <Pilha.Screen name="OrcamentoCasa" component={OrcamentoCasa} />
+            <Pilha.Screen name="ConfigModo" component={ConfigModo} />
+            <Pilha.Screen name="AtivarModulo" component={AtivarModulo} options={{ gestureEnabled: false }} />
+            <Pilha.Screen name="EditarCasal" component={EditarCasal} />
+            <Pilha.Screen name="DadosCasamento" component={DadosCasamento} />
+            <Pilha.Screen name="DadosCasa" component={DadosCasa} />
+            <Pilha.Screen name="MeusDados" component={MeusDados} />
+            <Pilha.Screen name="Convidar" component={Convidar} />
+            <Pilha.Screen name="Provisoria" component={ProvisoriaPilha} />
+          </Pilha.Group>
         )}
         <Pilha.Screen name="Convite" component={Convite} />
         {__DEV__ ? (

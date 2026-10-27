@@ -35,3 +35,31 @@ export function lerData(texto: string): string | null {
   const iso = `${m[3]}-${m[2]}-${m[1]}`;
   return adicionarDias(iso, 0) === iso ? iso : null;
 }
+
+const MESES = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
+
+/** "2027-04-18" → "18 de abril de 2027" (cartão de contagem do Início). */
+export function dataPorExtenso(data: string): string {
+  const [a, m, d] = data.split('-').map(Number);
+  return `${d} de ${MESES[m! - 1]} de ${a}`;
+}
+
+/** "2026-10-22" → "22 out" (prazos curtos das listas). */
+export function dataCurta(data: string): string {
+  const [, m, d] = data.split('-');
+  return `${d} ${MESES[Number(m) - 1]!.slice(0, 3)}`;
+}
+
+/** "2027-05" → "Maio de 2027" (mudança no T12c). */
+export function mesAnoPorExtenso(mesAno: string): string {
+  const [a, m] = mesAno.split('-').map(Number);
+  const nome = MESES[m! - 1]!;
+  return `${nome[0]!.toUpperCase()}${nome.slice(1)} de ${a}`;
+}
+
+/** Meses inteiros de `hoje` até o mês/ano (mudança em {n} meses). */
+export function mesesAte(hoje: string, mesAno: string): number {
+  const [a1, m1] = hoje.split('-').map(Number);
+  const [a2, m2] = mesAno.split('-').map(Number);
+  return (a2! - a1!) * 12 + (m2! - m1!);
+}

@@ -12,7 +12,7 @@ import { Contador } from '../../componentes/Contador';
 import { EscolhaUnica } from '../../componentes/EscolhaUnica';
 import { Texto } from '../../componentes/Texto';
 import { espacos } from '../../tema';
-import { TelaOnboarding, useOnboarding } from './comum';
+import { TelaOnboarding, useAlteracoes, useOnboarding } from './comum';
 
 // T07 · Sobre o casamento (Ob2Casamento.dc.html). Erros T46 com os textos da especificação.
 // P05 (decisão de 25/10/2026): estilos sem "religioso" no nome perguntam "Terá cerimônia religiosa?".
@@ -34,7 +34,7 @@ export const TEXTOS_T07 = {
 } as const;
 
 export function T07Casamento() {
-  const { casal, avancar } = useOnboarding();
+  const { casal, avancar, rotuloContinuar } = useOnboarding();
   const amanha = adicionarDias(hojeLocal(), 1);
   const [data, setData] = useState<string | null>(casal?.data_casamento ?? null);
   // Já passou pelo T07 sem data (estilo gravado, data vazia): volta com a caixa marcada.
@@ -47,6 +47,7 @@ export function T07Casamento() {
   const [tentou, setTentou] = useState(false);
   const [tocouCidade, setTocouCidade] = useState(false);
 
+  const { marcarSalvo } = useAlteracoes([data, semData, cidade, estilo, religioso, convidados, orcamento], 'os dados do casamento');
   const erroData = semData ? null : !data ? TEXTOS_T07.dataVazia : data < amanha ? TEXTOS_T07.dataPassada : null;
   const erroCidade = cidade ? null : TEXTOS_T07.cidade;
   const perguntaReligioso = PERGUNTA_RELIGIOSO.includes(estilo);
@@ -54,6 +55,7 @@ export function T07Casamento() {
   const continuar = () => {
     setTentou(true);
     if (erroData || erroCidade) return;
+    marcarSalvo();
     avancar('T07', {
       data_casamento: semData ? null : data,
       cidade: cidade!.cidade,
@@ -72,7 +74,7 @@ export function T07Casamento() {
       passo="T07"
       titulo="Sobre o casamento"
       subtitulo="Usamos isso para calcular os prazos do checklist."
-      rodape={<Botao rotulo="Continuar" larguraTotal onPress={continuar} />}
+      rodape={<Botao rotulo={rotuloContinuar} larguraTotal onPress={continuar} />}
     >
       <View style={estilos.linha}>
         <CampoData

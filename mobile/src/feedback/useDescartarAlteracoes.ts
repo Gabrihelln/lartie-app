@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, type RefObject } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { useDialogo } from './Dialogo';
 
@@ -10,6 +10,11 @@ interface Opcoes {
   temAlteracoes: boolean;
   /** Completa a frase "Vocês mudaram ___ e ainda não salvaram." Padrão: "este item". */
   oQue?: string;
+  /**
+   * Marque como true logo antes de navegar depois de salvar ou excluir: a saída não pergunta,
+   * mesmo antes de a tela renderizar de novo.
+   */
+  liberado?: RefObject<boolean>;
 }
 
 export function textoDescartar(oQue = 'este item') {
@@ -21,17 +26,18 @@ export function textoDescartar(oQue = 'este item') {
   };
 }
 
-export function useDescartarAlteracoes({ temAlteracoes, oQue }: Opcoes) {
+export function useDescartarAlteracoes({ temAlteracoes, oQue, liberado }: Opcoes) {
   const navigation = useNavigation();
   const { confirmar } = useDialogo();
 
   useEffect(() => {
     if (!temAlteracoes) return;
     return navigation.addListener('beforeRemove', (evento) => {
+      if (liberado?.current) return;
       evento.preventDefault();
       confirmar({ ...textoDescartar(oQue), tom: 'destrutivo' }).then((descartar) => {
         if (descartar) navigation.dispatch(evento.data.action);
       });
     });
-  }, [navigation, confirmar, temAlteracoes, oQue]);
+  }, [navigation, confirmar, temAlteracoes, oQue, liberado]);
 }

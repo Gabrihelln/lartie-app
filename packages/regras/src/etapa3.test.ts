@@ -368,3 +368,15 @@ describe('13.9 troca de modo', () => {
     expect(textoModoAlterado('Ana', 'casa')).toBe('Ana mudou o app para “Só a casa nova”.');
   });
 });
+
+import { dataCurta, dataPorExtenso, mesAnoPorExtenso, mesesAte } from './datas';
+
+describe('datas por extenso', () => {
+  it('formatos do Início', () => {
+    expect(dataPorExtenso('2027-04-18')).toBe('18 de abril de 2027');
+    expect(dataCurta('2026-10-22')).toBe('22 out');
+    expect(dataCurta('2026-03-05')).toBe('05 mar');
+    expect(mesAnoPorExtenso('2027-05')).toBe('Maio de 2027');
+    expect(mesesAte('2026-10-26', '2027-05')).toBe(7);
+  });
+});
